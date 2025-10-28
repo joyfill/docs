@@ -1,208 +1,130 @@
----
-title: "Event Handling"
-description: "Handle form events and user interactions"
-icon: "bolt"
----
+# Event handling
 
-# Event Handling
+This guide covers the event callbacks available in Joyfill forms and when they're triggered.
 
-Master the Joyfill event system to create responsive and interactive form experiences.
+### **Available Events**
 
-## Form Delegate
+| Event | When Triggered | Purpose |
+| --- | --- | --- |
+| onFieldChange | Field value changes | Track form changes |
+| onFocus | Field gains focus | Handle field focus |
+| onBlur | Field loses focus | Handle field blur |
+| onUpload | File upload requested | Handle file uploads |
+| onCapture | Barcode scan requested | Handle barcode scanning |
 
-Implement `JoyfillFormDelegate` to receive form events:
+## **onChange Event**
+
+Triggered when any field value changes in the form.
+
+**Parameters:**
+
+- changes: [Change] - Array of change objects describing what was modified
+- document: JoyDoc - The fully updated document with all changes applied
 
 ```swift
-class FormViewController: UIViewController, JoyfillFormDelegate {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        formView.delegate = self
-    }
-    
-    // Form lifecycle events
-    func formDidLoad(_ form: JoyfillForm) {
-        print("Form loaded")
-    }
-    
-    func formWillSubmit(_ form: JoyfillForm) -> Bool {
-        print("Form is about to submit")
-        return true // Return false to cancel submission
-    }
-    
-    func formDidSubmit(_ form: JoyfillForm, data: [String: Any]) {
-        print("Form submitted successfully")
-    }
-    
-    // Field events
-    func form(_ form: JoyfillForm, didUpdateField field: JoyfillField) {
-        print("Field updated: \(field.identifier)")
-    }
-    
-    func form(_ form: JoyfillForm, didFocusField field: JoyfillField) {
-        print("Field focused: \(field.identifier)")
-    }
-    
-    func form(_ form: JoyfillForm, didBlurField field: JoyfillField) {
-        print("Field blurred: \(field.identifier)")
-    }
-    
-    // Error handling
-    func form(_ form: JoyfillForm, didFailWithError error: Error) {
-        print("Error: \(error.localizedDescription)")
-    }
+func onChange(changes: [Change], document: JoyDoc) {        
+     if let firstChange = changes.first {
+           print(">>>>>>>>onChange", firstChange.change ?? "")
+     }
+     // The document parameter contains the fully updated form
 }
 ```
 
-## Available Events
+![output.gif](Event%20handling/output.gif)
 
-| Event | Description | Parameters |
-|-------|-------------|------------|
-| `formDidLoad` | Form finished loading | `form` |
-| `formWillSubmit` | Before form submission | `form` |
-| `formDidSubmit` | After successful submission | `form`, `data` |
-| `didUpdateField` | Field value changed | `form`, `field` |
-| `didFocusField` | Field received focus | `form`, `field` |
-| `didBlurField` | Field lost focus | `form`, `field` |
-| `didFailWithError` | Error occurred | `form`, `error` |
+## **onFocus Event**
 
-## Field-Specific Events
+Triggered when a field receives focus.
 
-Listen to events for specific fields:
+**Parameters:**
+
+- event: FieldIdentifier - Information about the current focused field
 
 ```swift
-formView.addEventListener(forField: "email") { event in
-    switch event {
-    case .valueChanged(let newValue):
-        print("Email changed to: \(newValue)")
-        validateEmail(newValue as? String)
-        
-    case .focused:
-        print("Email field focused")
-        
-    case .blurred:
-        print("Email field blurred")
-        
-    @unknown default:
-        break
-    }
+func onFocus(event: Joyfill.FieldIdentifier) {
+     print("Field focused: \(event.fieldID)")
 }
 ```
 
-## Form State Changes
+## **onBlur Event**
 
-Track form state:
+Triggered when a field loses focus.
+
+**Parameters:**
+
+- event: FieldIdentifier - Information about the field that lost focus
 
 ```swift
-func form(_ form: JoyfillForm, didChangeState state: JoyfillFormState) {
-    switch state {
-    case .loading:
-        showLoadingIndicator()
-        
-    case .ready:
-        hideLoadingIndicator()
-        
-    case .submitting:
-        disableSubmitButton()
-        showSubmittingIndicator()
-        
-    case .submitted:
-        hideSubmittingIndicator()
-        navigateToSuccessScreen()
-        
-    case .error(let message):
-        hideSubmittingIndicator()
-        showError(message)
-        
-    @unknown default:
-        break
-    }
+func onBlur(event: Joyfill.FieldIdentifier) {
+     print("Field blurred: \(event.fieldID)")
 }
 ```
 
-## Custom Event Handlers
+## **onUpload Event**
 
-Create custom event handlers for complex logic:
+Triggered when a file upload is requested for image or file fields.
+
+**Parameters:**
+
+- event: UploadEvent - Upload event details
+
+**Properties Available:**
+
+- fieldEvent: FieldIdentifier - The field requesting upload
+- multi: Bool - Whether multiple files are allowed
+- uploadHandler: ([String]) -> Void - Callback to provide file URLs
 
 ```swift
-class FormEventHandler {
-    
-    func handleFieldUpdate(_ field: JoyfillField, form: JoyfillForm) {
-        // Log analytics
-        Analytics.trackFieldUpdate(fieldId: field.identifier)
+func onUpload(event: UploadEvent) {
+        print("📤 Upload requested for field: \(event.fieldEvent.fieldID)")
         
-        // Update dependent fields
-        if field.identifier == "country" {
-            updateStateField(basedOn: field.value, in: form)
+        // Option 1: Present a photo picker for the user to choose an image.
+        // Option 2: Directly send pre-uploaded image identifiers or URLs to the upload handler.
+        
+        let exampleImageURL = "https://example.com/uploads/sample-image.jpg"
+        
+        // Example: sending a direct image URL or an identifier for the upload
+        event.uploadHandler([exampleImageURL])
+    }
+```
+
+## **onCapture Event**
+
+Triggered when camera capture is requested for Barcode cell.
+
+**Parameters:**
+
+- event: CaptureEvent - Capture event details
+
+**Properties Available:**
+
+- fieldEvent: FieldIdentifier - The field requesting capture
+- captureHandler: (ValueUnion) -> Void - Callback to provide captured content
+
+```swift
+    func onCapture(event: Joyfill.CaptureEvent) {
+        print("📷 Capture requested for field: \(event.fieldEvent.fieldID)")
+        print("User can open a barcode scanner to capture the code.")
+        event.captureHandler(.string("Scan Button Clicked"))
+    }
+```
+
+## **onError Event**
+
+- Used to listen to errors during document processing.
+- error: JoyfillError — details about the failure.
+- Error types include:
+    - schemaValidationError — Document schema validation failures
+    - schemaVersionError — SDK and document version compatibility issues
+
+```swift
+func onError(error: Joyfill.JoyfillError) {
+        switch error {
+        case .schemaValidationError(let schemaError):
+            print("❌ Schema Error: \(schemaError)")
+        case .schemaVersionError(let versionError):
+            print("❌ Schema Error: \(versionError)")
         }
-        
-        // Auto-save
-        autoSaveForm(form)
+        print("Error occurred: \(error)")
     }
-    
-    func updateStateField(basedOn country: Any?, in form: JoyfillForm) {
-        guard let country = country as? String else { return }
-        
-        // Load states for selected country
-        let states = getStates(for: country)
-        form.updateFieldOptions("state", options: states)
-    }
-    
-    func autoSaveForm(_ form: JoyfillForm) {
-        let data = form.getData()
-        FormDataManager.saveFormData(data, forKey: form.id)
-    }
-}
 ```
-
-## Event Debouncing
-
-Debounce rapid events like typing:
-
-```swift
-class DebouncedEventHandler {
-    
-    private var workItem: DispatchWorkItem?
-    private let delay: TimeInterval
-    
-    init(delay: TimeInterval = 0.5) {
-        self.delay = delay
-    }
-    
-    func debounce(_ action: @escaping () -> Void) {
-        workItem?.cancel()
-        
-        let newWorkItem = DispatchWorkItem(block: action)
-        workItem = newWorkItem
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: newWorkItem)
-    }
-}
-
-// Usage
-let debouncer = DebouncedEventHandler(delay: 0.5)
-
-func form(_ form: JoyfillForm, didUpdateField field: JoyfillField) {
-    if field.identifier == "search" {
-        debouncer.debounce {
-            self.performSearch(query: field.value as? String)
-        }
-    }
-}
-```
-
-<Tip>
-  Use event debouncing for performance-intensive operations like API calls or complex validations.
-</Tip>
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="API Reference" icon="code" href="/ios/api-reference/overview">
-    Explore the complete API
-  </Card>
-  <Card title="Release Notes" icon="newspaper" href="/ios/changelogs/releases">
-    See what's new
-  </Card>
-</CardGroup>
-
