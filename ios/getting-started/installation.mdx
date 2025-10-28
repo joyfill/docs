@@ -1,119 +1,145 @@
----
-title: "Installation"
-description: "Install the Joyfill iOS SDK in your project"
-icon: "download"
----
+# iOS-Getting started
 
-# Installing the iOS SDK
+# Add Form on iOS
 
-This guide will help you install the Joyfill iOS SDK using your preferred dependency manager.
+This guide explains how to integrate Joyfill iOS SDK into a new or existing iOS project using [SwiftUI](https://developer.apple.com/documentation/SwiftUI) By the end, you’ll be able to display a Form.
 
-## Installation Methods
+## Requirements
 
-<Tabs>
-  <Tab title="Swift Package Manager">
-    ### Using Swift Package Manager (Recommended)
+- A Mac running macOS
+- The [latest stable version of Xcode](https://developer.apple.com/xcode/)
 
-    1. In Xcode, go to **File** > **Add Package Dependencies**
-    2. Enter the package URL:
+## Creating your project
+
+Skip this step if you’re using an existing project. If you’re starting a new iOS app, follow the steps below.
+
+**Steps:**
+
+1. Open Xcode and select **File** > **New** > **Project**.
+2. Select the **iOS** tab and choose the **App** template.
+3. Enter your product name (for example, Joyfill-Demo) and organization identifier (for example, com.example).
+4. Click **Next**, choose a location to save the project, and click **Create**.
+
+## Adding Joyfill to your project
+
+**Steps:**
+
+1. In Xcode, select your project.
+2. Go to the **Package Dependencies** tab and click **+**.
+3. Enter the Joyfill Swift Package URL into the search field:
+    
+    ```swift
+    
+    https://github.com/joyfill/components-swift.git
+    
     ```
-    https://github.com/joyfill/joyfill-ios
+    
+4. In the **Dependency Rule** fields, select:
+    - **Version** > **Up to Next Minor** — for controlled updates
+5. Click **Add Package**. Confirm the addition.
+    
+    > In this confirmation step, ensure that the Add to Target column displays the correct target (usually the app target), and that the checkbox on the left is selected. For many projects — especially newly created ones — there will only be one target, so you can click the Add Package button again. However, for more complex projects with multiple targets, it’s important to double-check this setting.
+    > 
+
+Joyfill will now appear under **Swift Package Dependencies**.
+
+## Displaying a Form
+
+**Steps:**
+
+1. Add your JSON file to the project by dragging it into the Xcode project navigator. Click **Finish** when prompted.
+1.1  Here is an example json you can use [first-form.json](https://github.com/joyfill/components-swift/blob/update-readme-file/JoyfillSwiftUIExample/JoyfillExample/Simple%20Form%20Example/first-form.json)
+2. In your SwiftUI view, import the Joyfill SDK:
+    
+    ### Swift
+    
+    ```swift
+    import Joyfill
+    import JoyfillModel
     ```
-    3. Select the version you want to use
-    4. Click **Add Package**
-
-    ### Add to Package.swift
-
-    ```swift Package.swift
-    dependencies: [
-        .package(url: "https://github.com/joyfill/joyfill-ios", from: "1.0.0")
-    ]
+    
+3. Display the Form using the following code:
+    
+    ### Swift
+    
+    ```swift
+    import Joyfill
+    import JoyfillModel
+    
+    struct SimpleFormExampleView: View {
+        let documentEditor: DocumentEditor
+        let document = loadDoc(named: "first-form")
+        
+        init() {
+            self.documentEditor = DocumentEditor(document: document)
+        }
+    
+        var body: some View {
+            Form(documentEditor: documentEditor)
+        }
+    }
+    
+    private extension SimpleFormExampleView {
+        static func loadDoc(named name: String) -> JoyDoc {
+            let url = Bundle.main.url(forResource: name, withExtension: "json")!
+            let data = try! Data(contentsOf: url)
+            let dict = try! JSONSerialization.jsonObject(with: data) as! [String: Any]
+            return JoyDoc(dictionary: dict)
+        }
+    }
     ```
-  </Tab>
+    
+4. Build and run your application.
 
-  <Tab title="CocoaPods">
-    ### Using CocoaPods
+You’ll now see your First Form document displayed using Joyfill built-in UI.
 
-    1. Add Joyfill to your `Podfile`:
+## Listen for form changes
 
-    ```ruby Podfile
-    platform :ios, '13.0'
-    use_frameworks!
+The Joyfill SDK provides comprehensive event handling through the **FormChangeEvent** protocol, allowing you to respond to user interactions, data changes, file uploads, and errors in real-time.
 
-    target 'YourApp' do
-      pod 'Joyfill', '~> 1.0'
-    end
-    ```
+**Create an Event Handler**
 
-    2. Install the pod:
-
-    ```bash
-    pod install
-    ```
-
-    3. Open your `.xcworkspace` file
-  </Tab>
-
-  <Tab title="Carthage">
-    ### Using Carthage
-
-    1. Add Joyfill to your `Cartfile`:
-
-    ```
-    github "joyfill/joyfill-ios" ~> 1.0
-    ```
-
-    2. Run Carthage:
-
-    ```bash
-    carthage update --platform iOS
-    ```
-
-    3. Link the framework to your project
-  </Tab>
-</Tabs>
-
-## Import the SDK
-
-After installation, import Joyfill in your Swift files:
+Implement the FormChangeEvent protocol:
 
 ```swift
 import Joyfill
-```
+import JoyfillModel
 
-## Verify Installation
+final class ChangeHandler: FormChangeEvent {
+    func onChange(changes: [Joyfill.Change], document: JoyfillModel.JoyDoc) {
+        // Persist, sync, or react to changes
+        if let firstChange = changes.first {
+            print(">>>>>>>>onChange", firstChange.change ?? "")
+        }
+    }
 
-Create a simple test to verify the SDK is properly installed:
+    func onFocus(event: Joyfill.FieldIdentifier) {
+        // Field focused
+    }
 
-```swift
-import Joyfill
-import UIKit
+    func onBlur(event: Joyfill.FieldIdentifier) {
+        // Field blurred
+    }
 
-class ViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Initialize Joyfill
-        let config = JoyfillConfig(
-            accessToken: "your_access_token"
-        )
-        
-        print("Joyfill SDK initialized successfully!")
+    func onUpload(event: Joyfill.UploadEvent) {
+        // File(s) uploaded/removed
+    }
+
+    func onCapture(event: Joyfill.CaptureEvent) {
+        // Media captured (e.g., camera)
+    }
+
+    func onError(error: Joyfill.JoyfillError) {
+        // Schema validation/version or runtime errors
     }
 }
 ```
 
-<Note>
-  Replace `your_access_token` with your actual Joyfill access token. You can get one from the [Joyfill Dashboard](https://app.joyfill.io).
-</Note>
+**Connect to DocumentEditor**
 
-## Next Steps
+Pass your event handler to the DocumentEditor:
 
-<Card 
-  title="Quickstart Guide" 
-  icon="rocket"
-  href="/ios/getting-started/quickstart"
->
-  Now that you've installed the SDK, let's build your first form
-</Card>
-
+```swift
+let handler = ChangeHandler()
+let editor = DocumentEditor(document: myDocument, events: handler)
+```
