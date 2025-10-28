@@ -1,119 +1,142 @@
----
-title: "Installation"
-description: "Install the Joyfill Kotlin SDK in your project"
-icon: "download"
----
+# Getting Started
 
-# Installing the Kotlin SDK
+This guide helps you integrate Joyfill Android SDK into either a new or existing Android project. It shows you how to install the SDK and display your first form using Jetpack Compose.
 
-This guide will help you install the Joyfill Kotlin SDK using your preferred dependency manager.
+## **Install Joyfill SDK**
 
-## Installation Methods
+**Creating or opening your project**
 
-<Tabs>
-  <Tab title="Kotlin Package Manager">
-    ### Using Kotlin Package Manager (Recommended)
+If you already have an Android project, open it in Android Studio. Otherwise, create a new one by following the steps below.
 
-    1. In Android Studio, go to **File** > **Add Package Dependencies**
-    2. Enter the package URL:
-    ```
-    https://github.com/joyfill/joyfill-ios
-    ```
-    3. Select the version you want to use
-    4. Click **Add Package**
+1. Open Android Studio, select **File** > **New** > **New Project**.
+2. Choose the **Empty Activity** (Jetpack Compose) template.
+3. Set your app name (for example, Joyfill Demo), desired save location, language (Kotlin), and minimum SDK (21+ recommended).
+4. Click **Finish** to create the project.
 
-    ### Add to Package.swift
+**Adding Joyfill to your project**
 
-    ```swift Package.swift
-    dependencies: [
-        .package(url: "https://github.com/joyfill/joyfill-ios", from: "1.0.0")
-    ]
-    ```
-  </Tab>
+In your `app/build.gradle.kts` file, add the Joyfill dependency:
 
-  <Tab title="CocoaPods">
-    ### Using CocoaPods
-
-    1. Add Joyfill to your `Podfile`:
-
-    ```ruby Podfile
-    platform :ios, '13.0'
-    use_frameworks!
-
-    target 'YourApp' do
-      pod 'Joyfill', '~> 1.0'
-    end
-    ```
-
-    2. Install the pod:
-
-    ```bash
-    pod install
-    ```
-
-    3. Open your `.xcworkspace` file
-  </Tab>
-
-  <Tab title="Carthage">
-    ### Using Carthage
-
-    1. Add Joyfill to your `Cartfile`:
-
-    ```
-    github "joyfill/joyfill-ios" ~> 1.0
-    ```
-
-    2. Run Carthage:
-
-    ```bash
-    carthage update --platform Android
-    ```
-
-    3. Link the framework to your project
-  </Tab>
-</Tabs>
-
-## Import the SDK
-
-After installation, import Joyfill in your Kotlin files:
-
-```swift
-import Joyfill
-```
-
-## Verify Installation
-
-Create a simple test to verify the SDK is properly installed:
-
-```swift
-import Joyfill
-import UIKit
-
-class ViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Initialize Joyfill
-        let config = JoyfillConfig(
-            accessToken: "your_access_token"
-        )
-        
-        print("Joyfill SDK initialized successfully!")
-    }
+```kotlin
+dependencies {
+    implementation("io.joyfill:compose:<version>")
 }
 ```
 
-<Note>
-  Replace `your_access_token` with your actual Joyfill access token. You can get one from the [Joyfill Dashboard](https://app.joyfill.io).
-</Note>
+Check `versions` for the latest version.
 
-## Next Steps
+> ⚠️ See migration notes in `migration-guide` if you are upgrading from v1
+> 
 
-<Card 
-  title="Quickstart Guide" 
-  icon="rocket"
-  href="/kotlin/getting-started/quickstart"
->
-  Now that you've installed the SDK, let's build your first form
-</Card>
+**Sync your project**
 
+After adding the dependency, sync your project by clicking the **Sync Now** button that appears at the top of the file, or by selecting **File** > **Sync Project with Gradle Files**.
+
+## **Load your first form**
+
+**Download the sample JSON**
+
+Download the sample JSON to get started without any API calls: **`first-form.json`**
+
+This JSON file contains a simple form with:
+
+- A text field for "Full Name"
+- A number field for "Age"
+- A multi-select field for "Do you like football?"
+
+### **Provide JSON**
+
+After downloading `first-form.json`, you have two ways to use it in your app:
+
+**Method 1: Copy JSON content directly**
+
+Open the downloaded file, copy its entire content, and paste it into your code:
+
+```kotlin
+val json = """
+    {
+      "_id": "68d101ee8f5793b7cd6031fc",
+      "type": "template",
+      "name": "New Template",
+      // ... rest of your JSON content from first-form.json ...
+    }
+""".trimIndent()
+```
+
+**Method 2: Load from assets (recommended)**
+
+1. Place first-form.json in your `app/src/main/assets/` folder
+2. Load it in your code:
+
+```kotlin
+@Composable
+fun loadJsonFromAssets(context: Context, fileName: String): String {
+    return remember(fileName) {
+        context.assets.open(fileName).bufferedReader().use { it.readText() }
+    }
+}
+
+// Usage
+val context = LocalContext.current
+val json = loadJsonFromAssets(context, "first-form.json")
+```
+
+**Create your DocumentEditor**
+
+Once you have the JSON, create a DocumentEditor:
+
+```kotlin
+val editor = rememberDocumentEditor(json = json)
+```
+
+**Display the Form**
+
+Add the Form to your UI:
+
+```kotlin
+Form(editor = editor)
+```
+
+## **Listen for form changes**
+
+Track user interactions and form modifications using event callbacks:
+
+**Basic change tracking**
+
+```kotlin
+val editor = rememberDocumentEditor(
+    json = json,
+    onChange = { changeEvent ->
+        println("Form changed! ${changeEvent.changelogs.size} updates")
+        
+        // Access the updated document
+        val updatedDocument = changeEvent.document
+        
+        // Process each change
+        changeEvent.changelogs.forEach { change ->
+            println("Field '${change.fieldId}' was modified")
+        }
+    }
+)
+```
+
+**Field-level events**
+
+You can also listen for specific field interactions:
+
+```kotlin
+Form(
+    editor = editor,
+    onFieldChange = { event ->
+        println("Field changed: ${event.fieldId}")
+    },
+    onFocus = { event ->
+        println("Field focused: ${event.fieldId}")
+    },
+    onBlur = { event ->
+        println("Field lost focus: ${event.fieldId}")
+    }
+)
+```
+
+> 💡 **Learn more**: For detailed information about all available events and their parameters, see the [Form Events Documentation](https://www.notion.so/Handling-Form-Events-28bdef37c9a0802883a9d0497181682f?pvs=21).
