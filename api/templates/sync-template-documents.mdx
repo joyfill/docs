@@ -1,0 +1,30 @@
+---
+title: "Sync template documents"
+description: "post https://api-joy.joyfill.io/v1/templates/{identifier}/documents"
+---
+
+Sync the latest template styles and layout changes to pre-existing template documents
+
+This API request uses a paginated approach for updating the template documents. You will need to make the request for each of the "pages" returned in the response object.
+
+For instance, see the example response below:
+
+<CodeGroup>
+  ```bash bash
+  {
+    "page": 1,
+    "pages": 4,
+    "total": 1000
+  }
+  ```
+</CodeGroup>
+
+In order to properly update all associated documents you will need to call this API route 4 times in order to page through all the documents associated with the template.
+
+**Response**
+
+| Key       | Description                                                                                                                                    |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **page**  | Represents the current page of documents that were successfully synced with the template                                                       |
+| **pages** | Represents the total number of document pages. Each page could represent a total of 250 documents, or whatever you value you set as the limit. |
+| **total** | Represents the total number of documents associated with the template.                                                                         |

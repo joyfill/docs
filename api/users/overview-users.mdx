@@ -1,0 +1,34 @@
+---
+title: "Overview"
+description: "A user represents an individual interacting with any part of the Joyfill APIs, UI Components, etc. There are two different types of users within Joyfill: Organization Users and Group Users."
+---
+
+# Organization Users
+
+***
+
+An organization represents your own product or company. A organization user represents someone in your own company. These could be your developers, customer support team, account executives, etc.
+
+An organization user can perform actions against any objects owned by your organization.
+
+**Capabilities**
+
+* **Groups** - create, update, remove, and retrieve any group own by your organization.
+* **Users** - create, update, remove, and retrieve any user within your organization and any user owned by a group within your organization.
+* **Documents** - create, update, remove, and retrieve any document owned by your organization and any document owned by a group within your organization.
+
+# Group Users
+
+***
+
+A group represents a customer of your business/product. Therefore, a group user represents users and employees of your customers.
+
+A group user can only perform actions against objects owned by the group they belong to.
+
+For instance, if you have two customers called Company A and Company B. A user from within Company A cannot access any users, documents, etc. within Company B.
+
+**Capabilities**
+
+* **Groups** - retrieve only the group they belong to.
+* **Users** - create, update, remove, and retrieve only other users within the same group.
+* **Documents** - create, update, remove, and retrieve only other documents within the group they belong to.

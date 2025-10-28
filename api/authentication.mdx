@@ -1,226 +1,104 @@
 ---
 title: "Authentication"
-description: "Authenticate your API requests with Joyfill"
-icon: "key"
+description: "How to authenticate with the Joyfill Platform"
 ---
 
-# Authentication
+You can authenticate requests to Joyfill using an API key or a User Access Token. Joyfill responds with an error if you don’t include a valid authentication method or if the authentication method is expired.
 
-The Joyfill API uses Bearer token authentication to secure all API requests.
+* [API Keys](/docs/authentication#api-keys) - Used for authenticating secure backend requests.
+* [User Access Tokens](/docs/authentication#user-access-tokens) - Used for authenticating client-side (web & mobile) requests.
 
-## Getting Your Access Token
+# API Keys
 
-1. **Sign up** at [joyfill.io](https://joyfill.io)
-2. **Navigate** to Settings → API Access
-3. **Generate** a new access token
-4. **Copy** and store it securely
+***
 
-<Warning>
-  Keep your access tokens secure! Never commit them to version control or expose them in client-side code.
-</Warning>
+API Keys are used for authenticating secure backend requests. API Keys can be created inside the Joyfill Manager API Keys page.
 
-## Using Your Access Token
+## Creation
 
-Include your access token in the `Authorization` header of every API request:
+You can use the Joyfill Manager to view, revoke, and create API keys.
 
-```bash
-curl https://api-joy.joyfill.io/v1/documents \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-```
+Follow the steps below to create a new API Key inside Joyfill Manager:
 
-## Language Examples
+* **Step 1:** In the top navigation bar select the "Settings and Users" tab. When the menu appears select "API Keys". This will navigate you to the API Keys page.
+* **Step 2:** Select the "Add Key" button (*securely copy and store your public and secret key. This is the only time you will have access to the secret key.*)
+* **Step 3:** You will need to base64 encode your Public and Secret keys before they can used with the API. See instructions below.
 
-<CodeGroup>
+### Base64 Encoding
 
-```bash cURL
-curl https://api-joy.joyfill.io/v1/documents \
-  -H "Authorization: Bearer sk_live_abc123xyz456"
-```
-
-```javascript Node.js
-const axios = require('axios');
-
-const client = axios.create({
-  baseURL: 'https://api-joy.joyfill.io/v1',
-  headers: {
-    'Authorization': 'Bearer sk_live_abc123xyz456',
-    'Content-Type': 'application/json'
-  }
-});
-
-// Make requests
-const response = await client.get('/documents');
-```
-
-```python Python
-import requests
-
-headers = {
-    'Authorization': 'Bearer sk_live_abc123xyz456',
-    'Content-Type': 'application/json'
-}
-
-response = requests.get(
-    'https://api-joy.joyfill.io/v1/documents',
-    headers=headers
-)
-```
-
-```ruby Ruby
-require 'net/http'
-require 'json'
-
-uri = URI('https://api-joy.joyfill.io/v1/documents')
-
-request = Net::HTTP::Get.new(uri)
-request['Authorization'] = 'Bearer sk_live_abc123xyz456'
-request['Content-Type'] = 'application/json'
-
-response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-  http.request(request)
-end
-```
-
-```php PHP
-<?php
-$ch = curl_init();
-
-curl_setopt($ch, CURLOPT_URL, 'https://api-joy.joyfill.io/v1/documents');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: Bearer sk_live_abc123xyz456',
-    'Content-Type: application/json'
-]);
-
-$response = curl_exec($ch);
-curl_close($ch);
-?>
-```
-
-</CodeGroup>
-
-## Token Types
-
-| Token Type | Prefix | Use Case |
-|-----------|--------|----------|
-| **Live** | `sk_live_` | Production environment |
-| **Test** | `sk_test_` | Development and testing |
-| **User** | `usr_token_` | User-specific access |
-
-<Tip>
-  Use test tokens during development to avoid affecting production data.
-</Tip>
-
-## Security Best Practices
-
-### ✅ Do
-
-- Store tokens in environment variables
-- Use different tokens for development and production
-- Rotate tokens regularly
-- Revoke tokens immediately if compromised
-- Use server-side API calls only
-
-### ❌ Don't
-
-- Commit tokens to version control
-- Expose tokens in client-side code
-- Share tokens via email or chat
-- Use the same token across multiple applications
-- Hard-code tokens in your application
-
-## Managing Tokens
-
-### Creating a New Token
-
-1. Go to Dashboard → Settings → API Access
-2. Click "Generate New Token"
-3. Add a description (e.g., "Production Server")
-4. Copy the token immediately (it won't be shown again)
-
-### Rotating Tokens
-
-When rotating tokens:
-
-1. Generate a new token
-2. Update your application with the new token
-3. Test thoroughly
-4. Revoke the old token
-
-### Revoking Tokens
-
-Revoke a token immediately if:
-- It's been compromised
-- You no longer need it
-- An employee with access leaves
-- You're rotating tokens
-
-## Environment Variables
-
-Store your tokens securely using environment variables:
+You can encode your API keys using the command: `echo -n <YOUR_PUBLIC_KEY>:<YOUR_SECRET_KEY> | base64`. An example of the command is shown below:
 
 <CodeGroup>
-
-```bash .env
-JOYFILL_API_TOKEN=sk_live_abc123xyz456
-JOYFILL_API_URL=https://api-joy.joyfill.io/v1
-```
-
-```javascript Node.js
-require('dotenv').config();
-
-const apiToken = process.env.JOYFILL_API_TOKEN;
-const apiUrl = process.env.JOYFILL_API_URL;
-```
-
-```python Python
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-api_token = os.getenv('JOYFILL_API_TOKEN')
-api_url = os.getenv('JOYFILL_API_URL')
-```
-
+  ```bash bash
+  echo -n pk_pnUBoEpGNtCq31LbY3Oxgvsw2UO9:sk_SVcxWggo642Wq3sfVW8AuxIFw2cT | base64
+  ```
 </CodeGroup>
 
-## Error Responses
+## Usage
 
-### 401 Unauthorized
+You must authenticate using HTTP basic authentication. Use your API Public Key as the username, and the API Secret as the password.
 
-Token is missing or invalid:
+You must send an Authorization header with the value Basic followed by base 64 encoded `public_key:secret_key` .
 
-```json
-{
-  "error": {
-    "code": "unauthorized",
-    "message": "Invalid or missing authentication token"
-  }
-}
+**Header example:**
+
+<CodeGroup>
+  ```bash bash
+  Authorization: Basic cHVibGljX2tleV9leGFtcGxlOnNlY3JldF9rZXlfZXhhbXBsZQo
+  ```
+</CodeGroup>
+
+# User Access Tokens
+
+***
+
+User Access Tokens are used for authenticating client-side (web & mobile) application requests .
+
+User access tokens can be created, retrieved and revoked via the [User Access Token API endpoints](/reference/overview-users) and inside the [Joyfill Manager users page](https://app-joy.joyfill.io/users).
+
+## Creation
+
+There are two ways to create a User Access Token. The first is from the user page within the Joyfill Manager and the other is via our API. See below for more details.
+
+### Option 1: Joyfill Manager
+
+Follow the steps below to generate a User Access Token for your own user account in the Joyfill Manager:
+
+* **Step 1:** Login to the [Joyfill Manager](https://app-joy.joyfill.io)
+* **Step 2:** In the top navigation bar select the "Settings and Users". When the menu appears select "Manager Users". This will navigate you to the Users page.
+* **Step 3:** Select the "Access Tokens" button next to your user account.
+* **Step 4:** Click the "Add Access Token" button (*securely copy and store your user access token.*)
+
+### Option 2: API Request
+
+Learn more: [Creating User Access Tokens](/reference/create-a-user-access-token)
+
+## Usage
+
+You must authenticate using HTTP bearer authentication.
+
+You must send an Authorization header with the value Bearer followed by the user access token.
+
+Header example:
+
+```
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IjYzYTBjOTZhZTJhZTg2N2Q1ZDE3ZjExNCIsImV4cGlyZXNPbiI6MTY3OTI4ODM5OTk5OX0.QZxoPkb2HAl1C0n4C9FTacEmbPb2DHVMa_iPn4cC08o
 ```
 
-### 403 Forbidden
+***
 
-Token is valid but lacks required permissions:
+[Overview](/docs/main-concepts)
 
-```json
-{
-  "error": {
-    "code": "forbidden",
-    "message": "Insufficient permissions for this resource"
-  }
-}
-```
+[JoyDoc](/docs/joydoc-usage)
 
-## Next Steps
+* [Table of Contents](#)
 
-<CardGroup cols={2}>
-  <Card title="Create Document" icon="file-plus" href="/api/documents/create">
-    Make your first authenticated API call
-  </Card>
-  <Card title="Error Handling" icon="triangle-exclamation" href="/api/errors">
-    Learn about error responses
-  </Card>
-</CardGroup>
+* * [API Keys](#api-keys)
 
+  * * [Creation](#creation)
+    * [Usage](#usage)
+
+  * [User Access Tokens](#user-access-tokens)
+
+  * * [Creation](#creation-1)
+    * [Usage](#usage-1)

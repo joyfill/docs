@@ -1,128 +1,32 @@
 ---
-title: "REST API Introduction"
-description: "Build integrations with the Joyfill REST API"
-icon: "code"
+title: "Overview"
+description: "Getting started with the Joyfill API"
 ---
 
-# Joyfill REST API
+The Joyfill API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
 
-The Joyfill REST API enables you to programmatically manage documents, templates, users, and groups. Build powerful integrations to automate your form workflows.
+# Hosts
 
-## Base URL
+The primary host is `api-joy.joyfill.io` for both read and write operations. All API access must use HTTPS and will require [Authentication](/docs/authentication).
 
-All API requests should be made to:
+# Format
 
-```
-https://api-joy.joyfill.io/v1
-```
+The entire API uses JSON encoded as UTF-8.
 
-## API Versions
+The body of POST and PUT requests must be either a JSON object or a JSON array (depending on the particular endpoint) and their Content-Type header should be set to application/json; charset=UTF-8.
 
-| Version | Status | Notes |
-|---------|--------|-------|
-| v1.1 | Current | Latest stable version |
-| v1.0 | Supported | Legacy version |
+The body of responses is always a JSON object, and their content type is always application/json; charset=UTF-8.
 
-<Note>
-  This documentation covers v1.1 of the Joyfill API. For v1.0 documentation, visit [docs.joyfill.io](https://docs.joyfill.io).
-</Note>
+# Authentication
 
-## Quick Start
+Joyfill uses API keys and User Access Tokens to authenticate API requests.
 
-<Steps>
-  <Step title="Get API Credentials">
-    Sign up at [joyfill.io](https://joyfill.io) and get your API access token from the dashboard.
-  </Step>
-  
-  <Step title="Make Your First Request">
-    Test your credentials with a simple API call:
-    ```bash
-    curl https://api-joy.joyfill.io/v1/documents \
-      -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-    ```
-  </Step>
-  
-  <Step title="Explore Endpoints">
-    Browse our comprehensive API reference to discover all available endpoints.
-  </Step>
-</Steps>
+Learn more: [Authenication](/docs/authentication)
 
-## Core Concepts
+# Identifiers
 
-### Documents
+Identifiers represent readable IDs for resources inside of Joyfill. Identifiers are the primary way you will query, update, and remove resources via the Joyfill API.
 
-Documents are instances of forms filled out by users. Each document can be in different states (draft, submitted, completed) and contains field values.
+Learn more: [Identifiers In Joyfill](/docs/platform-api)
 
-### Templates
-
-Templates define the structure and fields of your forms. Create documents from templates to maintain consistency across your forms.
-
-### Groups
-
-Groups organize documents and control access permissions. Use groups to manage different projects or teams.
-
-### Users
-
-Users can create, edit, and view documents based on their permissions. Manage user access through the API.
-
-## Key Features
-
-<CardGroup cols={2}>
-  <Card title="RESTful Design" icon="diagram-project">
-    Standard HTTP methods and status codes
-  </Card>
-  <Card title="JSON Format" icon="brackets-curly">
-    All requests and responses use JSON
-  </Card>
-  <Card title="Comprehensive" icon="list-check">
-    Full CRUD operations for all resources
-  </Card>
-  <Card title="Secure" icon="shield-check">
-    Bearer token authentication
-  </Card>
-</CardGroup>
-
-## Authentication
-
-All API requests require authentication using a Bearer token in the Authorization header:
-
-```bash
-Authorization: Bearer YOUR_ACCESS_TOKEN
-```
-
-Learn more in the [Authentication](/api/authentication) guide.
-
-## Rate Limits
-
-- **Standard**: 1000 requests per hour
-- **Enterprise**: Custom limits available
-
-<Tip>
-  Contact support@joyfill.io for increased rate limits or enterprise pricing.
-</Tip>
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Authentication" icon="key" href="/api/authentication">
-    Learn how to authenticate your requests
-  </Card>
-  <Card title="Create Document" icon="file-plus" href="/api/documents/create">
-    Create your first document via API
-  </Card>
-  <Card title="Error Handling" icon="triangle-exclamation" href="/api/errors">
-    Understand API errors and responses
-  </Card>
-  <Card title="Templates API" icon="layer-group" href="/api/templates/overview">
-    Manage form templates
-  </Card>
-</CardGroup>
-
-## Support
-
-Need help? We're here for you:
-
-- 📧 Email: support@joyfill.io
-- 📚 Full Documentation: [docs.joyfill.io](https://docs.joyfill.io)
-- 💬 Community: [GitHub Discussions](https://github.com/joyfill/discussions)
-
+Learn more: [Customizing Identifiers](/docs/platform-api#custom-identifiers)
