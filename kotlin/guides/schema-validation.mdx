@@ -1,126 +1,59 @@
----
-title: "Schema Validation"
-description: "Validate form data against JSON schemas"
-icon: "shield-check"
----
-
 # Schema Validation
 
-Use JSON Schema to enforce data structure and validation rules across your forms.
+This guide shows you how to validate document structure using Joyfill's schema validation system.
 
-## Overview
+### **What is Schema Validation**
 
-Schema validation ensures that form data conforms to a predefined structure, providing an additional layer of data integrity.
+Schema validation checks if your JSON document follows the correct Joyfill document structure before creating a form.
 
-## Basic Schema Validation
+### **Enabling/Disabling Schema Validation**
 
-```swift
-let schema: [String: Any] = [
-    "type": "object",
-    "properties": [
-        "email": [
-            "type": "string",
-            "format": "email"
-        ],
-        "age": [
-            "type": "integer",
-            "minimum": 18,
-            "maximum": 100
-        ]
-    ],
-    "required": ["email", "age"]
-]
+Schema validation is **enabled by default** in `rememberDocumentEditor`:
 
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "your_template_id",
-    validationSchema: schema
+```kotlin
+// Disable schema validation
+val editor = rememberDocumentEditor(
+    json = jsonString,
+    validateSchema = false // default is true
 )
-
-formView.loadForm(config: config)
 ```
 
-## Schema Examples
+### **How It Works**
 
-### Email Validation
-```json
-{
-  "type": "string",
-  "format": "email",
-  "minLength": 5,
-  "maxLength": 100
-}
-```
+When `validateSchema = true`:
 
-### Number Range
-```json
-{
-  "type": "number",
-  "minimum": 0,
-  "maximum": 100,
-  "multipleOf": 0.01
-}
-```
+1. Document is validated against the Joyfill schema during editor creation
+2. If validation fails, an error is set and the `onError` callback is triggered
+3. If validation passes, the editor is created normally
 
-### String Pattern
-```json
-{
-  "type": "string",
-  "pattern": "^[A-Z]{2}-[0-9]{4}$"
-}
-```
+### **Schema Error Types**
 
-### Array Validation
-```json
-{
-  "type": "array",
-  "items": {
-    "type": "string"
-  },
-  "minItems": 1,
-  "maxItems": 5,
-  "uniqueItems": true
-}
-```
+| Error Type | Code | When It Happens | Example |
+| --- | --- | --- | --- |
+| **SchemaError.Assertion** | ERROR_SCHEMA_VALIDATION | Document structure doesn't match schema rules | Missing required properties like files or fields |
+| **SchemaError.Format** | ERROR_SCHEMA_FORMAT | JSON format is invalid | Empty/blank string or malformed JSON |
+| **SchemaError.Version** | ERROR_SCHEMA_VERSION | Document version incompatible with SDK | Document created with newer SDK version |
 
-## Handling Schema Errors
+### **Error Monitoring**
 
-```swift
-extension FormViewController: JoyfillFormDelegate {
+Monitor schema errors reactively:
+
+```kotlin
+@Composable
+fun FormWithSchemaValidation() {
+    val editor = rememberDocumentEditor(json = jsonString)
+    val error = editor.error.watchAsState()
     
-    func form(_ form: JoyfillForm, didFailSchemaValidation errors: [SchemaValidationError]) {
-        print("Schema validation failed:")
-        
-        for error in errors {
-            print("Field: \(error.fieldPath)")
-            print("Error: \(error.message)")
-            print("Expected: \(error.expectedType)")
-            print("Received: \(error.actualValue)")
-        }
-        
-        // Show user-friendly error
-        showSchemaErrors(errors)
-    }
-    
-    func showSchemaErrors(_ errors: [SchemaValidationError]) {
-        let message = errors.map { $0.message }.joined(separator: "\n")
-        showAlert(title: "Validation Errors", message: message)
+    if (error != null) {
+        // Schema validation failed
+        Text("Schema Error: ${error.message}")
+    } else {
+        // Schema is valid, show form
+        Form(editor = editor)
     }
 }
 ```
 
-<Note>
-  Schema validation complements field-level validation. Use both for comprehensive data validation.
-</Note>
+## Things to know
 
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Event Handling" icon="bolt" href="/kotlin/guides/event-handling">
-    Master form events
-  </Card>
-  <Card title="API Reference" icon="code" href="/kotlin/api-reference/overview">
-    Explore the full API
-  </Card>
-</CardGroup>
-
+Schema validation is enabled by default (`validateSchema = true`). Disabling schema validation can lead to crashes and should only be used for testing. Schema errors include both user-friendly messages and technical details. Validation happens during editor creation, not during form interaction.
