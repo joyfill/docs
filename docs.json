@@ -68,9 +68,7 @@
           {
             "group": "API Reference",
             "pages": [
-              "kotlin/api-reference/overview",
-              "kotlin/api-reference/functions",
-              "kotlin/api-reference/classes"
+              "kotlin/api-reference/overview"
             ]
           },
           {
