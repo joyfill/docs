@@ -1,0 +1,98 @@
+---
+title: "Bulk create documents"
+description: "post https://api-joy.joyfill.io/v1/documents/bulk"
+---
+
+# Document Creation Strategies
+
+When creating documents within Joyfill there are two strategies you can use: Raw Document and Document from Template.
+
+## Raw Document
+
+With this method you pass the raw `files` and `fields` params on the data object. These params will be used for creating the document.
+
+**Can the`template` param be used with this strategy?**
+
+Yes. The `template` will only be used as the source reference to the template you specified. The custom `files` and `fields` will be used for the actual document creation.
+
+**Why would anyone pass in raw`files` and `fields` with the `template` param?**
+
+This is usually done when the document from template creation cycle is managed on the client side. This strategy allows the new document with all the modifications, updates, etc. and the reference to the original template to all be created with a single request.
+
+**Example Body**
+
+<CodeGroup>
+  ```bash bash
+  {
+    "data": [
+      {
+        "name": "New Document",
+        "group": "group_id",
+        "files": [JoyDocFileObject, ...],
+        "fields": [JoyDocFieldObject, ...],
+        ...
+      },
+      ...
+    ]
+  }
+  ```
+</CodeGroup>
+
+## Document From Template
+
+With this method you can leave the `files` and `fields` params empty and simply pass the `template` param on the data object and the Joyfill API will use the template to generate a new document with `files` and `fields` from the template.
+
+**Example Body**
+
+<CodeGroup>
+  ```bash bash
+  {
+    "data": [
+      {
+        "name": "New Document",
+        "group": "group_id",
+        "template": "temp_identifier",
+        ...
+      },
+      ...
+    ]
+  }
+  ```
+</CodeGroup>
+
+## Mixing Strategies
+
+With the bulk document creation API you can actually mix both creation strategies into one request.
+
+<CodeGroup>
+  ```bash bash
+  {
+    "data": [
+      {
+        "name": "New Document",
+        "group": "group_id",
+        "files": [JoyDocFileObject, ...],
+        "fields": [JoyDocFieldObject, ...],
+        ...
+      },
+      {
+        "name": "Another Document",
+        "group": "group_id",
+        "template": "temp_identifier",
+        ...
+      },
+      ...
+    ]
+  }
+  ```
+</CodeGroup>
+
+# API Response
+
+**Successful and Failed Creations**
+
+The Joyfill bulk document creation API separates the successful creations and failed creations into `data` and `failures` on the response object.
+
+**Documents**
+
+The documents within the `data` param on the response object are only partial documents. They do not contain the `files` and `fields` properties. This ensures that no payload size issues occur. The full documents can be retrieved via the API once you've successfully received this response from the API.

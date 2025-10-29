@@ -16,9 +16,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "ios/introduction",
-              "ios/getting-started/installation",
-              "ios/getting-started/quickstart"
+              "ios/getting-started"
             ]
           },
           {
@@ -56,9 +54,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "kotlin/introduction",
-              "kotlin/getting-started/installation",
-              "kotlin/getting-started/quickstart"
+              "kotlin/getting-started"
             ]
           },
           {
@@ -174,39 +170,67 @@
             "group": "Getting Started",
             "pages": [
               "api/introduction",
-              "api/authentication",
-              "api/errors"
+              "api/authentication"
             ]
           },
           {
             "group": "Documents",
             "pages": [
               "api/documents/overview",
-              "api/documents/create",
-              "api/documents/bulk-create",
-              "api/documents/retrieve",
-              "api/documents/list",
-              "api/documents/update",
-              "api/documents/delete"
+              "api/documents/create-a-document",
+              "api/documents/bulk-create-documents",
+              "api/documents/update-a-document",
+              "api/documents/update-a-document-changelogs",
+              "api/documents/delete-a-document",
+              "api/documents/retrieve-a-document",
+              "api/documents/list-all-documents",
+              "api/documents/search-all-documents",
+              "api/documents/create-document-image-datauri",
+              "api/documents/create-a-document-pdf-export",
+              "api/documents/create-a-document-pdf-export-with-raw-json-payload"
+              
             ]
           },
           {
             "group": "Templates",
             "pages": [
-              "api/templates/overview",
-              "api/templates/create",
-              "api/templates/retrieve",
-              "api/templates/list",
-              "api/templates/update",
-              "api/templates/delete"
+              "api/templates/overview-templates",
+              "api/templates/create-a-template",
+              "api/templates/update-a-template",
+              "api/templates/sync-template-documents",
+              "api/templates/delete-a-template",
+              "api/templates/retrieve-a-template",
+              "api/templates/list-all-templates"
             ]
           },
           {
-            "group": "Additional Resources",
+            "group": "Groups",
             "pages": [
-              "api/groups/overview",
-              "api/users/overview",
-              "api/utilities/overview"
+              "api/groups/overview-groups",
+              "api/groups/create-a-group",
+              "api/groups/delete-a-group",
+              "api/groups/list-all-groups",
+              "api/groups/retrieve-a-group",
+              "api/groups/update-a-group"
+            ]
+          },
+          {
+            "group": "Users",
+            "pages": [
+              "api/users/overview-users",
+              "api/users/create-a-user",
+              "api/users/delete-a-user",
+              "api/users/retrieve-a-user",
+              "api/users/list-all-users",
+              "api/users/create-a-user-access-token",
+              "api/users/delete-a-user-access-token",
+              "api/users/list-all-user-access-tokens"
+            ]
+          },
+          {
+            "group": "Utilities",
+            "pages": [
+              "api/utilities/convert-pdf-to-png-datauri"
             ]
           }
         ]
