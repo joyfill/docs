@@ -16,9 +16,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "ios/introduction",
-              "ios/getting-started/installation",
-              "ios/getting-started/quickstart"
+              "ios/getting-started"
             ]
           },
           {
@@ -56,9 +54,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "kotlin/introduction",
-              "kotlin/getting-started/installation",
-              "kotlin/getting-started/quickstart"
+              "kotlin/getting-started"
             ]
           },
           {
