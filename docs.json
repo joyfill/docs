@@ -33,10 +33,7 @@
           {
             "group": "API Reference",
             "pages": [
-              "ios/api-reference/overview",
-              "ios/api-reference/modules",
-              "ios/api-reference/functions",
-              "ios/api-reference/classes"
+              "ios/api-reference/overview"
             ]
           },
           {
@@ -71,9 +68,7 @@
           {
             "group": "API Reference",
             "pages": [
-              "kotlin/api-reference/overview",
-              "kotlin/api-reference/functions",
-              "kotlin/api-reference/classes"
+              "kotlin/api-reference/overview"
             ]
           },
           {
@@ -180,14 +175,14 @@
               "api/documents/create-a-document",
               "api/documents/bulk-create-documents",
               "api/documents/update-a-document",
-              "api/documents/update-a-document-changelogs",
+              "api/documents/update-a-document-via-changelogs",
               "api/documents/delete-a-document",
               "api/documents/retrieve-a-document",
               "api/documents/list-all-documents",
               "api/documents/search-all-documents",
-              "api/documents/create-document-image-datauri",
+              "api/documents/create-a-image-upload-data-uri",
               "api/documents/create-a-document-pdf-export",
-              "api/documents/create-a-document-pdf-export-with-raw-json-payload"
+              "api/documents/create-a-document-pdf-export-using-raw-json-payload"
               
             ]
           },
@@ -230,7 +225,7 @@
           {
             "group": "Utilities",
             "pages": [
-              "api/utilities/convert-pdf-to-png-datauri"
+              "api/utilities/convert-pdf-to-pngs-data-uri"
             ]
           }
         ]
@@ -238,21 +233,7 @@
     ],
     "global": {
       "anchors": [
-        {
-          "anchor": "Website",
-          "href": "https://joyfill.io",
-          "icon": "globe"
-        },
-        {
-          "anchor": "GitHub",
-          "href": "https://github.com/joyfill",
-          "icon": "github"
-        },
-        {
-          "anchor": "Support",
-          "href": "https://joyfill.io/support",
-          "icon": "life-ring"
-        }
+          
       ]
     }
   },
