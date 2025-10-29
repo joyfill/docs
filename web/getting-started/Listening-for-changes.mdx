@@ -1,0 +1,1301 @@
+## Overview
+
+The Joyfill SDK provides comprehensive event handling to track all user interactions and document changes. This guide covers how to listen for and handle various types of form changes.
+
+## Basic Change Handling
+
+### onChange Event
+
+The primary way to listen for form changes is through the `onChange` callback:
+
+```jsx
+import React, { useState } from 'react';
+import { JoyDoc } from '@joyfill/components';
+
+function MyForm() {
+  const [document, setDocument] = useState(initialDocument);
+
+  const handleChange = (changelogs, updatedDoc) => {
+    console.log('Document changed:', changelogs);
+    console.log('Updated document:', updatedDoc);
+
+    // Process each changelog
+    changelogs.forEach(changelog => {
+      console.log('Change type:', changelog.target);
+      console.log('Field ID:', changelog.fieldId);
+      console.log('Change data:', changelog.change);
+      console.log('Timestamp:', changelog.createdOn);
+    });
+
+    // Update document state
+    setDocument(updatedDoc);
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onChange={handleChange}
+      mode="fill"
+    />
+  );
+}
+
+```
+
+### Changelog Structure
+
+Each changelog contains detailed information about the change:
+
+```jsx
+{
+  sdk: 'js',                    // SDK identifier
+  v: 1,                         // Version number
+  target: 'field.update',       // Change type
+  _id: 'document-id',           // Document ID
+  identifier: 'document-identifier', // Document identifier
+  fieldId: 'field-id',          // Field ID (for field-related changes)
+  fieldIdentifier: 'field-identifier', // Field identifier
+  change: { value: 'new value' }, // Change data
+  createdOn: 1640995200000,      // Timestamp
+  formula: true                  // Formula-driven change (optional)
+}
+
+```
+
+## Event Types
+
+### Field Events
+
+### Field Updates
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  // Filter field updates
+  const fieldUpdates = changelogs.filter(changelog =>
+    changelog.target === 'field.update'
+  );
+
+  if (fieldUpdates.length > 0) {
+    console.log('Fields updated:', fieldUpdates);
+
+    // Process each field update
+    fieldUpdates.forEach(update => {
+      console.log(`Field ${update.fieldIdentifier} changed to:`, update.change.value);
+    });
+  }
+
+  setDocument(updatedDoc);
+};
+
+```
+
+### Field Creation
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  // Filter field creation
+  const fieldCreates = changelogs.filter(changelog =>
+    changelog.target === 'field.create'
+  );
+
+  if (fieldCreates.length > 0) {
+    console.log('Fields created:', fieldCreates);
+
+    // Track new fields
+    fieldCreates.forEach(create => {
+      console.log(`New field created: ${create.fieldIdentifier}`);
+    });
+  }
+
+  setDocument(updatedDoc);
+};
+
+```
+
+### Field Deletion
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  // Filter field deletion
+  const fieldDeletes = changelogs.filter(changelog =>
+    changelog.target === 'field.delete'
+  );
+
+  if (fieldDeletes.length > 0) {
+    console.log('Fields deleted:', fieldDeletes);
+
+    // Track deleted fields
+    fieldDeletes.forEach(del => {
+      console.log(`Field deleted: ${del.fieldIdentifier}`);
+    });
+  }
+
+  setDocument(updatedDoc);
+};
+
+```
+
+### Page Events
+
+### Page Creation
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  // Filter page creation
+  const pageCreates = changelogs.filter(changelog =>
+    changelog.target === 'page.create'
+  );
+
+  if (pageCreates.length > 0) {
+    console.log('Pages created:', pageCreates);
+  }
+
+  setDocument(updatedDoc);
+};
+
+```
+
+### Page Updates
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  // Filter page updates
+  const pageUpdates = changelogs.filter(changelog =>
+    changelog.target === 'page.update'
+  );
+
+  if (pageUpdates.length > 0) {
+    console.log('Pages updated:', pageUpdates);
+  }
+
+  setDocument(updatedDoc);
+};
+
+```
+
+### Table Row Events
+
+### Row Creation
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  // Filter table row creation
+  const rowCreates = changelogs.filter(changelog =>
+    changelog.target === 'field.value.rowCreate'
+  );
+
+  if (rowCreates.length > 0) {
+    console.log('Table rows created:', rowCreates);
+  }
+
+  setDocument(updatedDoc);
+};
+
+```
+
+### Row Updates
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  // Filter table row updates
+  const rowUpdates = changelogs.filter(changelog =>
+    changelog.target === 'field.value.rowUpdate'
+  );
+
+  if (rowUpdates.length > 0) {
+    console.log('Table rows updated:', rowUpdates);
+  }
+
+  setDocument(updatedDoc);
+};
+
+```
+
+# 🎯 Advanced Event Handling Guide
+
+## Overview
+
+The Joyfill SDK provides comprehensive event handling to track all user interactions and document changes. This guide covers all available event handlers and their corresponding changelog structures for advanced form management.
+
+## Event Handler Types
+
+The Joyfill SDK provides the following public event handlers:
+
+- `onFocus` - Field focus events
+- `onBlur` - Field blur events
+- `onChange` - Document changes (field, fieldposition, page, style changes)
+- `onCaptureAsync` - Barcode capture events
+- `onUploadAsync` - File upload events (images)
+- `onFileUpload` - File upload events
+- `onFileClick` - File click events
+- `onFileDelete` - File deletion events
+
+## Event Parameters
+
+All event handlers receive structured parameters with the following common properties:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| v | Number | Changelog version number |
+| sdk | String | Specifies the name of the SDK that generated the changelog object |
+| target | String | Specifies the target change that was made |
+| _id | String | Specifies the target document _id for the change |
+| identifier | String | Specifies the target document identifier for the change |
+| fileId | String | Specifies the target file _id for the change |
+| pageId | String | Specifies the target page _id for the change |
+| fieldId | String | Specifies the target field _id for the change |
+| fieldIdentifier | String | Specifies the target field identifier for the change |
+| fieldPositionId | String | Specifies the target field position _id for the change |
+| change | Object | Object containing the properties and values that should be applied for the change |
+| createdOn | Number | Millisecond timestamp of the change event |
+
+## Focus and Blur Events
+
+### `onFocus`
+
+Triggered when a field receives focus.
+
+**Event Parameters:**
+
+- `params` (Object): Focus context information
+- `event` (Event): The DOM focus event (call `event.blur()` to blur the currently focused field)
+
+**Changelog Structure:**
+
+```jsx
+{
+  sdk: 'js',
+  type: 'fieldPosition.focus',
+  v: 1,
+  _id: documentId,
+  identifier: documentIdentifier,
+  fileId: fileId,
+  pageId: pageId,
+  fieldId: fieldId,
+  fieldPositionId: fieldPositionId,
+  fieldIdentifier: fieldIdentifier
+}
+
+```
+
+**Usage Example:**
+
+```jsx
+function MyForm() {
+  const handleFocus = (params, event) => {
+    const {
+      sdk,
+      type,
+      v,
+      _id,
+      identifier,
+      fileId,
+      pageId,
+      fieldId,
+      fieldPositionId,
+      fieldIdentifier,
+    } = params;
+
+    console.log('Field focused:', {
+      sdk,
+      type,
+      v,
+      _id,
+      identifier,
+      fileId,
+      pageId,
+      fieldId,
+      fieldPositionId,
+      fieldIdentifier,
+    });
+
+    // Auto-blur after 3 seconds
+    setTimeout(() => {
+      console.log('blurring the field', event);
+      if (event && event.blur) event.blur();
+    }, 3000);
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onFocus={handleFocus}
+    />
+  );
+}
+
+```
+
+### `onBlur`
+
+Triggered when a field loses focus.
+
+**Event Parameters:**
+
+- `params` (Object): Blur context information
+- `event` (Event): The DOM blur event
+
+**Changelog Structure:**
+
+```jsx
+{
+  sdk: 'js',
+  v: 1,
+  target: 'fieldPosition.blur',
+  _id: documentId,
+  identifier: documentIdentifier,
+  fileId: fileId,
+  pageId: pageId,
+  fieldId: fieldId,
+  fieldPositionId: fieldPositionId,
+  fieldIdentifier: fieldIdentifier,
+}
+
+```
+
+**Usage Example:**
+
+```jsx
+function MyForm() {
+  const handleBlur = (params, event) => {
+    const {
+      sdk,
+      type,
+      v,
+      _id,
+      identifier,
+      fileId,
+      pageId,
+      fieldId,
+      fieldPositionId,
+      fieldIdentifier,
+    } = params;
+
+    console.log('Field blurred:', {
+      sdk,
+      type,
+      v,
+      _id,
+      identifier,
+      fileId,
+      pageId,
+      fieldId,
+      fieldPositionId,
+      fieldIdentifier,
+    });
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onBlur={handleBlur}
+    />
+  );
+}
+
+```
+
+## Change Events
+
+### `onChange`
+
+The primary event handler for all document changes. Triggered for:
+
+- **Field changes** - Field value or property updates
+- **Field position changes** - Field position, size, or display changes
+- **Page changes** - Page creation, updates, or deletion
+- **Style changes** - Theme and styling modifications
+
+**Event Parameters:**
+
+- `changelogs` (Array): Array of changelog objects describing the changes
+- `updatedDoc` (Object): The updated document state
+
+**Field Change Changelog:**
+
+```jsx
+{
+  sdk: 'js',
+  v: 1,
+  target: 'field.update',
+  _id: documentId,
+  identifier: documentIdentifier,
+  fileId: fileId,
+  pageId: pageId,
+  fieldId: fieldId,
+  fieldIdentifier: fieldIdentifier,
+  fieldPositionId: fieldPositionId,
+  change: {
+    value: 'new value',
+    properties: { /* field properties */ }
+  },
+  createdOn: 1640995200000,
+  formula: false
+}
+
+```
+
+**Field Position Change Changelog:**
+
+```jsx
+{
+  sdk: 'js',
+  v: 1,
+  target: 'fieldPosition.update',
+  _id: documentId,
+  identifier: documentIdentifier,
+  fileId: fileId,
+  pageId: pageId,
+  fieldId: fieldId,
+  fieldPositionId: fieldPositionId,
+  change: {
+    x: 100,
+    y: 200,
+    width: 200,
+    height: 30,
+    _id: fieldPositionId
+  },
+  createdOn: 1640995200000
+}
+
+```
+
+**Page Change Changelog:**
+
+```jsx
+{
+  sdk: 'js',
+  v: 1,
+  target: 'page.update',
+  _id: documentId,
+  identifier: documentIdentifier,
+  fileId: fileId,
+  pageId: pageId,
+  change: {
+    name: 'Updated Page Name',
+    properties: { /* page properties */ }
+  },
+  createdOn: 1640995200000
+}
+
+```
+
+**Style/Theme Change Changelog:**
+
+```jsx
+{
+  sdk: 'js',
+  v: 1,
+  target: 'style.update',
+  _id: documentId,
+  identifier: documentIdentifier,
+  fileId: fileId,
+  change: {
+    theme: 'dark', // or 'light'
+    styles: { /* style properties */ }
+  },
+  createdOn: 1640995200000
+}
+
+```
+
+**Usage Example:**
+
+```jsx
+function MyForm() {
+  const [document, setDocument] = useState(initialDocument);
+
+  const handleChange = (changelogs, updatedDoc) => {
+    console.log('Document changed:', changelogs);
+
+    // Process each changelog
+    changelogs.forEach(changelog => {
+      console.log('Change type:', changelog.target);
+      console.log('Field ID:', changelog.fieldId);
+      console.log('Change data:', changelog.change);
+    });
+
+    // Update document state
+    setDocument(updatedDoc);
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onChange={handleChange}
+    />
+  );
+}
+
+```
+
+## Capture Events
+
+### `onCaptureAsync` - Barcode Capture
+
+Triggered when barcode capture is initiated (e.g., table barcode cell, barcode field).
+
+**Function Signature:**
+
+```jsx
+onCaptureAsync() => Promise<string>
+
+```
+
+**Description:**
+
+- Called without any parameters when user clicks the barcode capture button
+- Expected to return a Promise that resolves to the captured barcode value (string)
+- The returned value will be automatically populated into the barcode field
+
+**Usage Example:**
+
+```jsx
+function MyForm() {
+  const handleCaptureAsync = async () => {
+    console.log('Barcode capture initiated');
+
+    // Example: Open camera/scanner and return barcode value
+    // This is where you would integrate with your barcode scanning library
+    const barcodeValue = await scanBarcode(); // Your barcode scanning logic
+
+    return barcodeValue; // Return the captured barcode string
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onCaptureAsync={handleCaptureAsync}
+    />
+  );
+}
+
+```
+
+## Upload Events
+
+### `onUploadAsync`
+
+Triggered when file upload is initiated for image fields, both in normal fields and table field cells.
+
+**Note:** This function will be called only when `onFileUploadAsync` is not passed into JoyDoc. If `onFileUploadAsync` is present, it will be triggered instead of this.
+
+**Function Signature:**
+
+```jsx
+onUploadAsync(params, files) => Promise<Array<ImageObject>>
+
+```
+
+**Parameters:**
+
+- `params` (Object): Upload context information
+- `files` (Array&lt;File&gt;): Array of File objects selected by the user
+
+**Params Structure:**
+
+**Normal Field Upload:**
+
+```jsx
+{
+  "target": "field.update",
+  "_id": "68ef74d29e5f80ece781b8ed",
+  "identifier": "my-document",
+  "fileId": "file1",
+  "pageId": "page1",
+  "fieldId": "68ef7569f4642997bd016fec",
+  "fieldIdentifier": "field_68ef7569f4642997bd016fec",
+  "fieldPositionId": "68ef75696b31bf638f74c074",
+  "multi": true
+}
+
+```
+
+**Table Field Upload:**
+
+```jsx
+{
+  "target": "field.update",
+  "_id": "68ef74d29e5f80ece781b8ed",
+  "identifier": "my-document",
+  "fileId": "file1",
+  "pageId": "page1",
+  "fieldId": "68ef7569f4642997bd016fec",
+  "fieldIdentifier": "field_68ef7569f4642997bd016fec",
+  "fieldPositionId": "68ef75696b31bf638f74c074",
+  "rowId": "row_12345",
+  "columnId": "column_67890",
+  "multi": true
+}
+
+```
+
+**Files Structure:**
+
+```jsx
+[
+  {
+    "path": "./IMG_4176.jpg",
+    "relativePath": "./IMG_4176.jpg",
+    "lastModified": 1636782919000,
+    "lastModifiedDate": "Sat Nov 13 2021 05:55:19 GMT+0000 (Greenwich Mean Time)",
+    "name": "IMG_4176.jpg",
+    "size": 1024000,
+    "type": "image/jpeg",
+    "webkitRelativePath": ""
+  }
+]
+
+```
+
+**Usage Example:**
+
+```jsx
+function MyForm() {
+  const [document, setDocument] = useState(initialDocument);
+
+  const handleUploadAsync = async (params, fileUploads) => {
+    console.log("onUploadAsync: ", params, fileUploads);
+
+    const resultPromises = await fileUploads.map(async (fileUpload) => {
+      console.log("files uploaded");
+      const dataUri = await getDataUriForFileUpload(fileUpload);
+      return uploadFileAsync(params.identifier, dataUri);
+    });
+
+    return Promise.all(resultPromises)
+      .then((responses) => {
+        const finalResponse = Array.isArray(responses[0])
+          ? responses[0]
+          : responses;
+
+        return finalResponse;
+      })
+      .catch((error) => {
+        if (error) return;
+      });
+  };
+
+  const handleChange = (changelogs, updatedDoc) => {
+    console.log("Document changed:", changelogs);
+
+    // Process each changelog
+    changelogs.forEach((changelog) => {
+      if (changelog.target === "field.update") {
+        console.log("Field updated:", changelog.fieldId);
+        console.log("Multi upload:", changelog.multi);
+
+        // Check if this was a table field upload
+        if (changelog.rowId && changelog.columnId) {
+          console.log("Table field upload:", {
+            fieldId: changelog.fieldId,
+            rowId: changelog.rowId,
+            columnId: changelog.columnId,
+          });
+        } else if (changelog.multi === true) {
+          console.log(
+            "Multiple images uploaded to normal field:",
+            changelog.fieldId
+          );
+        }
+      }
+    });
+
+    // Update document state
+    setDocument(updatedDoc);
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onChange={handleChange}
+      onUploadAsync={handleUploadAsync}
+    />
+  );
+}
+
+// Helper functions
+const getDataUriForFileUpload = async (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
+const uploadFileAsync = async (identifier, dataUri, tableContext = null) => {
+  const uploadData = {
+    identifier,
+    dataUri,
+    ...(tableContext && {
+      rowId: tableContext.rowId,
+      columnId: tableContext.columnId,
+    }),
+  };
+
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(uploadData),
+  });
+
+  const result = await response.json();
+  return {
+    _id: `upload-${Date.now()}`,
+    url: result.url,
+    fileName: result.fileName,
+    filePath: result.filePath,
+  };
+};
+
+```
+
+### `onFileUpload`
+
+Triggered when a file upload is initiated.
+
+**Function Signature:**
+
+```jsx
+onFileUpload(params, files) => Promise<Array<ImageObject>>
+
+```
+
+**Parameters:**
+
+- `params` (Object): '
+- `files` (Array&lt;File&gt;): Array of File objects selected by the user
+
+**Usage Example:**
+
+```jsx
+function MyForm() {
+  const [document, setDocument] = useState(initialDocument);
+
+  const handleFileUploadAsync = async (params, fileUploads) => {
+    console.log('onFileUploadAsync params:', params);
+    console.log('onFileUploadAsync files:', fileUploads);
+
+    const uploadPromises = fileUploads.map(async (file) => {
+      const dataUri = await getDataUriForFileUpload(file);
+      return uploadFileAsync(params.identifier, dataUri);
+    });
+
+    const results = await Promise.all(uploadPromises);
+    return results;
+  };
+
+  const handleChange = (changelogs, updatedDoc) => {
+    console.log('Document changed:', changelogs);
+
+    // Process each changelog
+    changelogs.forEach(changelog => {
+      if (changelog.target === 'field.update') {
+        console.log('Field updated:', changelog.fieldId);
+
+        // Check if this was a table field upload
+        if (changelog.rowId && changelog.columnId) {
+          console.log('Table field upload completed:', {
+            fieldId: changelog.fieldId,
+            rowId: changelog.rowId,
+            columnId: changelog.columnId,
+            multi: changelog.multi
+          });
+        } else {
+          console.log('Normal field upload completed:', {
+            fieldId: changelog.fieldId,
+            multi: changelog.multi
+          });
+        }
+      }
+    });
+
+    setDocument(updatedDoc);
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onChange={handleChange}
+      onFileUploadAsync={handleFileUploadAsync}
+    />
+  );
+}
+
+```
+
+## File Interaction Events
+
+### `onFileClick`
+
+Triggered when a file is clicked or selected in an image field.
+
+**Function Signature:**
+
+```jsx
+onFileClick(params, urlObject) => Promise<void>
+
+```
+
+**Parameters:**
+
+- `params` (Object): Context information about the file click
+- `urlObject` (Object): Information about the clicked file
+
+**Params Object:**
+
+```jsx
+{
+  "_id": "68ef74d29e5f80ece781b8ed",
+  "identifier": "my-document",
+  "fileId": "file1",
+  "pageId": "page1",
+  "fieldId": "68ef81699ee8e13ed8dcd8e3",
+  "fieldIdentifier": "field_68ef81699ee8e13ed8dcd8e3",
+  "fieldPositionId": "68ef8169fb605e9648b562f1"
+}
+
+```
+
+**URL Object:**
+
+```jsx
+{
+  "_id": "68ef8fb9874dbbcfd1189f88",
+  "url": "<https://s3.amazonaws.com/docspace.dev.documents/68a47e5d32dddce3ee2c31a5/documents/my-document/68ef8fb38f7d1d3e8348f894-1760530355509.jpg>",
+  "fileName": "68ef8fb38f7d1d3e8348f894-1760530355509.jpg",
+  "filePath": "68a47e5d32dddce3ee2c31a5/documents/my-document"
+}
+
+```
+
+**Usage Example:**
+
+```jsx
+function MyForm() {
+  const handleFileClick = async (params, urlObject) => {
+    console.log('File clicked:', {
+      params,
+      urlObject
+    });
+
+    const { fieldId, fieldIdentifier } = params;
+    const { url, fileName, _id: fileId } = urlObject;
+
+    console.log('File details:', {
+      fieldId,
+      fieldIdentifier,
+      fileId,
+      fileName,
+      url
+    });
+
+    // Open file in new tab
+    window.open(url, '_blank');
+
+    // Or handle file action based on file type
+    const fileExtension = fileName.split('.').pop().toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+      // Handle image files
+      console.log('Image file clicked:', fileName);
+    } else if (['pdf'].includes(fileExtension)) {
+      // Handle PDF files
+      console.log('PDF file clicked:', fileName);
+    }
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onFileClick={handleFileClick}
+    />
+  );
+}
+
+```
+
+### `onFileDelete`
+
+Triggered when a file is deleted from an image field.
+
+**Function Signature:**
+
+```jsx
+onFileDelete(params, urlObject) => Promise<void>
+
+```
+
+**Parameters:**
+
+- `params` (Object): Context information about the file deletion
+- `urlObject` (Object): Information about the file being deleted
+
+**Usage Example:**
+
+```jsx
+function MyForm() {
+  const handleFileDelete = async (params, urlObject) => {
+    console.log('File delete requested:', {
+      params,
+      urlObject
+    });
+
+    const { fieldId, fieldIdentifier } = params;
+    const { url, fileName, _id: fileId } = urlObject;
+
+    console.log('File to be deleted:', {
+      fieldId,
+      fieldIdentifier,
+      fileId,
+      fileName,
+      url
+    });
+
+    // Confirm deletion
+    const confirmed = confirm(`Are you sure you want to delete "${fileName}"?`);
+
+    if (confirmed) {
+      console.log('File deletion confirmed by user');
+      // File deletion is handled by the SDK
+      // This handler is called before the actual deletion
+    } else {
+      console.log('File deletion cancelled by user');
+      // Prevent deletion (if the SDK supports it)
+    }
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onFileDelete={handleFileDelete}
+    />
+  );
+}
+
+```
+
+## Advanced Change Processing
+
+### Filtering Changes by Type
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  // Filter by change type
+  const fieldChanges = changelogs.filter(c => c.target.startsWith('field.'));
+  const pageChanges = changelogs.filter(c => c.target.startsWith('page.'));
+  const fileChanges = changelogs.filter(c => c.target.startsWith('file.'));
+  const styleChanges = changelogs.filter(c => c.target.startsWith('style.'));
+
+  console.log('Field changes:', fieldChanges);
+  console.log('Page changes:', pageChanges);
+  console.log('File changes:', fileChanges);
+  console.log('Style changes:', styleChanges);
+
+  setDocument(updatedDoc);
+};
+
+```
+
+### Tracking Specific Events
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  // Track theme changes specifically
+  const themeChanges = changelogs.filter(c =>
+    c.target === 'style.update' && c.change.theme
+  );
+
+  if (themeChanges.length > 0) {
+    console.log('Theme changed to:', themeChanges[0].change.theme);
+  }
+
+  setDocument(updatedDoc);
+};
+
+```
+
+## Real-World Examples
+
+### Form Validation
+
+```jsx
+function MyForm() {
+  const [document, setDocument] = useState(initialDocument);
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (changelogs, updatedDoc) => {
+    // Process changes
+    changelogs.forEach(changelog => {
+      if (changelog.target === 'field.update') {
+        // Validate field
+        const fieldId = changelog.fieldId;
+        const fieldValue = changelog.change.value;
+
+        // Perform validation
+        const validationResult = validateField(fieldId, fieldValue);
+
+        if (!validationResult.isValid) {
+          setErrors(prev => ({
+            ...prev,
+            [fieldId]: validationResult.message
+          }));
+        } else {
+          setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[fieldId];
+            return newErrors;
+          });
+        }
+      }
+    });
+
+    setDocument(updatedDoc);
+  };
+
+  return (
+    <div>
+      <JoyDoc
+        doc={document}
+        features={{
+          validateSchema: true
+        }}
+        onChange={handleChange}
+      />
+      {Object.keys(errors).length > 0 && (
+        <div className="errors">
+          {Object.entries(errors).map(([fieldId, message]) => (
+            <div key={fieldId} className="error">
+              {message}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+```
+
+### Auto-Save
+
+```jsx
+function MyForm() {
+  const [document, setDocument] = useState(initialDocument);
+  const [lastSaved, setLastSaved] = useState(null);
+
+  const handleChange = useCallback((changelogs, updatedDoc) => {
+    console.log('Document changed:', changelogs);
+    setDocument(updatedDoc);
+
+    // Auto-save after changes
+    debounce(() => {
+      saveDocument(updatedDoc);
+      setLastSaved(new Date());
+    }, 1000)();
+  }, []);
+
+  return (
+    <div>
+      <JoyDoc
+        doc={document}
+        onChange={handleChange}
+      />
+      {lastSaved && (
+        <div className="save-status">
+          Last saved: {lastSaved.toLocaleTimeString()}
+        </div>
+      )}
+    </div>
+  );
+}
+
+```
+
+### Analytics Tracking
+
+```jsx
+function MyForm() {
+  const [document, setDocument] = useState(initialDocument);
+
+  const handleChange = (changelogs, updatedDoc) => {
+    // Track user interactions
+    changelogs.forEach(changelog => {
+      analytics.track('document_change', {
+        changeType: changelog.target,
+        fieldId: changelog.fieldId,
+        fieldType: getFieldType(changelog.fieldId),
+        timestamp: changelog.createdOn
+      });
+    });
+
+    setDocument(updatedDoc);
+  };
+
+  return (
+    <JoyDoc
+      doc={document}
+      onChange={handleChange}
+    />
+  );
+}
+
+```
+
+### Undo/Redo Functionality
+
+```jsx
+function MyForm() {
+  const [document, setDocument] = useState(initialDocument);
+  const [history, setHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
+  const handleChange = (changelogs, updatedDoc) => {
+    // Add to history
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push({
+      changelogs,
+      document: updatedDoc,
+      timestamp: Date.now()
+    });
+
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+    setDocument(updatedDoc);
+  };
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      const previousState = history[historyIndex - 1];
+      setDocument(previousState.document);
+      setHistoryIndex(historyIndex - 1);
+    }
+  };
+
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      const nextState = history[historyIndex + 1];
+      setDocument(nextState.document);
+      setHistoryIndex(historyIndex + 1);
+    }
+  };
+
+  return (
+    <div>
+      <div className="controls">
+        <button onClick={undo} disabled={historyIndex <= 0}>
+          Undo
+        </button>
+        <button onClick={redo} disabled={historyIndex >= history.length - 1}>
+          Redo
+        </button>
+      </div>
+      <JoyDoc
+        doc={document}
+        onChange={handleChange}
+      />
+    </div>
+  );
+}
+
+```
+
+## Best Practices
+
+### 1. Efficient Change Processing
+
+```jsx
+const handleChange = useCallback((changelogs, updatedDoc) => {
+  // Only process necessary changes
+  const importantChanges = changelogs.filter(c =>
+    c.target === 'field.update' || c.target === 'field.create'
+  );
+
+  if (importantChanges.length > 0) {
+    setDocument(updatedDoc);
+  }
+}, []);
+
+```
+
+### 2. Error Handling
+
+```jsx
+const handleChange = (changelogs, updatedDoc) => {
+  try {
+    // Process changes
+    changelogs.forEach(changelog => {
+      if (changelog.target === 'field.update') {
+        validateFieldChange(changelog);
+      }
+    });
+
+    setDocument(updatedDoc);
+  } catch (error) {
+    console.error('Error processing changes:', error);
+    // Handle error gracefully
+  }
+};
+
+```
+
+## Troubleshooting
+
+### Common Issues
+
+### 1. onChange Not Firing
+
+**Problem:** The onChange callback isn't being called.
+
+**Solution:** Ensure the callback is properly provided:
+
+```jsx
+<JoyDoc
+  doc={document}
+  onChange={handleChange} // Make sure this is provided
+/>
+
+```
+
+### 2. Event Handlers Not Working
+
+**Problem:** Event handlers like onFocus, onBlur, etc. are not being triggered.
+
+**Solution:** Check that the handlers are properly defined and passed to JoyDoc:
+
+```jsx
+<JoyDoc
+  doc={document}
+  onFocus={handleFocus}
+  onBlur={handleBlur}
+  onFileClick={handleFileClick}
+  onFileDelete={handleFileDelete}
+  onUploadAsync={handleUploadAsync}
+  onCaptureAsync={handleCaptureAsync}
+/>
+
+```
+
+### 3. Upload Events Not Working
+
+**Problem:** File upload events are not being triggered.
+
+**Solution:** Ensure you're using the correct event handler and that your upload function returns the expected format:
+
+```jsx
+const handleUploadAsync = async (params, files) => {
+  // Your upload logic here
+  return [
+    {
+      _id: 'upload-id',
+      url: 'uploaded-file-url',
+      fileName: 'file-name.jpg',
+      filePath: 'file-path'
+    }
+  ];
+};
+
+```
+
+This comprehensive guide covers all available event handlers in the Joyfill SDK, providing developers with the complete information needed to implement robust form handling and user interaction tracking.
+

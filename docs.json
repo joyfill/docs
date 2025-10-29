@@ -125,9 +125,8 @@
           {
             "group": "Getting Started",
             "pages": [
-              "web/introduction",
-              "web/getting-started/installation",
-              "web/getting-started/quickstart"
+              "web/getting-started/Getting-Started",
+              "web/getting-started/Listening-for-changes"
             ]
           },
           {
@@ -144,9 +143,7 @@
           {
             "group": "API Reference",
             "pages": [
-              "web/api-reference/overview",
-              "web/api-reference/functions",
-              "web/api-reference/classes"
+              "web/api-reference/overview"
             ]
           },
           {

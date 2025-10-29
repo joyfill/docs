@@ -1,324 +1,271 @@
----
-title: "Populating and Extracting Data"
-description: "Work with form data - populate fields and extract values"
-icon: "database"
----
 
-# Populating and Extracting Data
+This guide explains how to populate and extract data from JoyDoc, focusing on text fields and table fields.
 
-Learn how to populate form fields with existing data and extract user-entered values.
+## 1. Accessing Fields
 
-## Populating Form Data
+You can access fields using `doc.fields`. The `fields` property contains an array of all field objects in the document.
 
-### Load Form with Pre-filled Data
+```jsx
+// Access all fields
+const allFields = doc.fields;
 
-```swift
-let formData: [String: Any] = [
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "john.doe@example.com",
-    "phone": "+1234567890",
-    "address": [
-        "street": "123 Main St",
-        "city": "San Francisco",
-        "state": "CA",
-        "zip": "94105"
-    ]
-]
-
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "your_template_id",
-    initialData: formData
-)
-
-formView.loadForm(config: config)
-```
-
-### Update Field Values Programmatically
-
-```swift
-// Update a single field
-formView.setFieldValue("John", forField: "first_name")
-
-// Update multiple fields
-let updates: [String: Any] = [
-    "email": "newemail@example.com",
-    "phone": "+1987654321"
-]
-formView.setFieldValues(updates)
-```
-
-## Extracting Form Data
-
-### Get All Form Data
-
-```swift
-// Get complete form data
-let formData = formView.getFormData()
-print("Form data: \(formData)")
-
-// Example output:
-// {
-//   "first_name": "John",
-//   "last_name": "Doe",
-//   "email": "john.doe@example.com",
-//   ...
-// }
-```
-
-### Get Specific Field Values
-
-```swift
-// Get single field value
-if let firstName = formView.getFieldValue("first_name") as? String {
-    print("First name: \(firstName)")
+// Example field structure
+{
+  "_id": "name-field",
+  "identifier": "name",
+  "type": "text",
+  "title": "Your Name",
+  "value": "",
+  "file": "file1"
 }
 
-// Get multiple field values
-let fieldIds = ["first_name", "last_name", "email"]
-let values = formView.getFieldValues(fieldIds)
 ```
 
-### Extract Data on Submit
+## 2. Finding Fields
 
-```swift
-extension FormViewController: JoyfillFormDelegate {
+Fields can be found using their `fieldId` (which is the `_id` property of the field).
+
+```jsx
+// Find a specific field by its ID
+const findFieldById = (doc, fieldId) => {
+  return doc.fields.find(field => field._id === fieldId);
+};
+
+// Example usage
+const nameField = findFieldById(doc, "name-field");
+console.log(nameField.title); // "Your Name"
+
+```
+
+## 3. Extracting Data for Non-Table Fields (Text)
+
+At any moment, you can get the latest document from `JoyDoc.onChange` and extract text field values using the fieldId.
+
+```jsx
+// In your JoyDoc component
+<JoyDoc
+  doc={doc}
+  onChange={(changelog, updatedDoc) => {
+    // Extract text field value
+    const textField = updatedDoc.fields.find(
+      (field) => field._id === "name-field"
+    );
+    const textValue = textField.value;
+    console.log("Text field value:", textValue);
+  }}
+/>;
+```
+
+## 4. Populating Data
+
+You can populate fields by injecting values into `doc.fields[].value`. Here's how to populate text fields:
+
+```jsx
+// Populate text fields
+const populateTextFields = (doc) => {
+  const updatedDoc = { ...doc };
+  const updatedFields = [...doc.fields];
+
+  // Find and populate specific text fields
+  const nameField = updatedFields.find(field => field._id === "name-field");
+  if (nameField) {
+    nameField.value = "John Doe";
+  }
+
+  const emailField = updatedFields.find(field => field._id === "email-field");
+  if (emailField) {
+    emailField.value = "john.doe@example.com";
+  }
+
+  updatedDoc.fields = updatedFields;
+  return updatedDoc;
+};
+
+// Example usage
+const populatedDoc = populateTextFields(doc);
+
+```
+
+## 5. Extracting Data for Table Fields
+
+You can get a table field value by mapping through fields and accessing the table field's `value` using the table fieldId.
+
+```jsx
+// Extract table field data
+const extractTableData = (doc, tableFieldId) => {
+  const tableField = doc.fields.find((field) => field._id === tableFieldId);
+
+  if (tableField && tableField.type === "table") {
+    return tableField.value.map((row) => {
+      const rowData = {};
+      // Extract data from each cell
+      Object.keys(row.cells).forEach((columnId) => {
+        const column = tableField.tableColumns.find(
+          (col) => col._id === columnId
+        );
+        rowData[column.title] = row.cells[columnId];
+      });
+      return rowData;
+    });
+  }
+
+  return [];
+};
+
+// Example usage
+const tableData = extractTableData(doc, "68ef815e4c716f176ea8d2ba");
+console.log("Table data:", tableData);
+```
+
+## 6. Populating Table Fields
+
+You can populate table rows by updating the `value.cells` property. Here's how to populate table fields:
+
+```jsx
+// Populate table fields
+const populateTableFields = (doc, tableFieldId) => {
+  const updatedDoc = { ...doc };
+  const updatedFields = [...doc.fields];
+
+  const tableField = updatedFields.find((field) => field._id === tableFieldId);
+
+  if (tableField && tableField.type === "table") {
+    // Create cells object with column data
+    const cells = {};
+    tableField.tableColumns.forEach((column) => {
+      if (column.type === "text") {
+        cells[column._id] = "Sample text data";
+      } else if (column.type === "dropdown") {
+        cells[column._id] = column.options[0]._id; // Select first option
+      }
+    });
+
+    // Create new rows with populated cells
+    const newRows = [
+      {
+        _id: "row1",
+        deleted: false,
+        cells: { ...cells },
+      },
+      {
+        _id: "row2",
+        deleted: false,
+        cells: { ...cells },
+      },
+    ];
+
+    tableField.value = newRows;
+    tableField.rowOrder = ["row1", "row2"];
+  }
+
+  updatedDoc.fields = updatedFields;
+  return updatedDoc;
+};
+
+// Example usage
+const populatedTableDoc = populateTableFields(doc, "68ef815e4c716f176ea8d2ba");
+```
+
+## Complete Example
+
+Here's a complete example showing both population and extraction:
+
+```jsx
+import React, { useState } from "react";
+import JoyDoc from "./JoyDoc";
+
+const MyForm = () => {
+  const [doc, setDoc] = useState(initialDoc);
+
+  // Populate data function
+  const populateData = () => {
+    const updatedDoc = { ...doc };
+    const updatedFields = [...doc.fields];
+
+    // Populate text field
+    const nameField = updatedFields.find((field) => field._id === "name-field");
+    if (nameField) {
+      nameField.value = "Jane Smith";
+    }
+
+    // Populate table field
+    const tableField = updatedFields.find(
+      (field) => field._id === "68ef815e4c716f176ea8d2ba"
+    );
+    if (tableField && tableField.type === "table") {
     
-    func formDidSubmit(_ form: JoyfillForm, data: [String: Any]) {
-        print("Form submitted with data:")
-        
-        // Access specific fields
-        if let name = data["first_name"] as? String {
-            print("Name: \(name)")
+      const cells = {};
+    
+      tableField.tableColumns.forEach((column) => {
+        if (column.type === "text") {
+          cells[column._id] = "Table cell data";
         }
+      });
+
+      tableField.value = [{ _id: "row1", deleted: false, cells: { ...cells } }];
+      tableField.rowOrder = ["row1"];
+    }
+
+    updatedDoc.fields = updatedFields;
+    setDoc(updatedDoc);
+  };
+
+  // Extract data function
+  const extractData = () => {
+  
+    // Extract text field
+    const nameField = doc.fields.find((field) => field._id === "name-field");
+    console.log("Name:", nameField?.value);
+
+    // Extract table data
+    const tableField = doc.fields.find(
+      (field) => field._id === "68ef815e4c716f176ea8d2ba"
+    );
+    
+    if (tableField && tableField.type === "table") {
+    
+      const tableData = tableField.value.map((row) => {
+      
+        const rowData = {};
+       
+        Object.keys(row.cells).forEach((columnId) => {
+       
+          const column = tableField.tableColumns.find(
+            (col) => col._id === columnId
+          );
+       
+          rowData[column.title] = row.cells[columnId];
+       
+        });
+        return rowData;
         
-        // Access nested data
-        if let address = data["address"] as? [String: Any] {
-            print("City: \(address["city"] ?? "")")
-        }
-        
-        // Send to your backend
-        sendToBackend(data)
+      });
+      console.log("Table data:", tableData);
     }
-    
-    func sendToBackend(_ data: [String: Any]) {
-        // Your API call here
-    }
-}
+  };
+
+  return (
+    <div>
+      <button onClick={populateData}>Populate Data</button>
+      <button onClick={extractData}>Extract Data</button>
+
+      <JoyDoc
+        doc={doc}
+        onChange={(changelog, updatedDoc) => {
+          setDoc(updatedDoc);
+        }}
+      />
+    </div>
+  );
+};
 ```
 
-## Working with Different Field Types
+## Key Points to Remember
 
-### Text Fields
-
-```swift
-// Set text value
-formView.setFieldValue("Hello, World!", forField: "description")
-
-// Get text value
-if let text = formView.getFieldValue("description") as? String {
-    print(text)
-}
-```
-
-### Number Fields
-
-```swift
-// Set number value
-formView.setFieldValue(42, forField: "age")
-formView.setFieldValue(99.99, forField: "price")
-
-// Get number value
-if let age = formView.getFieldValue("age") as? Int {
-    print("Age: \(age)")
-}
-```
-
-### Date Fields
-
-```swift
-// Set date value
-let date = Date()
-formView.setFieldValue(date, forField: "birth_date")
-
-// Get date value
-if let birthDate = formView.getFieldValue("birth_date") as? Date {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    print("Birth date: \(formatter.string(from: birthDate))")
-}
-```
-
-### Boolean/Checkbox Fields
-
-```swift
-// Set boolean value
-formView.setFieldValue(true, forField: "agree_to_terms")
-
-// Get boolean value
-if let agreed = formView.getFieldValue("agree_to_terms") as? Bool {
-    print("Agreed: \(agreed)")
-}
-```
-
-### Dropdown/Select Fields
-
-```swift
-// Set selected option
-formView.setFieldValue("option_2", forField: "country")
-
-// Get selected option
-if let country = formView.getFieldValue("country") as? String {
-    print("Selected country: \(country)")
-}
-```
-
-### Multi-select Fields
-
-```swift
-// Set multiple selections
-let selections = ["option_1", "option_3", "option_5"]
-formView.setFieldValue(selections, forField: "interests")
-
-// Get multiple selections
-if let interests = formView.getFieldValue("interests") as? [String] {
-    print("Selected interests: \(interests.joined(separator: ", "))")
-}
-```
-
-## Data Validation
-
-Always validate data before submission:
-
-```swift
-func submitForm() {
-    // Validate first
-    guard formView.validate() else {
-        showAlert(title: "Validation Error", message: "Please fill all required fields")
-        return
-    }
-    
-    // Extract data
-    let formData = formView.getFormData()
-    
-    // Additional custom validation
-    guard isDataValid(formData) else {
-        showAlert(title: "Error", message: "Invalid data")
-        return
-    }
-    
-    // Submit to backend
-    submitToBackend(formData)
-}
-
-func isDataValid(_ data: [String: Any]) -> Bool {
-    // Your custom validation logic
-    return true
-}
-```
-
-## Handling File Uploads
-
-```swift
-// Files are typically represented as URLs or Data
-if let fileURL = formView.getFieldValue("resume") as? URL {
-    print("File path: \(fileURL.path)")
-    
-    // Read file data if needed
-    do {
-        let fileData = try Data(contentsOf: fileURL)
-        print("File size: \(fileData.count) bytes")
-    } catch {
-        print("Error reading file: \(error)")
-    }
-}
-```
-
-## Data Persistence
-
-Save form data locally for later:
-
-```swift
-class FormDataManager {
-    
-    static func saveFormData(_ data: [String: Any], forKey key: String) {
-        let defaults = UserDefaults.standard
-        defaults.set(data, forKey: "form_data_\(key)")
-    }
-    
-    static func loadFormData(forKey key: String) -> [String: Any]? {
-        let defaults = UserDefaults.standard
-        return defaults.dictionary(forKey: "form_data_\(key)")
-    }
-    
-    static func clearFormData(forKey key: String) {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: "form_data_\(key)")
-    }
-}
-
-// Usage
-// Save data
-let formData = formView.getFormData()
-FormDataManager.saveFormData(formData, forKey: "user_profile")
-
-// Load data later
-if let savedData = FormDataManager.loadFormData(forKey: "user_profile") {
-    let config = JoyfillFormConfig(
-        mode: .fill,
-        templateId: "your_template_id",
-        initialData: savedData
-    )
-    formView.loadForm(config: config)
-}
-```
-
-## Auto-save Functionality
-
-Implement auto-save as users fill the form:
-
-```swift
-class FormViewController: UIViewController {
-    
-    var autoSaveTimer: Timer?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupAutoSave()
-    }
-    
-    func setupAutoSave() {
-        // Save every 30 seconds
-        autoSaveTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { [weak self] _ in
-            self?.autoSaveFormData()
-        }
-    }
-    
-    func autoSaveFormData() {
-        let formData = formView.getFormData()
-        FormDataManager.saveFormData(formData, forKey: "current_form")
-        print("✅ Form auto-saved")
-    }
-    
-    deinit {
-        autoSaveTimer?.invalidate()
-    }
-}
-```
-
-<Tip>
-  Always validate data on both client and server side for security and data integrity.
-</Tip>
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Schema Validation" icon="shield-check" href="/web/guides/schema-validation">
-    Validate data against schemas
-  </Card>
-  <Card title="Event Handling" icon="bolt" href="/web/guides/event-handling">
-    Handle form events
-  </Card>
-</CardGroup>
-
+- **Field Access**: Use `doc.fields` to access all fields
+- **Field Finding**: Use `field._id` to find specific fields
+- **Text Fields**: Access value directly with `field.value`
+- **Table Fields**: Access rows through `field.value` array, each row has `cells` object
+- **Population**: Modify `field.value` for text fields, or `field.value[].cells` for table fields
+- **Extraction**: Use `onChange` callback to get the latest document state
+- **Immutable Updates**: Always create new objects when updating to avoid mutation issues
