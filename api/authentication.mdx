@@ -5,8 +5,8 @@ description: "How to authenticate with the Joyfill Platform"
 
 You can authenticate requests to Joyfill using an API key or a User Access Token. Joyfill responds with an error if you don’t include a valid authentication method or if the authentication method is expired.
 
-* [API Keys](/docs/authentication#api-keys) - Used for authenticating secure backend requests.
-* [User Access Tokens](/docs/authentication#user-access-tokens) - Used for authenticating client-side (web & mobile) requests.
+* [API Keys](/api/authentication#api-keys) - Used for authenticating secure backend requests.
+* [User Access Tokens](/api/authentication#user-access-tokens) - Used for authenticating client-side (web & mobile) requests.
 
 # API Keys
 
@@ -54,7 +54,7 @@ You must send an Authorization header with the value Basic followed by base 64 e
 
 User Access Tokens are used for authenticating client-side (web & mobile) application requests .
 
-User access tokens can be created, retrieved and revoked via the [User Access Token API endpoints](/reference/overview-users) and inside the [Joyfill Manager users page](https://app-joy.joyfill.io/users).
+User access tokens can be created, retrieved and revoked via the [User Access Token API endpoints](/api/users/overview-users) and inside the [Joyfill Manager users page](https://app-joy.joyfill.io/users).
 
 ## Creation
 
@@ -71,7 +71,7 @@ Follow the steps below to generate a User Access Token for your own user account
 
 ### Option 2: API Request
 
-Learn more: [Creating User Access Tokens](/reference/create-a-user-access-token)
+Learn more: [Creating User Access Tokens](/api/users/create-a-user-access-token)
 
 ## Usage
 
@@ -85,20 +85,3 @@ Header example:
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IjYzYTBjOTZhZTJhZTg2N2Q1ZDE3ZjExNCIsImV4cGlyZXNPbiI6MTY3OTI4ODM5OTk5OX0.QZxoPkb2HAl1C0n4C9FTacEmbPb2DHVMa_iPn4cC08o
 ```
 
-***
-
-[Overview](/docs/main-concepts)
-
-[JoyDoc](/docs/joydoc-usage)
-
-* [Table of Contents](#)
-
-* * [API Keys](#api-keys)
-
-  * * [Creation](#creation)
-    * [Usage](#usage)
-
-  * [User Access Tokens](#user-access-tokens)
-
-  * * [Creation](#creation-1)
-    * [Usage](#usage-1)
