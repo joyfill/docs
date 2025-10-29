@@ -33,10 +33,7 @@
           {
             "group": "API Reference",
             "pages": [
-              "ios/api-reference/overview",
-              "ios/api-reference/modules",
-              "ios/api-reference/functions",
-              "ios/api-reference/classes"
+              "ios/api-reference/overview"
             ]
           },
           {
@@ -238,21 +235,7 @@
     ],
     "global": {
       "anchors": [
-        {
-          "anchor": "Website",
-          "href": "https://joyfill.io",
-          "icon": "globe"
-        },
-        {
-          "anchor": "GitHub",
-          "href": "https://github.com/joyfill",
-          "icon": "github"
-        },
-        {
-          "anchor": "Support",
-          "href": "https://joyfill.io/support",
-          "icon": "life-ring"
-        }
+          
       ]
     }
   },
