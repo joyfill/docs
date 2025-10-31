@@ -1,0 +1,185 @@
+---
+title: "Usage Examples"
+description: "We utilize the JoyDoc JSON format in all of the Joyfill Platform services. This greatly decreases the learning curve and integration time. Once you learn the JoyDoc JSON format you'll feel right at home with any Joyfill Platform services."
+---
+
+# Examples
+
+***
+
+## JoyDoc Payload
+
+We are going to be utilizing the same JoyDoc JSON (see below) for all three parts of the Joyfill Platform. This will show you how to quickly utilize the same data anywhere.
+
+In the example below we will render some simple elements: a first name text field with gray text and a last name text field with blue text.
+
+<CodeGroup>
+  ```bash bash
+  {
+    "_id": "638ca7c8880dfc1bca968be0", 
+    "name": "JoyDoc",
+    "files": [
+      {
+        "_id": "638ca7c84f04d853e2ac8e1c",
+        "pages": [
+          {
+            "_id": "638ca7c84f04d853e2ac8e11",
+            "name": "Primary Page",
+            "width": 816,
+            "height": 1056,
+            "cols": 4,
+            "rowHeight": 1,
+            "layout": "grid",
+            "presentation": "normal",
+            "fieldPositions": [
+              {
+                "_id": "638ca7c80f6b4b5c29bfd36a",
+                "field": "638ca7c8674374a0508b232a",
+                "type": "text",
+            		"displayType": "original",
+                "x": 0,
+                "y": 0,
+                "width": 2,
+                "height": 60,
+                "fontSize": 14,
+                "fontWeight": "bold",
+                "fontColor": "#738FA7"
+              },
+              {
+                "_id": "638ca7c840427fd8048a3ea7",
+                "field": "638ca7c8840365654634d1f2",
+                "type": "text",
+                "displayType": "original",
+                "x": 2,
+                "y": 0,
+                "width": 2,
+                "height": 60,
+                "fontSize": 14,
+                "fontWeight": "bold",
+                "fontColor": "#0E86D4"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "fields": [
+      {
+        "file": "638ca7c84f04d853e2ac8e1c",
+        "_id": "638ca7c8674374a0508b232a",
+        "type": "text",
+        "title": "First Name",
+        "value": "Joyfill"
+      },
+      {
+        "file": "638ca7c84f04d853e2ac8e1c",
+        "_id": "638ca7c8840365654634d1f2",
+        "type": "text",
+        "title": "Last Name",
+        "value": "Rocks"
+      }
+    ]
+  }
+  ```
+</CodeGroup>
+
+## API
+
+When updating, creating, or doing anything else associated with Joyfill API document endpoints you will use the JoyDoc JSON format. Below is an example of using the JoyDoc JSON to create a new Joyfill Document.
+
+<CodeGroup>
+  ```bash bash
+  import JoyDocJSON from './JoyDoc.json';
+
+  const save = async () => {
+    
+    const response = await fetch(
+      'https://api-joy.joyfill.io/documents',
+      {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization" "Basic <API_BASE64_ENCODED_KEYS>
+        },
+        body: JSON.stringify(JoyDocJSON)
+      }
+    );
+
+    return response.json()
+  }
+
+  save().then((result) => {
+  	console.log(result);
+    //Logs: { name: "JoyDoc", "files": [...], etc.}
+  })
+  ```
+</CodeGroup>
+
+## UI Components
+
+You can render any custom form or pdf into your our UI Components as long as the data is structured as a JoyDoc JSON format. Below is an example utilizing our React UI Component
+
+**Example Code**
+
+<CodeGroup>
+  ```bash bash
+
+  import JoyDocJSON from './JoyDoc.json'
+
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+  import { JoyDoc } from '@joyfill/components';
+
+  function render() {
+    const root = createRoot(document.getElementById('example'););
+    root.render(<JoyDoc doc={JoyDocJSON} />);
+  }
+
+  render();
+  ```
+</CodeGroup>
+
+**Rendered UI Component**
+
+![](/images/docs/b05677c-Screen_Shot_2023-03-21_at_7.56.14_PM.png)
+
+## Exports
+
+The Joyfill Export API generates a visual PDF rendering using the JoyDoc JSON format and generates downloadable files and reports. See below:
+
+<CodeGroup>
+  ```bash bash
+  import JoyDocJSON from './JoyDoc.json';
+
+  const createPDFDownload = async () => {
+    
+    const response = await fetch(
+      'https://api-joy.joyfill.io/documents/exports/pdf',
+      {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization" "Basic <API_BASE64_ENCODED_KEYS>
+        },
+        body: JSON.stringify({ document: JoyDocJSON })
+      }
+    );
+
+    return response.json()
+  }
+
+  createPDFDownload().then((downloadResult) => {
+    //See example below for generated PDF
+  	console.log(downloadResult.download_url);  
+  })
+  ```
+</CodeGroup>
+
+**PDF Download Result**
+
+<Frame caption="Generated PDF">
+  <img src="/images/docs/c45d678-Screen_Shot_2023-03-21_at_3.39.36_PM.png" />
+</Frame>
+
+***
+

@@ -1,0 +1,152 @@
+---
+title: "Populate Custom Data via Identifiers"
+description: "Populate Joyfill Documents and Templates with your custom data using identifiers"
+---
+
+# Overview
+
+In Joyfill you can populate the Joyfill Document or Template field values, selectable options, table rows and more by simply updating the JSON object and following the [JoyDoc format](/joyfill/schema-json).
+
+Utilizing identifiers is recommended because it gives you an easy way to identify what data should be pre-populated in each field. [Learn more about identifiers.](/joyfill/field-identifiers)
+
+Below are common examples of pre-populating data inside a Joyfill Documents and Templates.
+
+# Simple Fields
+
+***
+
+Simple fields represent: `text`, `number`, `date`, etc.
+
+<CodeGroup>
+  ```bash bash
+  const simpleIdentifier = 'simple_identifier';
+
+  /**
+   * Step 1: Find field associated with identifier
+   */
+  const simpleFieldIndex = doc.fields.findIndex((field) => field.identifier === simpleIdentifier);
+
+  /**
+   * Step 2: Update field value 
+   */
+  doc.fields[simpleFieldIndex].value = 'Custom Simple Value';
+  ```
+</CodeGroup>
+
+# Selection Fields
+
+***
+
+Selection fields represent: `dropdown`, `multi-select`, etc.
+
+<CodeGroup>
+  ```bash bash
+  const selectorIdentifier = 'selector_identifier';
+
+  /**
+   * Step 1: Find field associated with identifier
+   */
+  const selectorFieldIndex = doc.fields.findIndex((field) => field.identifier === selectorIdentifier);
+
+  /**
+  * Step 2: Update field selection options 
+  *
+  * - The "_id" option property specifies the actual saved value on the "field.value". Must be a string value.
+  * - The "value" option property specifies what is visually displayed to the user. 
+  */
+  doc.fields[selectorFieldIndex].options = [
+    { _id: 'customIdOne', value: 'First Display Value' },
+    { _id: 'customIdTwo', value: 'Second Display Value' },
+    { _id: 'customIdThree', value: 'Third Display Value' },
+  ];
+
+  /**
+  * Step 3: Pre-select your custom selection option (optional)
+  */
+  doc.fields[selectorFieldIndex].value = 'customIdTwo';
+  ```
+</CodeGroup>
+
+# Table Fields
+
+***
+
+<CodeGroup>
+  ```bash bash
+  const tableIdentifier = 'table_identifier';
+
+  /**
+   * Step 1: Find field associated with identifier
+   */
+  const tableFieldIndex = doc.fields.findIndex((field) => field.identifier === tableIdentifier);
+
+  /**
+  * Step 2: Grab the table column _id and index position by identifier. 
+  *
+  * The column _id and index position will be used to populate selectable options in 
+  * step 3 and set the individual row cell values in step 4. 
+  */
+  const tableDropdownColumnIdentifier = 'dropdown_col_identifier';
+  const tableDropdownColumnIndex = doc.fields[tableFieldIndex].tableColumns.findIndex((field) => field.identifier === tableDropdownColumnIdentifier);
+  const tableDropdownColumnId = doc.fields[tableFieldIndex].tableColumns[tableDropdownColumnIndex]._id;
+
+  const tableTextColumnIdentifier = 'text_col_identifier';
+  const tableTextColumnIndex = doc.fields[tableFieldIndex].tableColumns.findIndex((field) => field.identifier === tableTextColumnIdentifier);
+  const tableTextColumnId = doc.fields[tableFieldIndex].tableColumns[tableTextColumnIndex]._id;
+
+  /**
+  * Step 3: Set custom dropdown column options (optional)
+  *
+  * - The "_id" option property specifies the actual saved value on the "field.value"
+  * - The "value" option property specifies what is visually displayed to the user. 
+  *
+  * The custom options will be selectable in the table row cells associated 
+  * with the target dropdown column.
+  */
+
+  doc.fields[tableFieldIndex].tableColumns[tableDropdownColumnIndex].options = [
+    { _id: 'customColIdOne', value: 'First Display Cell Value' },
+    { _id: 'customColIdTwo', value: 'Second Display Cell Value' },
+    { _id: 'customColIdThree', value: 'Third Display Cell Value' },
+  ];
+
+  /**
+  * Step 4: Pre-populate table rows and row cells (optional) 
+  *
+  * - The "row[x]._id" must be unique for each row.
+  * - The "row[x].cells" must be an object.
+  * - The "row[x].cells['textColumnId']" can be any string or number.
+  * - The "row[x].cells['dropdownColumnId']" must be a table column option ID.
+  */
+  doc.fields[tableFieldIndex].value = [
+    {
+      _id: 'rowOneId', 
+      cells: {
+        [tableTextColumnId]: 'Cell 001',
+        [tableDropdownColumnId]: 'customColIdOne'
+      }
+    },
+    {
+      _id: 'rowTwoId', 
+      cells: {
+        [tableTextColumnId]: 'Cell 002',
+        [tableDropdownColumnId]: 'customColIdTwo'
+      }
+    },
+    {
+      _id: 'rowThreeId', 
+      cells: {} //Empty row cells example
+    }
+  ];
+
+  /**
+  * Step 4: Populate rowOrder with your row Ids. IMPORTANT NOTE: This step is 
+  * required to display the custom rows in the table field.
+  */
+  doc.fields[tableFieldIndex].rowOrder = doc.fields[tableFieldIndex].value.map((row) => row._id);
+  ```
+</CodeGroup>
+
+***
+
+
