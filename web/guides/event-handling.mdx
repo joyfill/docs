@@ -1,208 +1,549 @@
----
-title: "Event Handling"
-description: "Handle form events and user interactions"
-icon: "bolt"
----
+This document provides comprehensive information about all available events in JoyDoc and how to handle them.
 
-# Event Handling
+## Event Overview Table
 
-Master the Joyfill event system to create responsive and interactive form experiences.
+| Event Name | Event Triggers | Purpose |
+| --- | --- | --- |
+| `onFocus` | When a field receives focus | Track field focus events for analytics, validation, or UI updates |
+| `onChange` | When document data changes (field changes, field position changes, page changes, style changes, theme changes) | Handle document updates, save changes, or sync with external systems |
+| `onBlur` | When a field loses focus | Track field blur events for validation or cleanup operations |
+| `onUploadAsync` | When images or files are uploaded | Handle file uploads to external storage or processing services |
+| `onCaptureAsync` | When barcode is captured for table barcode cells | Handle camera capture functionality for barcode fields |
+| `onFileUploadAsync` | When images or files are uploaded | Handle field-specific file uploads with custom logic |
+| `onFileClick` | When a file in a field is clicked | Handle file interactions like opening, previewing, or downloading |
+| `onFileDelete` | When a file in a field is deleted | Handle file deletion with cleanup or confirmation logic |
+| `onError` | When errors occur (schema validation, license, etc.) | Handle and display errors to users |
 
-## Form Delegate
+## Event Details
 
-Implement `JoyfillFormDelegate` to receive form events:
+### onFocus
 
-```swift
-class FormViewController: UIViewController, JoyfillFormDelegate {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        formView.delegate = self
-    }
-    
-    // Form lifecycle events
-    func formDidLoad(_ form: JoyfillForm) {
-        print("Form loaded")
-    }
-    
-    func formWillSubmit(_ form: JoyfillForm) -> Bool {
-        print("Form is about to submit")
-        return true // Return false to cancel submission
-    }
-    
-    func formDidSubmit(_ form: JoyfillForm, data: [String: Any]) {
-        print("Form submitted successfully")
-    }
-    
-    // Field events
-    func form(_ form: JoyfillForm, didUpdateField field: JoyfillField) {
-        print("Field updated: \(field.identifier)")
-    }
-    
-    func form(_ form: JoyfillForm, didFocusField field: JoyfillField) {
-        print("Field focused: \(field.identifier)")
-    }
-    
-    func form(_ form: JoyfillForm, didBlurField field: JoyfillField) {
-        print("Field blurred: \(field.identifier)")
-    }
-    
-    // Error handling
-    func form(_ form: JoyfillForm, didFailWithError error: Error) {
-        print("Error: \(error.localizedDescription)")
-    }
+- **Triggered when**: A field receives focus
+- **Purpose**: Track field focus events for analytics, validation, or UI updates
+
+**Event signature:**
+
+```jsx
+onFocus(params, e) => {
+  // params contains field and document information
+  // e is the native focus event
 }
+
 ```
 
-## Available Events
+**Parameters:**
 
-| Event | Description | Parameters |
-|-------|-------------|------------|
-| `formDidLoad` | Form finished loading | `form` |
-| `formWillSubmit` | Before form submission | `form` |
-| `formDidSubmit` | After successful submission | `form`, `data` |
-| `didUpdateField` | Field value changed | `form`, `field` |
-| `didFocusField` | Field received focus | `form`, `field` |
-| `didBlurField` | Field lost focus | `form`, `field` |
-| `didFailWithError` | Error occurred | `form`, `error` |
+- `params`: Object containing:
+    - `sdk`: 'js'
+    - `v`: 1
+    - `type`: 'fieldPositionFocus'
+    - `_id`: Document ID
+    - `identifier`: Document identifier
+    - `fileId`: File ID
+    - `pageId`: Page ID
+    - `fieldId`: Field ID
+    - `fieldIdentifier`: Field identifier
+    - `fieldPositionId`: Field position ID
+    - `fieldRowId`: Row ID (for table fields)
+    - `fieldColumnId`: Column ID (for table fields)
+    - `fieldColumnIdentifier`: Column identifier (for table fields)
+- `e`: Native DOM focus event
 
-## Field-Specific Events
+**Example:**
 
-Listen to events for specific fields:
+```jsx
+<JoyDoc
+  onFocus={(params, e) => {
+    console.log('Field focused:', params.fieldId);
+    // Call e.blur() to blur the field programmatically
+    setTimeout(() => e.blur(), 3000);
+  }}
+/>
 
-```swift
-formView.addEventListener(forField: "email") { event in
-    switch event {
-    case .valueChanged(let newValue):
-        print("Email changed to: \(newValue)")
-        validateEmail(newValue as? String)
-        
-    case .focused:
-        print("Email field focused")
-        
-    case .blurred:
-        print("Email field blurred")
-        
-    @unknown default:
-        break
-    }
-}
 ```
 
-## Form State Changes
+### onChange
 
-Track form state:
+- **Triggered when**: Document data changes
+- **Purpose**: Handle document updates, save changes, or sync with external systems
 
-```swift
-func form(_ form: JoyfillForm, didChangeState state: JoyfillFormState) {
-    switch state {
-    case .loading:
-        showLoadingIndicator()
-        
-    case .ready:
-        hideLoadingIndicator()
-        
-    case .submitting:
-        disableSubmitButton()
-        showSubmittingIndicator()
-        
-    case .submitted:
-        hideSubmittingIndicator()
-        navigateToSuccessScreen()
-        
-    case .error(let message):
-        hideSubmittingIndicator()
-        showError(message)
-        
-    @unknown default:
-        break
-    }
+**Triggered for:**
+
+- **Field changes** - Field value or property updates
+- **Field position changes** - Field position, size, or display changes
+- **Page changes** - Page creation, updates, or deletion
+- **Style changes** - Theme and styling modifications
+- **Theme changes** - Toggle between themes
+
+All these will cause changes to the document data
+
+**Event signature:**
+
+```jsx
+onChange(changelog, doc) => {
+  // changelog contains the changes made
+  // doc contains the updated document
 }
+
 ```
 
-## Custom Event Handlers
+**Parameters:**
 
-Create custom event handlers for complex logic:
+- `changelog`: Array of change objects describing what was modified
+- `doc`: The updated document object
 
-```swift
-class FormEventHandler {
-    
-    func handleFieldUpdate(_ field: JoyfillField, form: JoyfillForm) {
-        // Log analytics
-        Analytics.trackFieldUpdate(fieldId: field.identifier)
-        
-        // Update dependent fields
-        if field.identifier == "country" {
-            updateStateField(basedOn: field.value, in: form)
+**Example:**
+
+```jsx
+<JoyDoc
+  onChange={(changelog, doc) => {
+    console.log('Document changed:', changelog);
+    console.log('Updated document:', doc);
+
+    // Save changes to server
+    saveDocument(doc);
+
+    // Update local state
+    setDocument(doc);
+  }}
+/>
+
+```
+
+### onBlur
+
+- **Triggered when**: A field loses focus
+- **Purpose**: Track field blur events for validation or cleanup operations
+
+**Event signature:**
+
+```jsx
+onBlur(params, e) => {
+  // params contains field and document information
+  // e is the native blur event
+}
+
+```
+
+**Parameters:**
+
+- `params`: Object containing:
+    - `sdk`: 'js'
+    - `v`: 1
+    - `target`: 'fieldPositionBlur'
+    - `_id`: Document ID
+    - `identifier`: Document identifier
+    - `fileId`: File ID
+    - `pageId`: Page ID
+    - `fieldId`: Field ID
+    - `fieldIdentifier`: Field identifier
+    - `fieldPositionId`: Field position ID
+    - `fieldRowId`: Row ID (for table fields)
+    - `fieldColumnId`: Column ID (for table fields)
+    - `fieldColumnIdentifier`: Column identifier (for table fields)
+- `e`: Native DOM blur event
+
+**Example:**
+
+```jsx
+<JoyDoc
+  onBlur={(params, e) => {
+    console.log('Field blurred:', params.fieldId);
+
+    // Validate field on blur
+    validateField(params.fieldId);
+  }}
+/>
+
+```
+
+### onUploadAsync
+
+- **Triggered when**: Images or files are uploaded
+- **Purpose**: Handle file uploads to external storage or processing services
+
+**Event signature:**
+
+```jsx
+onUploadAsync(params, fileUploads) => {
+  // params contains upload context
+  // fileUploads contains the files to upload
+  // Must return array of file objects with url, fileName, filePath
+}
+
+```
+
+**Parameters:**
+
+- `params`: Object containing upload context and document information
+- `fileUploads`: Array of file objects to upload
+
+**Return value:** Array of file objects with:
+
+- `url`: Public URL of uploaded file
+- `fileName`: Name of the file
+- `filePath`: Path to the file
+
+**Example:**
+
+```jsx
+<JoyDoc
+  onUploadAsync={async (params, fileUploads) => {
+    console.log('Uploading files:', fileUploads);
+
+    const uploadPromises = fileUploads.map(async (file) => {
+      // Upload to your storage service
+      const uploadedFile = await uploadToS3(file);
+
+      return {
+        url: uploadedFile.url,
+        fileName: uploadedFile.fileName,
+        filePath: uploadedFile.filePath
+      };
+    });
+
+    return await Promise.all(uploadPromises);
+  }}
+/>
+
+```
+
+### onCaptureAsync
+
+- **Triggered when**: Barcode is captured for table barcode cells
+- **Purpose**: Handle camera capture functionality for barcode fields
+
+**Event signature:**
+
+```jsx
+onCaptureAsync(params) => {
+  // params contains capture context
+  // Must return URL string of captured barcode
+}
+
+```
+
+**Parameters:**
+
+- `params`: Object containing capture context
+
+**Return value:** String data of the captured barcode
+
+**Example:**
+
+```jsx
+<JoyDoc
+  onCaptureAsync={async (params) => {
+    console.log('Barcode capture initiated:', params);
+
+    // Open camera and capture barcode
+    const barcodeData = await captureBarcode();
+
+    return barcodeData;
+  }}
+/>
+
+```
+
+### onFileUploadAsync
+
+- **Triggered when**: Images or files are uploaded
+- **Purpose**: Handle field-specific file uploads with custom logic
+
+**Event signature:**
+
+```jsx
+onFileUploadAsync(params, fileUploads) => {
+  // params contains field and upload context
+  // fileUploads contains the files to upload
+  // Must return array of file objects with url, fileName, filePath
+}
+
+```
+
+**Parameters:**
+
+- `params`: Object containing field information and upload context
+- `fileUploads`: Array of file objects to upload
+
+**Return value:** Array of file objects with:
+
+- `url`: Public URL of uploaded file
+- `fileName`: Name of the file
+- `filePath`: Path to the file
+
+**Example:**
+
+```jsx
+// Configure in fieldSettings
+const fieldSettings = {
+  field: {
+    onFileUploadAsync: async (params, fileUploads) => {
+      console.log('Field-specific upload:', params.fieldId, fileUploads);
+
+      // Custom upload logic for this specific field
+      const uploadPromises = fileUploads.map(async (file) => {
+        const uploadedFile = await customUploadService(file, params.fieldId);
+
+        return {
+          url: uploadedFile.url,
+          fileName: uploadedFile.fileName,
+          filePath: uploadedFile.filePath
+        };
+      });
+
+      return await Promise.all(uploadPromises);
+    }
+  }
+};
+
+<JoyDoc
+  fieldSettings={fieldSettings}
+/>
+
+```
+
+### onFileClick
+
+- **Triggered when**: A file in a field is clicked
+- **Purpose**: Handle file interactions like opening, previewing, or downloading
+
+**Event signature:**
+
+```jsx
+onFileClick(params, urlObject) => {
+  // params contains field and file context
+  // urlObject contains file information
+}
+
+```
+
+**Parameters:**
+
+- `params`: Object containing:
+    - `fileId`: File ID
+    - `pageId`: Page ID
+    - `fieldId`: Field ID
+    - `fieldIdentifier`: Field identifier
+    - `fieldPositionId`: Field position ID
+- `urlObject`: Object containing:
+    - `url`: File URL
+    - `fileName`: File name
+    - `filePath`: File path
+
+**Example:**
+
+```jsx
+// Configure in fieldSettings
+const fieldSettings = {
+  field: {
+    onFileClick: (params, urlObject) => {
+      console.log('File clicked:', urlObject);
+
+      // Open file in new tab
+      window.open(urlObject.url, '_blank');
+    }
+  }
+};
+
+<JoyDoc
+  fieldSettings={fieldSettings}
+/>
+
+```
+
+### onFileDelete
+
+- **Triggered when**: A file in a field is deleted
+- **Purpose**: Handle file deletion with cleanup or confirmation logic
+
+**Event signature:**
+
+```jsx
+onFileDelete(params, urlObject) => {
+  // params contains field and file context
+  // urlObject contains file information
+}
+
+```
+
+**Parameters:**
+
+- `params`: Object containing:
+    - `fileId`: File ID
+    - `pageId`: Page ID
+    - `fieldId`: Field ID
+    - `fieldIdentifier`: Field identifier
+    - `fieldPositionId`: Field position ID
+- `urlObject`: Object containing:
+    - `url`: File URL
+    - `fileName`: File name
+    - `filePath`: File path
+
+**Example:**
+
+```jsx
+// Configure in fieldSettings
+const fieldSettings = {
+  field: {
+    onFileDelete: async (params, urlObject) => {
+      console.log('File deleted:', urlObject);
+
+      // Show confirmation dialog
+      const confirmed = await showConfirmDialog(
+        `Are you sure you want to delete ${urlObject.fileName}?`
+      );
+
+      if (confirmed) {
+        // Delete from storage service
+        await deleteFromStorage(urlObject.filePath);
+      }
+
+      return confirmed;
+    }
+  }
+};
+
+<JoyDoc
+  fieldSettings={fieldSettings}
+/>
+
+```
+
+### onError
+
+- **Triggered when**: Errors occur (schema validation, license validation, etc.)
+- **Purpose**: Handle and display errors to users
+
+**Event signature:**
+
+```jsx
+onError(error) => {
+  // error contains error information
+}
+
+```
+
+**Parameters:**
+
+- `error`: Object containing error information:
+    - For schema validation errors: Validation error details
+    - For license errors: `{ code: 'LICENSE_VALIDATION_ERROR', message: string, type: 'license' }`
+
+**Example:**
+
+```jsx
+<JoyDoc
+  onError={(error) => {
+    console.error('JoyDoc Error:', error);
+
+    if (error.type === 'license') {
+      showLicenseError(error.message);
+    } else {
+      showGenericError('An error occurred. Please try again.');
+    }
+  }}
+/>
+
+```
+
+## Complete Example
+
+Here's a complete example showing how to use all events:
+
+```jsx
+import React, { useState } from 'react';
+import JoyDoc from './JoyDoc';
+
+const MyJoyDocApp = () => {
+  const [doc, setDoc] = useState(initialDoc);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fieldSettings = {
+    field: {
+      onFileUploadAsync: async (params, fileUploads) => {
+        setIsLoading(true);
+        try {
+          const uploadPromises = fileUploads.map(async (file) => {
+            const uploadedFile = await uploadToS3(file);
+            return {
+              url: uploadedFile.url,
+              fileName: uploadedFile.fileName,
+              filePath: uploadedFile.filePath
+            };
+          });
+          return await Promise.all(uploadPromises);
+        } finally {
+          setIsLoading(false);
         }
-        
-        // Auto-save
-        autoSaveForm(form)
-    }
-    
-    func updateStateField(basedOn country: Any?, in form: JoyfillForm) {
-        guard let country = country as? String else { return }
-        
-        // Load states for selected country
-        let states = getStates(for: country)
-        form.updateFieldOptions("state", options: states)
-    }
-    
-    func autoSaveForm(_ form: JoyfillForm) {
-        let data = form.getData()
-        FormDataManager.saveFormData(data, forKey: form.id)
-    }
-}
-```
-
-## Event Debouncing
-
-Debounce rapid events like typing:
-
-```swift
-class DebouncedEventHandler {
-    
-    private var workItem: DispatchWorkItem?
-    private let delay: TimeInterval
-    
-    init(delay: TimeInterval = 0.5) {
-        self.delay = delay
-    }
-    
-    func debounce(_ action: @escaping () -> Void) {
-        workItem?.cancel()
-        
-        let newWorkItem = DispatchWorkItem(block: action)
-        workItem = newWorkItem
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: newWorkItem)
-    }
-}
-
-// Usage
-let debouncer = DebouncedEventHandler(delay: 0.5)
-
-func form(_ form: JoyfillForm, didUpdateField field: JoyfillField) {
-    if field.identifier == "search" {
-        debouncer.debounce {
-            self.performSearch(query: field.value as? String)
+      },
+      onFileClick: (params, urlObject) => {
+        window.open(urlObject.url, '_blank');
+      },
+      onFileDelete: async (params, urlObject) => {
+        const confirmed = await showConfirmDialog(
+          `Delete ${urlObject.fileName}?`
+        );
+        if (confirmed) {
+          await deleteFromStorage(urlObject.filePath);
         }
+        return confirmed;
+      }
     }
-}
+  };
+
+  return (
+    <div>
+      {isLoading && <div>Uploading...</div>}
+
+      <JoyDoc
+        doc={doc}
+        fieldSettings={fieldSettings}
+        onChange={(changelog, updatedDoc) => {
+          console.log('Document changed:', changelog);
+          setDoc(updatedDoc);
+          saveDocument(updatedDoc);
+        }}
+        onFocus={(params, e) => {
+          console.log('Field focused:', params.fieldId);
+          analytics.track('field_focused', params);
+        }}
+        onBlur={(params, e) => {
+          console.log('Field blurred:', params.fieldId);
+          validateField(params.fieldId);
+        }}
+        onUploadAsync={async (params, fileUploads) => {
+          const uploadPromises = fileUploads.map(async (file) => {
+            const uploadedFile = await uploadToS3(file);
+            return {
+              url: uploadedFile.url,
+              fileName: uploadedFile.fileName,
+              filePath: uploadedFile.filePath
+            };
+          });
+          return await Promise.all(uploadPromises);
+        }}
+        onCaptureAsync={async (params) => {
+          const barcodeData = await captureBarcode();
+          return barcodeData;
+        }}
+        onError={(error) => {
+          console.error('JoyDoc Error:', error);
+          showError(error.message || 'An error occurred');
+        }}
+      />
+    </div>
+  );
+};
+
 ```
 
-<Tip>
-  Use event debouncing for performance-intensive operations like API calls or complex validations.
-</Tip>
+## Best Practices
 
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="API Reference" icon="code" href="/web/api-reference/overview">
-    Explore the complete API
-  </Card>
-  <Card title="Release Notes" icon="newspaper" href="/web/changelogs/releases">
-    See what's new
-  </Card>
-</CardGroup>
-
+1. **Async Event Handlers**: Always use `async/await` for upload and capture events
+2. **Error Handling**: Implement proper error handling in all async event handlers
+3. **Loading States**: Show loading indicators during file uploads
+4. **Validation**: Use `onBlur` for field validation
+5. **Analytics**: Use `onFocus` and `onChange` for user interaction tracking
+6. **File Management**: Implement proper cleanup in `onFileDelete` handlers
+7. **Performance**: Debounce `onChange` events if needed for frequent updates

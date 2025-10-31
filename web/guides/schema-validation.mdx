@@ -1,126 +1,310 @@
----
-title: "Schema Validation"
-description: "Validate form data against JSON schemas"
-icon: "shield-check"
----
-
-# Schema Validation
-
-Use JSON Schema to enforce data structure and validation rules across your forms.
-
 ## Overview
 
-Schema validation ensures that form data conforms to a predefined structure, providing an additional layer of data integrity.
+Schema validation in JoyDoc ensures that documents conform to the expected structure and version compatibility. It validates the document's JSON schema against the official JoyDoc schema definition and checks version compatibility.
 
-## Basic Schema Validation
+### Manual Schema Validation
 
-```swift
-let schema: [String: Any] = [
-    "type": "object",
-    "properties": [
-        "email": [
-            "type": "string",
-            "format": "email"
-        ],
-        "age": [
-            "type": "integer",
-            "minimum": 18,
-            "maximum": 100
-        ]
-    ],
-    "required": ["email", "age"]
-]
+You can also validate schemas manually:
 
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "your_template_id",
-    validationSchema: schema
-)
+```jsx
+import { validateSchema } from '@joyfill/components';
 
-formView.loadForm(config: config)
-```
+const schemaError = validateSchema(doc);
 
-## Schema Examples
-
-### Email Validation
-```json
-{
-  "type": "string",
-  "format": "email",
-  "minLength": 5,
-  "maxLength": 100
+if (schemaError) {
+  console.log('Schema validation failed:', schemaError);
+} else {
+  console.log('Document schema is valid');
 }
+
 ```
 
-### Number Range
-```json
-{
-  "type": "number",
-  "minimum": 0,
-  "maximum": 100,
-  "multipleOf": 0.01
-}
+## Enabling/Disabling Schema Validation
+
+### Default Behavior
+
+Schema validation is **enabled by default** in the JoyDoc component.
+
+### Enabling Schema Validation
+
+Schema validation is enabled by default, but you can explicitly enable it:
+
+```jsx
+<JoyDoc
+  doc={document}
+  mode="edit"
+  features={{
+    validateSchema: true  // Explicitly enables schema validation
+  }}
+/>
+
 ```
 
-### String Pattern
-```json
-{
-  "type": "string",
-  "pattern": "^[A-Z]{2}-[0-9]{4}$"
-}
+### Disabling Schema Validation
+
+To disable schema validation, set `features.validateSchema` to `false`:
+
+```jsx
+<JoyDoc
+  doc={document}
+  mode="edit"
+  features={{
+    validateSchema: false  // Disables schema validation
+  }}
+/>
+
 ```
 
-### Array Validation
-```json
+## How Schema Validation Works
+
+### Basic Usage
+
+Schema validation is automatically performed by the JoyDoc component when enabled:
+
+```jsx
+import { JoyDoc } from '@joyfill/components';
+
+// Schema validation is enabled by default
+<JoyDoc
+  doc={document}
+  mode="edit"
+	features={{
+	  validateSchema: true
+	}}
+  onError={(error) => {
+    if (error.code === 'ERROR_SCHEMA_VALIDATION') {
+      console.log('Schema validation failed:', error);
+    }
+  }}
+/>
+
+```
+
+## Schema Validation Process
+
+The validation process follows these steps:
+
+1. **Version Compatibility Check**: Verifies the document's schema version is compatible with the current SDK
+2. **JSON Schema Validation**: Validates the document structure against the official JoyDoc schema
+3. **Error Reporting**: Returns detailed error information if validation fails
+
+## Validation Results
+
+### Success Case
+
+When validation passes, the function returns `undefined`:
+
+```jsx
+const result = validateSchema(validDoc);
+console.log(result); // undefined (no errors)
+
+```
+
+### Error Cases
+
+When validation fails, an error object is returned with the following structure:
+
+```jsx
 {
-  "type": "array",
-  "items": {
-    "type": "string"
+  code: 'ERROR_SCHEMA_VALIDATION' | 'ERROR_SCHEMA_VERSION',
+  message: 'Error description',
+  details: {
+    schemaVersion: '2.0.0',
+    sdkVersion: '3.1.4'
   },
-  "minItems": 1,
-  "maxItems": 5,
-  "uniqueItems": true
+  errors?: [...] // Only present for schema validation errors
 }
+
 ```
 
-## Handling Schema Errors
+## Error Types
 
-```swift
-extension FormViewController: JoyfillFormDelegate {
-    
-    func form(_ form: JoyfillForm, didFailSchemaValidation errors: [SchemaValidationError]) {
-        print("Schema validation failed:")
-        
-        for error in errors {
-            print("Field: \(error.fieldPath)")
-            print("Error: \(error.message)")
-            print("Expected: \(error.expectedType)")
-            print("Received: \(error.actualValue)")
-        }
-        
-        // Show user-friendly error
-        showSchemaErrors(errors)
-    }
-    
-    func showSchemaErrors(_ errors: [SchemaValidationError]) {
-        let message = errors.map { $0.message }.joined(separator: "\n")
-        showAlert(title: "Validation Errors", message: message)
-    }
+### 1. Schema Version Error
+
+**Code**: `ERROR_SCHEMA_VERSION`
+
+Occurs when the document's schema version is incompatible with the current SDK version.
+
+```jsx
+{
+  code: 'ERROR_SCHEMA_VERSION',
+  message: 'Error detected with targeted schema version.',
+  error: 'The targeted version of 1.0.0 is not supported. Version 2.0.0 must be used.',
+  details: {
+    schemaVersion: '2.0.0',
+    sdkVersion: '3.1.4'
+  }
 }
+
 ```
 
-<Note>
-  Schema validation complements field-level validation. Use both for comprehensive data validation.
-</Note>
+**Common causes:**
 
-## Next Steps
+- Using an outdated document format
+- Document created with an older SDK version
+- Manual document editing with incorrect version
 
-<CardGroup cols={2}>
-  <Card title="Event Handling" icon="bolt" href="/web/guides/event-handling">
-    Master form events
-  </Card>
-  <Card title="API Reference" icon="code" href="/web/api-reference/overview">
-    Explore the full API
-  </Card>
-</CardGroup>
+### 2. Schema Validation Error
 
+**Code**: `ERROR_SCHEMA_VALIDATION`
+
+Occurs when the document structure doesn't match the expected schema.
+
+```jsx
+{
+  code: 'ERROR_SCHEMA_VALIDATION',
+  message: 'Error detected during schema validation',
+  details: {
+    schemaVersion: '2.0.0',
+    sdkVersion: '3.1.4'
+  },
+  errors: [
+    {
+      instancePath: '/fields/0',
+      schemaPath: '#/properties/fields/items/required',
+      keyword: 'required',
+      params: { missingProperty: 'type' },
+      message: "must have required property 'type'"
+    }
+  ]
+}
+
+```
+
+**Common causes:**
+
+- Missing required properties
+- Invalid field types
+- Malformed document structure
+- Corrupted document data
+
+## Error Handling
+
+### In JoyDoc Component
+
+Handle schema validation errors using the `onError` callback:
+
+```jsx
+<JoyDoc
+  doc={document}
+  mode="edit"
+  features={{
+	  validateSchema: true
+  }}
+  onError={(error) => {
+    switch (error.code) {
+      case 'ERROR_SCHEMA_VERSION':
+        console.error('Schema version incompatible:', error.error);
+        // Handle version incompatibility
+        break;
+      case 'ERROR_SCHEMA_VALIDATION':
+        console.error('Schema validation failed:', error.errors);
+        // Handle schema validation errors
+        break;
+      default:
+        console.error('Unknown error:', error);
+    }
+  }}
+/>
+
+```
+
+## Implementation Example
+
+```jsx
+import React, { useState, useEffect } from "react";
+import { JoyDoc, validateSchema } from "@joyfill/components";
+
+function DocumentEditor() {
+  const [doc, setDoc] = useState(null);
+  const [schemaError, setSchemaError] = useState(null);
+
+  useEffect(() => {
+    if (doc) {
+      const error = validateSchema(doc);
+      setSchemaError(error);
+    }
+  }, [doc]);
+
+  const handleError = (error) => {
+    if (error.code === "ERROR_SCHEMA_VALIDATION") {
+      setSchemaError(error);
+    }
+  };
+
+  return (
+    <div>
+      {/* Schema Error Display */}
+      {schemaError && (
+        <div
+          style={{
+            padding: "20px",
+            margin: "20px",
+            border: "2px solid #f44336",
+            borderRadius: "8px",
+            backgroundColor: "#ffebee",
+          }}
+        >
+          <h3 style={{ color: "#c62828", margin: "0 0 10px 0" }}>
+            Schema Validation Error
+          </h3>
+          <p style={{ margin: "0 0 10px 0" }}>{schemaError.message}</p>
+
+          {schemaError.code === "ERROR_SCHEMA_VERSION" && (
+            <p style={{ margin: "0 0 10px 0" }}>
+              <strong>Error:</strong> {schemaError.error}
+            </p>
+          )}
+
+          <p style={{ margin: "0 0 10px 0" }}>
+            <strong>Schema Version:</strong> {schemaError.details.schemaVersion}
+          </p>
+          <p style={{ margin: "0 0 10px 0" }}>
+            <strong>SDK Version:</strong> {schemaError.details.sdkVersion}
+          </p>
+
+          {schemaError.errors && (
+            <details style={{ marginTop: "10px" }}>
+              <summary style={{ cursor: "pointer", fontWeight: "bold" }}>
+                Validation Details
+              </summary>
+              <pre
+                style={{
+                  marginTop: "10px",
+                  padding: "10px",
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: "4px",
+                  overflow: "auto",
+                  fontSize: "12px",
+                }}
+              >
+                {JSON.stringify(schemaError.errors, null, 2)}
+              </pre>
+            </details>
+          )}
+        </div>
+      )}
+
+      <JoyDoc
+        doc={doc}
+        mode="edit"
+        onError={handleError}
+        features={{
+          validateSchema: true, // Explicitly enable schema validation
+        }}
+      />
+    </div>
+  );
+}
+
+export default DocumentEditor;
+```
+
+## Key points:
+
+- **Schema validation is enabled by default** in JoyDoc components
+- **Version compatibility** is checked using major version numbers
+- **Two types of errors**: Schema version errors and schema validation errors
+- **Always handle errors** using the `onError` callback
+- **Validate documents** before processing to prevent runtime errors
+- **Use manual validation** for programmatic document validation

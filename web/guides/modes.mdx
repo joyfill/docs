@@ -1,109 +1,96 @@
----
-title: "Form Modes"
-description: "Understanding readonly, fill, and edit modes"
-icon: "toggle-on"
----
+## Overview
 
-# Form Modes
+The Joyfill Components SDK supports three distinct modes that control how users can interact with your forms: **Edit Mode**, **Fill Mode**, and **Read-Only Mode**.
 
-Joyfill supports three distinct modes for form rendering, each designed for specific use cases.
+## Edit Mode (Default)
 
-## Available Modes
+**Edit Mode** (`edit`) is the default mode that allows full form design, styling, and configuration capabilities.
 
-### Readonly Mode
+```jsx
 
-Display forms in a non-editable state, perfect for viewing submitted forms or archived documents.
+ <JoyDoc 
+	 doc={document} 
+	 onChange={handleChange} 
+	 mode="edit" 
+	 />
 
-```swift
-let config = JoyfillFormConfig(
-    mode: .readonly,
-    templateId: "your_template_id"
+```
+
+**Features:**
+
+- Full form design and layout capabilities
+- Field creation, editing, and deletion
+- Field positioning and resizing
+- Form styling and theme customization
+- Page management (create, duplicate, delete)
+- Table and collection field management
+- Formula configuration
+- Field settings and validation rules
+- All interactive design elements are functional
+
+## Fill Mode
+
+**Fill Mode** (`fill`) allows users to input data into pre-configured forms without design capabilities.
+
+```jsx
+const documentEditor = (
+  <JoyDoc
+    doc={document}
+    onChange={handleChange}
+    mode="fill"  // Must be explicitly set
+  />
 )
 
-formView.loadForm(config: config)
 ```
 
-**Use Cases:**
-- Viewing completed forms
-- Displaying form history
-- Showing read-only receipts
-- Archival purposes
+**Features:**
 
-### Fill Mode
+- Users can input data into all field types
+- File uploads and camera capture are enabled
+- Form validation is active
+- Page navigation is available for multi-page forms
+- Field interactions (focus, blur, change) are tracked
+- All data entry functionality is operational
+- Design elements are hidden or disabled
 
-Allow users to fill out empty or partially completed forms.
+## Read-Only Mode
 
-```swift
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "your_template_id"
+**Read-Only Mode** (`readonly`) displays forms for viewing only, preventing any user modifications.
+
+```jsx
+const documentEditor = (
+  <JoyDoc
+    doc={document}
+    onChange={handleChange}
+    mode="readonly"  // Must be explicitly set
+  />
 )
 
-formView.loadForm(config: config)
 ```
 
-**Use Cases:**
-- New form submissions
-- Initial data entry
-- Customer-facing forms
-- Survey collection
+**Features:**
 
-### Edit Mode
+- All fields are disabled for input
+- File uploads and camera capture are disabled
+- Form data is displayed but cannot be modified
+- Page navigation remains functional for multi-page forms
+- Field interactions are limited to viewing
+- All design and editing capabilities are disabled
+- Form validation is not enforced
 
-Enable editing of existing form data, ideal for updating previously submitted information.
+## Mode Comparison
 
-```swift
-let config = JoyfillFormConfig(
-    mode: .edit,
-    templateId: "your_template_id",
-    documentId: "existing_document_id"
-)
-
-formView.loadForm(config: config)
-```
-
-**Use Cases:**
-- Updating submitted forms
-- Correcting errors
-- Adding missing information
-- Form revisions
-
-## Switching Modes Dynamically
-
-You can change the form mode at runtime:
-
-```swift
-// Switch to readonly mode
-formView.setMode(.readonly)
-
-// Switch to edit mode
-formView.setMode(.edit)
-
-// Switch to fill mode
-formView.setMode(.fill)
-```
-
-<Note>
-  Switching modes will preserve the current form data unless you explicitly reload the form.
-</Note>
-
-## Mode-Specific Behaviors
-
-| Feature | Readonly | Fill | Edit |
-|---------|----------|------|------|
-| Edit fields | ❌ | ✅ | ✅ |
-| Submit button | ❌ | ✅ | ✅ |
-| Field validation | ❌ | ✅ | ✅ |
-| Data persistence | - | ✅ | ✅ |
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Event Handling" icon="bolt" href="/web/guides/event-handling">
-    Learn how to handle form events
-  </Card>
-  <Card title="Data Management" icon="database" href="/web/guides/populating-and-extracting-data">
-    Work with form data
-  </Card>
-</CardGroup>
-
+| Feature | Edit Mode | Fill Mode | Read-Only Mode |
+| --- | --- | --- | --- |
+| Field Creation | ✅ | ❌ | ❌ |
+| Field Editing | ✅ | ❌ | ❌ |
+| Field Positioning | ✅ | ❌ | ❌ |
+| Data Input | ✅ | ✅ | ❌ |
+| File Uploads | ✅ | ✅ | ❌ |
+| Form Validation | ✅ | ✅ | ❌ |
+| Page Management | ✅ | ❌ | ❌ |
+| Formula Configuration | ✅ | ❌ | ❌ |
+| Theme Customization | ✅ | ❌ | ❌ |
+| Field Settings | ✅ | ❌ | ❌ |
+| Page Navigation | ✅ | ✅ | ✅ |
+| Print/Export | ✅ | ✅ | ✅ |

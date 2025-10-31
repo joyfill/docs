@@ -1,217 +1,384 @@
----
-title: "Image Upload Handling"
-description: "Handle image uploads and attachments in forms"
-icon: "image"
----
+## Overview
 
-# Image Upload Handling
+The JoyDoc SDK provides comprehensive image upload functionality through image fields, supporting both single and multiple image uploads with flexible handling options.
 
-Learn how to handle image uploads, configure storage options, and manage image attachments in your iOS forms.
+**Architecture Overview**
 
-## Basic Image Upload
+When users interact with image fields, the SDK triggers upload events that your application must handle by implementing upload handlers.
 
-By default, Joyfill handles image uploads automatically:
+**Flow:**
 
-```swift
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "your_template_id"
-)
+1. User selects image field → SDK creates upload event
+2. Your upload handler receives the event with file data
+3. You process selected images (resize, upload to server, etc.)
+4. Return processed file URLs to the SDK
+5. SDK updates the form with the provided URLs
 
-// Images will be uploaded to Joyfill's default storage
-formView.loadForm(config: config)
+## Upload Methods
+
+JoyDoc provides two methods for handling image uploads:
+
+- **`onFileUploadAsync`** (configured in field settings)
+- **`onUploadAsync`** (configured in JoyDoc component props)
+
+## Basic Implementation Examples
+
+**onFieldUploadAsync**
+
+You can also configure `onFileUploadAsync` via field settings as documented in the [Joyfill Customize Settings guide](https://docs.joyfill.io/docs/customize-settings#/field--field_type--field_identifier):
+
+```jsx
+const fieldSettings = {
+  field: {
+    onFileUploadAsync: async (params, fileUploads) => {
+      console.log(
+        "onFileUploadAsync via field settings: ",
+        params,
+        fileUploads
+      );
+
+      const uploadPromises = fileUploads.map(async (file) => {
+        const dataUri = await getDataUriForFileUpload(file);
+        return uploadFileAsync(params.fieldIdentifier, dataUri);
+      });
+
+      const results = await Promise.all(uploadPromises);
+      return results;
+    },
+  },
+};
+
+// Use with JoyDoc component
+<JoyDoc
+  doc={document}
+  fieldSettings={fieldSettings}
+  onChange={handleChange}
+  mode="edit"
+  width={816}
+  height={600}
+/>;
 ```
 
-## Custom Upload Handler
+### onUploadAsync
 
-Implement custom image upload logic for your own storage solution:
+Configure upload handling at the document level:
 
-```swift
-class FormViewController: UIViewController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Set custom upload handler
-        formView.imageUploadHandler = { [weak self] image, completion in
-            self?.uploadImage(image, completion: completion)
-        }
+```jsx
+<JoyDoc
+  doc={document}
+  onUploadAsync={async (params, fileUploads) => {
+    console.log("onUploadAsync: ", params, fileUploads);
+
+    const resultPromises = await fileUploads.map(async (fileUpload) => {
+      const dataUri = await getDataUriForFileUpload(fileUpload);
+      return uploadFileAsync(params.fieldIdentifier, dataUri);
+    });
+
+    return Promise.all(resultPromises)
+      .then((responses) => {
+        // Normalize response for different file types
+        const finalResponse = Array.isArray(responses[0])
+          ? responses[0]
+          : responses;
+        return finalResponse;
+      })
+      .catch((error) => {
+        console.error("Upload error:", error);
+        if (error) return;
+      });
+  }}
+  // ... other props
+/>;
+```
+
+## Parameters
+
+Both methods receive the same parameters:
+
+- **params**: Object containing field/document metadata
+    - `params.fileId`: The file ID
+    - `params.pageId`: The page ID
+    - `params.fieldId`: The field ID
+    - `params.fieldPositionId`: The field position ID
+    - `params.fieldIdentifier`: The field identifier
+    - `params.documentId`: The document ID
+    - `params.documentIdentifier`: The document identifier
+- **fileUploads**: Array of File objects to be uploaded
+
+## Return Value
+
+Both methods should return an array of upload results. Each result should contain:
+
+- `_id`: Unique identifier for the uploaded file
+- `url`: URL where the file can be accessed
+- `fileName`: Original filename
+- `fileSize`: Size of the file in bytes
+
+## Complete Working Examples
+
+### Example 1: onFileUploadAsync
+
+Here's a complete working example using `onFileUploadAsync`:
+
+```jsx
+import React, { useState } from 'react';
+import { JoyDoc, getDefaultDocument } from '@joyfill/components';
+
+function OnFileUploadAsyncExample() {
+  const [document, setDocument] = useState(() => {
+    const doc = getDefaultDocument();
+
+    const fields = [
+      {
+        _id: 'profileImage',
+        identifier: 'profileImage',
+        type: 'image',
+        title: 'Profile Image',
+        value: [],
+        file: doc.files[0]._id,
+        multi: false
+      }
+    ];
+
+    doc.fields = fields;
+
+    doc.files[0].pages[0].fieldPositions.push({
+      _id: 'profileImage-position',
+      field: 'profileImage',
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      displayType: 'original'
+    });
+
+    return doc;
+  });
+
+  const handleChange = (changelogs, updatedDoc) => {
+    setDocument(updatedDoc);
+  };
+
+  const fieldSettings = {
+    field: {
+      systemFilePicker: true,
+      onFileUploadAsync: async (params, fileUploads) => {
+        console.log('onFileUploadAsync triggered:', params, fileUploads);
+
+        const uploadPromises = fileUploads.map(async (file) => {
+          const dataUri = await getDataUriForFileUpload(file);
+          return uploadFileAsync(params.fieldIdentifier, dataUri);
+        });
+
+        const results = await Promise.all(uploadPromises);
+        console.log('Upload completed:', results);
+        return results;
+      }
     }
-    
-    func uploadImage(_ image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
-        // Convert image to data
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-            completion(.failure(ImageError.conversionFailed))
-            return
-        }
-        
-        // Upload to your server
-        let uploadURL = URL(string: "https://your-api.com/upload")!
-        var request = URLRequest(url: uploadURL)
-        request.httpMethod = "POST"
-        request.httpBody = imageData
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            // Parse response and return image URL
-            if let imageURL = self?.parseImageURL(from: data) {
-                completion(.success(imageURL))
-            } else {
-                completion(.failure(ImageError.uploadFailed))
-            }
-        }.resume()
-    }
-    
-    func parseImageURL(from data: Data?) -> URL? {
-        // Parse your server's response
-        // Return the uploaded image URL
-        return nil
-    }
+  };
+
+  return (
+    <div>
+      <h1>onFileUploadAsync Example</h1>
+      <JoyDoc
+        doc={document}
+        fieldSettings={fieldSettings}
+        onChange={handleChange}
+        mode="edit"
+        width={816}
+        height={600}
+      />
+    </div>
+  );
 }
 
-enum ImageError: Error {
-    case conversionFailed
-    case uploadFailed
+export default OnFileUploadAsyncExample;
+
+```
+
+### Example 2: onUploadAsync
+
+Here's a complete working example using `onUploadAsync`:
+
+```jsx
+import React, { useState } from "react";
+import { JoyDoc, getDefaultDocument } from "@joyfill/components";
+
+function OnUploadAsyncExample() {
+  const [document, setDocument] = useState(() => {
+    const doc = getDefaultDocument();
+
+    const fields = [
+      {
+        _id: "galleryImages",
+        identifier: "galleryImages",
+        type: "image",
+        title: "Image Gallery",
+        value: [],
+        file: doc.files[0]._id,
+        multi: true,
+      },
+    ];
+
+    doc.fields = fields;
+
+    doc.files[0].pages[0].fieldPositions.push({
+      _id: "galleryImages-position",
+      field: "galleryImages",
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      displayType: "original",
+    });
+
+    return doc;
+  });
+
+  const handleChange = (changelogs, updatedDoc) => {
+    setDocument(updatedDoc);
+  };
+
+  const handleUpload = async (params, fileUploads) => {
+    console.log("onUploadAsync triggered:", params, fileUploads);
+
+    const resultPromises = await fileUploads.map(async (fileUpload) => {
+      const dataUri = await getDataUriForFileUpload(fileUpload);
+      return uploadFileAsync(params.fieldIdentifier, dataUri);
+    });
+
+    return Promise.all(resultPromises)
+      .then((responses) => {
+        // Normalize response for different file types
+        const finalResponse = Array.isArray(responses[0])
+          ? responses[0]
+          : responses;
+        console.log("Upload completed:", finalResponse);
+        return finalResponse;
+      })
+      .catch((error) => {
+        console.error("Upload error:", error);
+        if (error) return;
+      });
+  };
+
+  return (
+    <div>
+      <h1>onUploadAsync Example</h1>
+      <JoyDoc
+        doc={document}
+        onUploadAsync={handleUpload}
+        onChange={handleChange}
+        mode="edit"
+        width={816}
+        height={600}
+      />
+    </div>
+  );
 }
+
+export default OnUploadAsyncExample;
 ```
 
-## Image Compression
+## Setup steps
 
-Configure image compression before upload:
+**Step 1: Create Joyfill Account**
 
-```swift
-let imageConfig = JoyfillImageConfig()
-imageConfig.compressionQuality = 0.7
-imageConfig.maxDimension = 2048
-imageConfig.format = .jpeg
+- To begin working with Joyfill, go to [Joyfill's Platform](https://app-joy.joyfill.io/templates) and create an account (jump to step 2 if you already have an account).
+- By creating an account you will add yourself as the first user to your newly created Joyfill Organization and be placed inside the Joyfill Manager.
 
-formView.imageConfig = imageConfig
+**Step 2: Generate Your userAccessToken**
+
+- Once you're inside the Joyfill Manager you will want to select from the top navigation bar Settings & Users -> Manager Users -> and click "Access Tokens" button next to your user.
+- Once the modal appears select "Add Access Token". Copy and securely store your access token for later use.
+
+**Step3 Api Url**
+
+- The Api url is `http://api-joy.joyfill.io`
+
+## Helper Functions
+
+These utility functions are used in both upload methods:
+
+### getDataUriForFileUpload
+
+Converts a File object to a data URI string:
+
+```jsx
+const getDataUriForFileUpload = async (fileUpload) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileUpload);
+    reader.onloadend = async () => {
+      resolve(reader.result);
+    };
+    reader.onerror = () => {
+      reject(new Error('Failed to read file'));
+    };
+  });
+};
+
 ```
 
-## Handling Image Selection
+### uploadFileAsync
 
-Customize the image picker experience:
+Uploads a data URI to the server:
 
-```swift
-extension FormViewController: JoyfillFormDelegate {
-    
-    func form(_ form: JoyfillForm, willSelectImageFor field: JoyfillField) {
-        // Called before image picker is shown
-        print("About to select image for field: \(field.identifier)")
+```jsx
+
+const uploadFileAsync = async (docIdentifier, dataUri) => {
+  const response = await fetch(`${apiUrl}/v1/documents/${docIdentifier}/files/datauri`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: getHeaders(),
+    body: JSON.stringify({ file: dataUri })
+  });
+
+  const data = await response.json();
+  return data;
+};
+
+```
+
+### getHeaders
+
+Returns the necessary headers for API requests:
+
+```jsx
+const getHeaders = () => {
+  return {
+    Authorization: `Bearer ${userAccessToken}`,
+    'Content-Type': 'application/json'
+  };
+};
+
+```
+
+## Common Usage Patterns
+
+### Immediate Server Upload
+
+```jsx
+// Using onFileUploadAsync
+const fieldSettings = {
+  field: {
+    onFileUploadAsync: async (params, fileUploads) => {
+      const uploadPromises = fileUploads.map(async (file) => {
+        const dataUri = await getDataUriForFileUpload(file);
+        return uploadFileAsync(params.fieldIdentifier, dataUri);
+      });
+      return Promise.all(uploadPromises);
     }
-    
-    func form(_ form: JoyfillForm, didSelectImage image: UIImage, for field: JoyfillField) {
-        // Called after user selects an image
-        print("Image selected for field: \(field.identifier)")
-    }
-    
-    func form(_ form: JoyfillForm, didUploadImage url: URL, for field: JoyfillField) {
-        // Called after successful upload
-        print("Image uploaded: \(url.absoluteString)")
-    }
-    
-    func form(_ form: JoyfillForm, didFailImageUpload error: Error, for field: JoyfillField) {
-        // Handle upload failures
-        print("Image upload failed: \(error.localizedDescription)")
-        
-        let alert = UIAlertController(
-            title: "Upload Failed",
-            message: "Please try again",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
-}
+  }
+};
+
+// Using onUploadAsync
+const handleUpload = async (params, fileUploads) => {
+  const resultPromises = await fileUploads.map(async (fileUpload) => {
+    const dataUri = await getDataUriForFileUpload(fileUpload);
+    return uploadFileAsync(params.fieldIdentifier, dataUri);
+  });
+  return Promise.all(resultPromises);
+};
+
 ```
-
-## Image Sources
-
-Configure available image sources:
-
-```swift
-let imageConfig = JoyfillImageConfig()
-imageConfig.allowCamera = true
-imageConfig.allowPhotoLibrary = true
-imageConfig.allowFiles = false
-
-formView.imageConfig = imageConfig
-```
-
-## Multiple Image Uploads
-
-Handle fields that accept multiple images:
-
-```swift
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "your_template_id"
-)
-
-// Enable multiple image uploads for specific field types
-config.multipleImagesEnabled = true
-config.maxImagesPerField = 5
-
-formView.loadForm(config: config)
-```
-
-## Progress Tracking
-
-Track upload progress for better UX:
-
-```swift
-extension FormViewController: JoyfillFormDelegate {
-    
-    func form(_ form: JoyfillForm, imageUploadProgress progress: Double, for field: JoyfillField) {
-        // Update UI with upload progress (0.0 to 1.0)
-        let percentage = Int(progress * 100)
-        print("Upload progress: \(percentage)%")
-        
-        // Update a progress indicator
-        // progressView.progress = Float(progress)
-    }
-}
-```
-
-<Warning>
-  Always handle image upload failures gracefully and provide clear feedback to users. Large images can take time to upload, especially on slower connections.
-</Warning>
-
-## Best Practices
-
-<AccordionGroup>
-  <Accordion title="Image Compression">
-    Always compress images before upload to reduce bandwidth and improve performance. Use appropriate compression quality (0.7-0.8 is usually sufficient).
-  </Accordion>
-  
-  <Accordion title="File Size Limits">
-    Implement file size limits to prevent extremely large uploads:
-    ```swift
-    imageConfig.maxFileSize = 10 * 1024 * 1024 // 10 MB
-    ```
-  </Accordion>
-  
-  <Accordion title="Error Handling">
-    Provide clear error messages and allow users to retry failed uploads easily.
-  </Accordion>
-  
-  <Accordion title="Offline Support">
-    Consider queuing uploads when offline and retrying when connection is restored.
-  </Accordion>
-</AccordionGroup>
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Field Validation" icon="check-circle" href="/web/guides/required-field-validation">
-    Learn about field validation
-  </Card>
-  <Card title="Event Handling" icon="bolt" href="/web/guides/event-handling">
-    Master the event system
-  </Card>
-</CardGroup>
-

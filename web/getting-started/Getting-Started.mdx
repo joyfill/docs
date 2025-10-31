@@ -1,0 +1,160 @@
+
+## Overview
+
+The Joyfill Components SDK is a powerful React library for creating dynamic, interactive forms and documents. This guide will help you get started with installing and using the SDK in your React application.
+
+## Installation
+
+### Prerequisites
+
+- Node.js 18.20.0 or higher
+- React 18.3.1 or higher
+- A package manager (npm, yarn, or pnpm)
+
+### Install the SDK
+
+```bash
+# Using npm
+npm install @joyfill/components
+
+# Using yarn
+yarn add @joyfill/components
+
+# Using pnpm
+pnpm add @joyfill/components
+
+```
+
+### Install Peer Dependencies
+
+The SDK requires several peer dependencies. Install them if they're not already in your project:
+
+```bash
+# Core dependencies
+npm install react react-dom prop-types styled-components
+
+# Optional dependencies for enhanced functionality
+npm install moment moment-timezone @tiptap/react victory
+
+```
+
+## Quick Start
+
+### Basic Usage
+
+```jsx
+import React, { useState } from 'react';
+import { JoyDoc } from '@joyfill/components';
+
+function App() {
+  const [document, setDocument] = useState({
+    _id: 'my-document',
+    identifier: 'my-document',
+    name: 'My First Form',
+    files: [{
+      _id: 'file1',
+      name: 'Main File',
+      pages: [{
+        _id: 'page1',
+        name: 'Page 1',
+        fieldPositions: []
+      }]
+    }],
+    fields: []
+  });
+
+  const handleChange = (changelogs, updatedDoc) => {
+    console.log('Document changed:', changelogs);
+    setDocument(updatedDoc);
+  };
+
+  return (
+    <div style={{ width: '100%', maxWidth: '816px', margin: '0 auto' }}>
+      <JoyDoc
+        doc={document}
+        onChange={handleChange}
+        mode="edit"
+        width={816}
+        height={1056}
+      />
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+### Loading your first form
+
+Here is a simple Joydoc that has a text field in it:
+
+```jsx
+import React, { useState } from 'react';
+import { JoyDoc, getDefaultDocument } from '@joyfill/components';
+
+function MyForm() {
+  const [document, setDocument] = useState(() => {
+    // Create a default document
+    const doc = getDefaultDocument();
+
+    // Add a text field
+    doc.fields.push({
+      _id: 'name-field',
+      identifier: 'name',
+      type: 'text',
+      title: 'Your Name',
+      value: '',
+      file: doc.files[0]._id
+    });
+
+    // Add field position for layout
+    doc.files[0].pages[0].fieldPositions.push({
+      _id: 'name-position',
+      field: 'name-field',
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      displayType: 'original'
+    });
+
+    return doc;
+  });
+
+  const handleChange = (changelogs, updatedDoc) => {
+    console.log('Form changed:', changelogs);
+    setDocument(updatedDoc);
+  };
+
+  const handleSubmit = () => {
+    // Extract form data
+    const formData = {};
+    document.fields.forEach(field => {
+      formData[field.identifier] = field.value;
+    });
+
+    console.log('Form data:', formData);
+    alert(`Hello, ${formData.name || 'Anonymous'}!`);
+  };
+
+  return (
+    <div>
+      <h1>My First Joyfill Form</h1>
+      <JoyDoc
+        doc={document}
+        onChange={handleChange}
+        mode="fill"
+        width={816}
+        height={600}
+      />
+      <button onClick={handleSubmit} style={{ marginTop: '20px' }}>
+        Submit Form
+      </button>
+    </div>
+  );
+}
+
+export default MyForm;
+
+```
