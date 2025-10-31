@@ -5,14 +5,25 @@ description: "Embeddable form builder SDKs for every platform"
 
 <img
   className="block dark:hidden"
-  src="/images/hero-light.png"
+  src="/images/Joyfill_docs_banner.png"
   alt="Joyfill Hero Light"
 />
 <img
   className="hidden dark:block"
-  src="/images/hero-dark.png"
+  src="/images/Joyfill_docs_banner.png"
   alt="Joyfill Hero Dark"
 />
+
+
+# What is Joyfill?
+Joyfill provides you with ready-to-use embeddable UI SDKs, APIs, and Services that empower you to add powerful Form and PDF capabilities directly inside your own application on web and mobile.
+
+**To your end users**, Joyfill is an easy-to-use interface that allows them build any form, digitize any legacy PDF and then fill those documents out on web or mobile directly in your own applications.
+
+**To customer success teams**, Joyfill is an easy-to-use drag-and-drop form builder that allows them to build any kind of form or digitize any PDF provided by your customers. No need to wait on the developers anymore. Everything can be managed, prepared, and published directly inside the Joyfill Manager.
+
+**And to developers**, Joyfill is a powerful set of ready-to-use Embeddable UI Components and APIs that can used to add powerful form and digital PDF solutions directly inside your own product on web and mobile without the 1000s of hours spent on development and support.
+
 
 # Developer Documentation
 
@@ -24,7 +35,7 @@ Build powerful, customizable form experiences with Joyfill. Integrate forms into
   <Card
     title="iOS SDK"
     icon="apple"
-    href="/ios/introduction"
+    href="/ios/getting-started"
     color="#000000"
   >
     Build native iOS form experiences with Swift
@@ -32,7 +43,7 @@ Build powerful, customizable form experiences with Joyfill. Integrate forms into
   <Card
     title="Kotlin SDK"
     icon="android"
-    href="/kotlin/introduction"
+    href="/kotlin/getting-started"
     color="#3DDC84"
   >
     Create Android apps with our Kotlin SDK
@@ -123,39 +134,6 @@ Build powerful, customizable form experiences with Joyfill. Integrate forms into
   </Step>
 </Steps>
 
-## Popular Guides
-
-<CardGroup cols={2}>
-  <Card
-    title="Create Document API"
-    icon="code"
-    href="/api/documents/create"
-  >
-    Create documents via REST API
-  </Card>
-  <Card
-    title="Form Modes"
-    icon="toggle-on"
-    href="/ios/guides/modes"
-  >
-    Learn about readonly, fill, and edit modes
-  </Card>
-  <Card
-    title="Data Management"
-    icon="database"
-    href="/ios/guides/populating-and-extracting-data"
-  >
-    Populate and extract form data
-  </Card>
-  <Card
-    title="Authentication"
-    icon="key"
-    href="/api/authentication"
-  >
-    Secure your API requests
-  </Card>
-</CardGroup>
-
 ## Quick Example
 
 Here's how easy it is to get started with Joyfill:
@@ -164,32 +142,42 @@ Here's how easy it is to get started with Joyfill:
 
 ```swift iOS
 import Joyfill
+import JoyfillModel
 
-// Initialize
-Joyfill.configure(accessToken: "your_token")
+struct SimpleFormExampleView: View {
+    let documentEditor: DocumentEditor
+    let document = loadDoc(named: "first-form")
+    
+    init() {
+        self.documentEditor = DocumentEditor(document: document)
+    }
 
-// Load form
-let formView = JoyfillFormView()
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "your_template_id"
-)
-formView.loadForm(config: config)
+    var body: some View {
+        Form(documentEditor: documentEditor)
+    }
+}
+
+private extension SimpleFormExampleView {
+    static func loadDoc(named name: String) -> JoyDoc {
+        let url = Bundle.main.url(forResource: name, withExtension: "json")!
+        let data = try! Data(contentsOf: url)
+        let dict = try! JSONSerialization.jsonObject(with: data) as! [String: Any]
+        return JoyDoc(dictionary: dict)
+    }
+}
 ```
 
 ```kotlin Android
-import io.joyfill.Joyfill
+import androidx.compose.runtime.Composable
+import joyfill.Form
+import joyfill.rememberDocumentEditor
 
-// Initialize
-Joyfill.configure("your_token")
+@Composable
+fun SimpleFormExample() {
+    val editor = rememberDocumentEditor(json = "") // paste ur json here
 
-// Load form
-val formView = JoyfillFormView(context)
-val config = JoyfillFormConfig(
-    mode = FormMode.FILL,
-    templateId = "your_template_id"
-)
-formView.loadForm(config)
+    Form(editor = editor)
+}
 ```
 
 ```javascript React Native
@@ -223,14 +211,22 @@ form.load();
 
 ```bash REST API
 # Create a document from template
-curl -X POST https://api-joy.joyfill.io/v1/documents \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "New Document",
-    "group": "group_id",
-    "template": "template_id"
-  }'
+curl --request POST \
+  --url https://api-joy.joyfill.io/v1/documents \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "identifier": "<string>",
+  "name": "<string>",
+  "files": [
+    "<any>"
+  ],
+  "fields": [
+    "<any>"
+  ],
+  "template": "<string>",
+  "group": "<string>",
+  "stage": "published"
+}'
 ```
 
 </CodeGroup>
@@ -241,7 +237,7 @@ curl -X POST https://api-joy.joyfill.io/v1/documents \
   <Card
     title="Documentation"
     icon="book-open"
-    href="/ios/getting-started/installation"
+    href="/ios/getting-started"
   >
     Explore comprehensive guides
   </Card>
@@ -255,7 +251,7 @@ curl -X POST https://api-joy.joyfill.io/v1/documents \
   <Card
     title="Support"
     icon="life-ring"
-    href="https://joyfill.io/support"
+    href="https://joyfill.io/contact-us"
   >
     Get help from our team
   </Card>
@@ -266,7 +262,7 @@ curl -X POST https://api-joy.joyfill.io/v1/documents \
 <Card
   title="Ready to build?"
   icon="rocket"
-  href="/ios/getting-started/installation"
+  href="/ios/getting-started"
   horizontal
 >
   Start with our quickstart guide and build your first form in minutes

@@ -1,0 +1,31 @@
+---
+title: "Identifiers"
+description: "Overview of identifiers inside of Joyfill"
+---
+
+Identifiers represent readable IDs for resources inside of Joyfill. Identifiers are the primary way you will query, update, and remove resources via the Joyfill API. Identifiers are also how you can identify individual fields on the form for pre-populating and extracting field data.
+
+Joyfill will auto generate a unique identifier for each new resource that you create. Each identifier will be unique only to your organization.
+
+## Resource Examples
+
+| Resource | Example                    |
+| -------- | -------------------------- |
+| Group    | `group_*************`      |
+| User     | `user_**************`      |
+| Document | `doc_***************`      |
+| Template | `template_***************` |
+| Fields   | `field_*************`      |
+
+## Custom Identifiers
+
+Joyfill identifiers can be set to custom values at the moment of resource creation. The custom identifier can be an ID inside your own database or some other value that helps you connect and uniquely identify the associated resource between Joyfill and your own system.
+
+**Requirements**
+
+* Custom identifiers must be unique.
+* Type: String, Minimum Length: 3, Max Length: 50.
+* Alphanumeric and `_` characters only.
+
+***
+

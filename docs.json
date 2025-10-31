@@ -9,9 +9,43 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": [
+    "dropdowns": [
+        {
+          "dropdown": "Overview",
+          "icon": "list",
+          "groups": [
+            {
+              "group": "Joyfill",
+              "pages": [
+                "joyfill/index"
+              ]
+            },
+            {
+                "group": "JoyDoc",
+                "pages": [
+                  "joyfill/joydoc-usage",
+                  "joyfill/schema-json",
+                  "joyfill/usage-guide",
+                  "joyfill/metadata",
+                  "joyfill/field-identifiers"
+                ]
+            },
+            {
+              "group": "API reference",
+              "openapi": "OpenApi.json"
+            },
+            {
+              "group": "Extra",
+              "pages": [
+                "joyfill/identifiers",
+                "joyfill/custom-data-population-via-identifiers"
+              ]
+            }
+          ]
+        },
       {
-        "tab": "iOS SDK",
+        "dropdown": "iOS SDK",
+        "icon": "apple",
         "groups": [
           {
             "group": "Getting Started",
@@ -46,7 +80,8 @@
         ]
       },
       {
-        "tab": "Kotlin SDK",
+        "dropdown": "Kotlin SDK",
+        "icon": "android",
         "groups": [
           {
             "group": "Getting Started",
@@ -81,7 +116,8 @@
         ]
       },
       {
-        "tab": "React Native SDK",
+        "dropdown": "React Native SDK",
+        "icon": "react",
         "groups": [
           {
             "group": "Getting Started",
@@ -120,7 +156,8 @@
         ]
       },
       {
-        "tab": "Web SDK",
+        "dropdown": "Web SDK",
+        "icon": "globe",
         "groups": [
           {
             "group": "Getting Started",
@@ -156,7 +193,8 @@
         ]
       },
       {
-        "tab": "REST API",
+        "dropdown": "REST API",
+        "icon": "code",
         "groups": [
           {
             "group": "Getting Started",

@@ -1,0 +1,304 @@
+---
+title: "Reference"
+description: "JoyDoc property reference and descriptions"
+---
+
+# Contents
+
+* [Full JSON](/joyfill/schema-json#full-json)
+* [Document Properties](/joyfill/schema-json#document-properties)
+* [File Properties](/joyfill/schema-json#file-properties)
+* [Page Properties](/joyfill/schema-json#page-properties)
+* [Field Position Properties](/joyfill/schema-json#field-position-properties)
+* [Field Properties](/joyfill/schema-json#field-properties)
+
+## Full JSON
+
+<CodeGroup>
+  ```bash bash
+  Object{ //Document
+    identifier: String,
+    group: String,
+    type: String,
+    stage: String,
+    name: String,
+    files: Array[
+      Object{ //File
+        identifier: String,
+        name: String,
+        styles: Object
+        pages: Array[
+          Object{ //Page
+            identifier: String,
+            name: String,
+            width: Number,
+            height: Number,
+            cols: Number,
+            rowHeight: Number,
+            layout: String,
+            presentation: String,
+            backgroundImage: String,
+            margin: Number,
+            padding: Number,
+            borderWidth: Number,
+            borderColor: String,
+            borderStyle: String,
+            fieldPositions: Array[
+              Object{ //Field Position
+                _id: String,
+                field: String,
+                type: String,
+                displayType: String,
+                width: Number,
+                height: Number,
+                x: Number,
+                y: Number,
+                condition: String,
+                targetValue: String,
+                targetValueDisplayType: String, 
+                customTrueTargetDisplayValue: String,
+                customFalseTargetDisplayValue: String,
+                invertBooleanCondition: Boolean,
+                rowIndex: Number,
+                column: String,
+                primaryDisplayOnly: Boolean,
+                primaryMaxWidth: Number, 
+                primaryMaxHeight: Number,
+                maxImageWidth: Number,
+                maxImageHeight: Number,
+                titleFontSize: Number,
+                titleFontColor: String,
+                titleFontStyle: String,
+                titleFontWeight: String,
+                titleTextAlign: String,
+                titleTextTransform: String,
+                titleTextDecoration: String,
+                lineHeight: Number,
+                fontSize: Number,
+                fontColor: String,
+                fontStyle: String,
+                fontWeight: String,
+                textAlign: String,
+                textTransform: String,
+                textDecoration: String,
+                textOverflow: String,
+                padding: Number,
+                borderColor: String,
+                borderRadius: Number,
+                borderWidth: Number,
+                backgroundColor: String,
+                zIndex: Number,
+                columnTitleFontSize: Number,
+                columnTitleFontColor: String,
+                columnTitleFontStyle: String,
+                columnTitleFontWeight: String,
+                columnTitleTextAlign: String,
+                columnTitleTextTransform: String,
+                columnTitleTextDecoration: String,
+                columnTitleBackgroundColor: String,
+                columnTitlePadding: Number,
+              }, //End of Field Position
+              ...
+            ] //End of fields array
+          }, //End of Page
+          ...
+        ], //End of pages array
+        views: [
+          Object{ //View
+            type: String,
+            _id: String,
+            pages: PageObject
+          },
+          ...
+        ]
+      }, //End of File
+      ...
+    ], //End of files array
+    fields: [
+      Object{ //Field
+        file: String,
+        _id: String,
+        identifier: String,
+        type: String,
+        title: String,
+        value: Mixed,
+        matadata: Object,
+      	rowOrder: [String, String, ...],
+        yTitle: String,
+        yMin: Number,
+        yMax: Number,
+        xTitle: String,
+        xMin: Number,
+        xMax: Number,
+        options: Array[
+          Object{
+            _id: String,
+            value: String,
+          },
+          ...
+        ], //end of options
+        tableColumnOrder: [String, ...],
+        tableColumns: Array[ 
+          Object{
+            title: String,
+            type: String,
+            identifier: String,
+            value: String,
+            options: Array[
+              Object{
+                _id: String,
+                value: String,
+              },
+              ...
+            ], //end of options array
+            maxImageWidth: Number,
+            maxImageHeight: Number,
+          }, //end of column object
+          ...
+        ], //end of tableColumns array
+      },//End of Field
+      ...
+    ] //End of fields array
+  }//End of Document
+  				   
+  ```
+</CodeGroup>
+
+## Document Properties
+
+| Name       | Type                            | Description                                                                                                                                                                                                                                                                                   |
+| ---------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id       | String                          | Must be a Joyfill internally generated ID. DO NOT manually set this value. Cannot be used with a custom value. Should be used for reference only. Example: `642529511e4ec1adeb444111`                                                                                                         |
+| identifier | String                          | The identifier specifies an ID or some other value that helps you connect and uniquely identify the associated resource between Joyfill and your own system. Can be a custom value or if left blank the identifier will be auto generated by Joyfill. Example: `doc_642529511e4ec1adeb444111` |
+| group      | String                          | Specifies the identifier of the Joyfill Group that this document is associated with.                                                                                                                                                                                                          |
+| type       | String ('document', 'template') | Specifies document category based on the functional usage. [Learn more](/docs/quick-start#key-terminology) about the usage differences between the template and document type.                                                                                                                |
+| stage      | String ('draft', 'published')   | Specifies the current stage of completion/visibility.                                                                                                                                                                                                                                         |
+| name       | String                          | Name to visually display for the document                                                                                                                                                                                                                                                     |
+| files      | array\_objects                  | Array of JoyDoc File objects                                                                                                                                                                                                                                                                  |
+
+## File Properties
+
+| Name       | Type           | Description                                                                                                                                                                                                                                                                                    |
+| ---------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id       | String         | Must be a Joyfill internally generated ID. DO NOT manually set this value. Cannot be used with a custom value. Should be used for reference only. Example: `642529511e4ec1adeb444111`                                                                                                          |
+| identifier | String         | The identifier specifies an ID or some other value that helps you connect and uniquely identify the associated resource between Joyfill and your own system. Can be a custom value or if left blank the identifier will be auto generated by Joyfill. Example: `file_642529511e4ec1adeb444111` |
+| name       | String         | Name to visually display for the file                                                                                                                                                                                                                                                          |
+| styles     | Object         | Object of default styles to apply to all JoyDoc Fields within the JoyDoc File. See Field style properties to see what style options are available.                                                                                                                                             |
+| pages      | array\_objects | Array of JoyDoc Page objects                                                                                                                                                                                                                                                                   |
+| views      | array\_objects | Array of JoyDoc View objects                                                                                                                                                                                                                                                                   |
+
+## View Properties
+
+| Name  | Type              | Description                                                                                                                                                                           |
+| ----- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id  | String            | Must be a Joyfill internally generated ID. DO NOT manually set this value. Cannot be used with a custom value. Should be used for reference only. Example: `642529511e4ec1adeb444111` |
+| type  | String ('mobile') | Specifies the intended device or experience the view is targeted at.                                                                                                                  |
+| pages | array\_objects    | Array of JoyDoc Page objects                                                                                                                                                          |
+
+## Page Properties
+
+| Name          | Type                                 | Description                                                                                                                                                                                                                                                                                    |
+| ------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id          | String                               | Must be a Joyfill internally generated ID. DO NOT manually set this value. Cannot be used with a custom value. Should be used for reference only. Example: `642529511e4ec1adeb444111`                                                                                                          |
+| identifier    | String                               | The identifier specifies an ID or some other value that helps you connect and uniquely identify the associated resource between Joyfill and your own system. Can be a custom value or if left blank the identifier will be auto generated by Joyfill. Example: `page_642529511e4ec1adeb444111` |
+| name          | String                               | Name to visually display in page list.                                                                                                                                                                                                                                                         |
+| width         | Number                               | Page width in pixels.                                                                                                                                                                                                                                                                          |
+| height        | Number                               | Page height in pixels.                                                                                                                                                                                                                                                                         |
+| layout        | String ('grid', 'float')             | Layout mode for page fields                                                                                                                                                                                                                                                                    |
+| rowHeight     | Number                               | Row heights for the page grid.                                                                                                                                                                                                                                                                 |
+| cols          | Number                               | Column count for the page grid                                                                                                                                                                                                                                                                 |
+| presentation  | String ('normal', 'transparent')     | Visual display style of fields                                                                                                                                                                                                                                                                 |
+| margin        | Number                               | Page margin in pixels                                                                                                                                                                                                                                                                          |
+| padding       | Number                               | Page padding in pixels                                                                                                                                                                                                                                                                         |
+| borderWidth   | Number                               | Page border width in pixels                                                                                                                                                                                                                                                                    |
+| borderColor   | String                               | Page border color in HEX                                                                                                                                                                                                                                                                       |
+| borderStyle   | String ('solid', 'double', 'dashed') | Page border style                                                                                                                                                                                                                                                                              |
+| fieldPosition | array\_objects                       | Array of JoyDoc Page Field Position objects                                                                                                                                                                                                                                                    |
+
+## Field Position Properties
+
+| Name                          | Type                                                                                                                                    | Description                                                                                                                                                                                                         |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id                          | String                                                                                                                                  | Must be a Joyfill internally generated ID. DO NOT manually set this value. Cannot be used with a custom value. Should be used for reference only. Example: `642529511e4ec1adeb444111`                               |
+| field                         | String                                                                                                                                  | Specifies ID of linked Field. Must be a Joyfill internally generated ID. DO NOT manually set this value. Cannot be used with a custom value. Should be used for reference only. Example: `642529511e4ec1adeb444111` |
+| type                          | String ('text', 'textarea', 'number', 'date', 'multiSelect', 'dropdown', 'block', 'image', 'signature', 'table', 'inputGroup', 'chart') | Primary type of a field. The primary type determines core functionality for the field.                                                                                                                              |
+| displayType                   | String ('text', 'circle', 'square', 'check', 'radio', 'original', 'horizontal')                                                         | Display type of a field. Determines visual functionality for a field.                                                                                                                                               |
+| width                         | Number                                                                                                                                  | Number of Page columns to utilize for the field.                                                                                                                                                                    |
+| height                        | Number                                                                                                                                  | Number of Page rows to utilize for the field.                                                                                                                                                                       |
+| x                             | Number                                                                                                                                  | Horizontally position the top left corner of a field at Page column number.                                                                                                                                         |
+| y                             | Number                                                                                                                                  | Vertically position the top left corner of a field at Page row number.                                                                                                                                              |
+| condition                     | String ('equals')                                                                                                                       | Condition to determine visual selection status of a selector displayType Field.                                                                                                                                     |
+| targetValue                   | String                                                                                                                                  | JoyDoc Field Option ID                                                                                                                                                                                              |
+| targetValueDisplayType        | String ('original', 'custom')                                                                                                           | Specifies whether or not to overwrite the default JoyDoc Field Option display text with a true/false custom text value.                                                                                             |
+| customTrueTargetDisplayValue  | String                                                                                                                                  | Specifies the custom display text overwrite for a true selection state.                                                                                                                                             |
+| customFalseTargetDisplayValue | String                                                                                                                                  | Specifies the custom display text overwrite for a false selection state.                                                                                                                                            |
+| invertBooleanCondition        | Boolean                                                                                                                                 | Invert the conditional selection state of a selector displayType Field.                                                                                                                                             |
+| rowIndex                      | Number                                                                                                                                  | Specifies the linked rowIndex of an individually placed JoyDoc Field Table Cell.                                                                                                                                    |
+| column                        | String                                                                                                                                  | Specifies the linked JoyDoc Field Table Column ID of an individually placed JoyDoc Field Table Cell.                                                                                                                |
+| primaryDisplayOnly            | Boolean                                                                                                                                 | Visually display only the primary part of the JoyDoc Field.                                                                                                                                                         |
+| primaryMaxWidth               | Number                                                                                                                                  | Max width in pixels of the primary part of the JoyDoc Field.                                                                                                                                                        |
+| primaryMaxHeight              | Number                                                                                                                                  | Max width in pixels of the primary part of the JoyDoc Field.                                                                                                                                                        |
+| maxImageWidth                 | Number                                                                                                                                  | Max width in pixels of the internal image.                                                                                                                                                                          |
+| maxImageHeight                | Number                                                                                                                                  | Max height in pixels of the internal image.                                                                                                                                                                         |
+| titleFontSize                 | Number                                                                                                                                  | Font size in pixels of JoyDoc Field title.                                                                                                                                                                          |
+| titleFontColor                | String                                                                                                                                  | Font color in Hex of JoyDoc Field title.                                                                                                                                                                            |
+| titleFontStyle                | String ('normal', 'italic')                                                                                                             | Font style of JoyDoc Field title.                                                                                                                                                                                   |
+| titleFontWeight               | String ('normal', 'bold')                                                                                                               | Font weight of JoyDoc Field title.                                                                                                                                                                                  |
+| titleTextAlign                | String ('left', 'center', 'right')                                                                                                      | Text align of JoyDoc Field title.                                                                                                                                                                                   |
+| titleTextTransform            | String ('none', 'uppercase')                                                                                                            | Text transform of JoyDoc Field title.                                                                                                                                                                               |
+| titleTextDecoration           | String ('none', 'underline')                                                                                                            | Text decoration of JoyDoc Field title.                                                                                                                                                                              |
+| lineHeight                    | String                                                                                                                                  | Percentage to utilize for each line out of a total 100%                                                                                                                                                             |
+| fontSize                      | Number                                                                                                                                  | Font size in pixels of JoyDoc Field element.                                                                                                                                                                        |
+| fontColor                     | Number                                                                                                                                  | Font color in Hex of JoyDoc Field element.                                                                                                                                                                          |
+| fontStyle                     | String ('normal', 'italic')                                                                                                             | Font style of JoyDoc Field element.                                                                                                                                                                                 |
+| fontWeight                    | String ('normal', 'bold')                                                                                                               | Font weight of JoyDoc Field element.                                                                                                                                                                                |
+| textAlign                     | String ('left', 'center', 'right')                                                                                                      | Text align of JoyDoc Field element.                                                                                                                                                                                 |
+| textTransform                 | String ('none', 'uppercase')                                                                                                            | Text transform of JoyDoc Field element.                                                                                                                                                                             |
+| textDecoration                | String ('none', 'underline')                                                                                                            | Text decoration of JoyDoc Field element.                                                                                                                                                                            |
+| textOverflow                  | String (null, 'ellipsis')                                                                                                               | Text overflow of JoyDoc Field element.                                                                                                                                                                              |
+| padding                       | Number                                                                                                                                  | Padding in pixels of JoyDoc Field element.                                                                                                                                                                          |
+| borderColor                   | String                                                                                                                                  | Border color in Hex of JoyDoc Field element.                                                                                                                                                                        |
+| borderRadius                  | Number                                                                                                                                  | Border radius in pixels of JoyDoc Field element.                                                                                                                                                                    |
+| borderWidth                   | Number                                                                                                                                  | Border width in pixels of the JoyDoc Field element.                                                                                                                                                                 |
+| backgroundColor               | String                                                                                                                                  | Background color in HEX of the JoyDoc Field element.                                                                                                                                                                |
+| zIndex                        | Number                                                                                                                                  | z index position relative to other JoyDoc Fields.                                                                                                                                                                   |
+| columnTitleFontSize           | String                                                                                                                                  | Font size of the table columns in the JoyDoc Field.                                                                                                                                                                 |
+| columnTitleFontColor          | String                                                                                                                                  | Font color of the table columns in the JoyDoc Field.                                                                                                                                                                |
+| columnTitleFontStyle          | String ('normal', 'italic')                                                                                                             | Font style of the table columns in the JoyDoc Field.                                                                                                                                                                |
+| columnTitleFontWeight         | String ('normal', 'bold')                                                                                                               | Font weight of the table columns in the JoyDoc Field.                                                                                                                                                               |
+| columnTitleTextAlign          | String ('left', 'center', 'right')                                                                                                      | Text align of the table columns in the JoyDoc Field.                                                                                                                                                                |
+| columnTitleTextTransform      | String ('none', 'uppercase')                                                                                                            | Text transform of the table columns in the JoyDoc Field.                                                                                                                                                            |
+| columnTitleTextDecoration     | String ('none', 'underline')                                                                                                            | Text decoration of the table columns in the JoyDoc Field.                                                                                                                                                           |
+| columnTitleBackgroundColor    | String                                                                                                                                  | Background color in HEX of the table columns in the JoyDoc Field.                                                                                                                                                   |
+| columnTitlePadding            | Number                                                                                                                                  | Padding in pixels of the table columns in the JoyDoc field.                                                                                                                                                         |
+
+## Field Properties
+
+| Name             | Type                                                                                                                                    | Description                                                                                                                                                                                                                                                                                                                                 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id             | String                                                                                                                                  | Must be a Joyfill internally generated ID. DO NOT manually set this value. Cannot be used with a custom value. Should be used for reference only. Example: `642529511e4ec1adeb444111`                                                                                                                                                       |
+| file             | String                                                                                                                                  | Must be a Joyfill internally generated ID. DO NOT manually set this value. Cannot be used with a custom value. Should be used for reference only. Example: `642529511e4ec1adeb444111`                                                                                                                                                       |
+| identifier       | String                                                                                                                                  | The identifier specifies an ID or some other value that helps you connect and uniquely identify the associated resource between Joyfill and your own system. Can be a custom value or if left blank the identifier will be auto generated by Joyfill. Primarily used for data mapping in the API. Example: `field_642529511e4ec1adeb444111` |
+| type             | String ('text', 'textarea', 'number', 'date', 'multiSelect', 'dropdown', 'block', 'image', 'signature', 'table', 'inputGroup', 'chart') | Primary type of a field. The primary type determines core functionality for the field.                                                                                                                                                                                                                                                      |
+| title            | String                                                                                                                                  | Field title.                                                                                                                                                                                                                                                                                                                                |
+| value            | Mixed                                                                                                                                   | Field value                                                                                                                                                                                                                                                                                                                                 |
+| rowOrder         | array\_strings                                                                                                                          | Array of JoyDoc of Row IDs inside Table Field value property.                                                                                                                                                                                                                                                                               |
+| options          | array\_objects                                                                                                                          | Array of JoyDoc Field Option objects.                                                                                                                                                                                                                                                                                                       |
+| tableColumns     | array\_objects                                                                                                                          | Array of JoyDoc Field Table Column objects.                                                                                                                                                                                                                                                                                                 |
+| tableColumnOrder | array\_strings                                                                                                                          | Array of JoyDoc Field Table Column IDs.                                                                                                                                                                                                                                                                                                     |
+| metadata         | Object                                                                                                                                  | Object                                                                                                                                                                                                                                                                                                                                      |
+| yTitle           | String                                                                                                                                  | Vertical title for JoyDoc Fields with type 'chart'.                                                                                                                                                                                                                                                                                         |
+| yMax             | Number                                                                                                                                  | Vertical max value for JoyDoc Fields with type 'chart'.                                                                                                                                                                                                                                                                                     |
+| yMin             | Number                                                                                                                                  | Vertical min value for JoyDoc Fields with type 'chart'.                                                                                                                                                                                                                                                                                     |
+| xTitle           | String                                                                                                                                  | Horizontal title for JoyDoc Fields with type 'chart'.                                                                                                                                                                                                                                                                                       |
+| xMax             | Number                                                                                                                                  | Horizontal max value for JoyDoc Fields with type 'chart'.                                                                                                                                                                                                                                                                                   |
+| xMin             | Number                                                                                                                                  | Horizontal min value for JoyDoc Fields with type 'chart'.                                                                                                                                                                                                                                                                                   |
+
+## Summary
+
+<Info>
+  ### Important Note: You're not limited to or required to follow this data structure internally. You can store your data any way you like in your internal system.
+</Info>
+
+***
+
