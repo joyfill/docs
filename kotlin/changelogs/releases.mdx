@@ -1,142 +1,219 @@
 ---
-title: "Release Notes"
-description: "Version history and changelog for the Kotlin SDK"
-icon: "newspaper"
+title: Release Notes
+description: Complete changelog of Joyfill Kotlin Multiplatform SDK releases.
 ---
 
-# Release Notes
+## 2.0.0-Beta10
 
-Stay up to date with the latest features, improvements, and bug fixes in the Joyfill Kotlin SDK.
+### 🚀 Enhancements
+- **Enhanced:** Support for additional custom time formats.
+- **Improved:** Required field validation — added page ID to the validation status object for more accurate field tracking.
 
-## Version 1.2.0 (Latest)
+### 🧩 Fixes
+- **Fixed:** Crash when adding rows in Table fields caused by invalid default values in columns such as Text, Signature, Date, or Block.
+- **Fixed:** Edge case involving Collection fields and formula calculations.
+- **Fixed:** Multiselect fields not working when a deleted option shared the same value as a non-deleted option.
+- **Fixed:** Formula fields failing to process decimal numbers without a leading zero.
 
-**Release Date:** January 15, 2025
-
-### ✨ New Features
-- Added support for signature fields with touch-based signing
-- Introduced offline form caching for improved performance
-- New `JoyfillTheme` system for comprehensive UI customization
-- Added batch field value updates for better performance
-
-### 🔧 Improvements
-- Enhanced image upload performance with concurrent uploads
-- Improved form validation with better error messages
-- Optimized memory usage for large forms
-- Better accessibility support with VoiceOver improvements
-
-### 🐛 Bug Fixes
-- Fixed date picker display issue on Android 17
-- Resolved memory leak in form view controller
-- Fixed keyboard dismissal on submit
-- Corrected text field alignment in RTL languages
-
-### 📝 Documentation
-- Added comprehensive guide for offline support
-- Updated API reference with new theme system
-- New examples for custom validators
+### 🎨 UI / UX Improvements
+- **Added:** Row highlighting for selected rows in Table and Collection fields to improve visibility for users.
 
 ---
 
-## Version 1.1.0
+## 2.0.0-Beta09
 
-**Release Date:** December 1, 2024
+### 🚀 Enhancements
+- **Added:** Support for single image fields (JF-90).
+- **Added:** Changelog emissions for collection fields.
+- **Added:** Descriptive error message when image fields fail to load URLs.
+- **Added:** `ImageReplacementSample` composable to demonstrate how to replace an image in the ImageField.
 
-### ✨ New Features
-- Multi-language support with localization
-- Custom validation rules API
-- Real-time collaboration support
-- Form templates library
+### 🧩 Fixes
+- **Fixed:** UI not updating when image URL changes (JF-35).
+- **Fixed:** Field validation failing when adding a new table row without fields (JF-84).
+- **Fixed:** Editable table fields in read-only mode (JF-87).
+- **Fixed:** Changelog emissions for non-collection fields.
 
-### 🔧 Improvements
-- Faster form loading times
-- Better error handling
-- Enhanced TypeScript definitions
-- Improved dark mode support
+### 🎨 UI / UX Improvements
+- **Improved:** Size of required asterisk on required fields.
 
-### 🐛 Bug Fixes
-- Fixed dropdown menu positioning
-- Resolved text input cursor issues
-- Fixed image rotation on upload
-- Corrected date format parsing
+### 📦 Dependencies
+- **Updated:** Compose Multiplatform 1.7.3 → 1.8.1.
 
 ---
 
-## Version 1.0.0
+## 2.0.0-Beta08
 
-**Release Date:** October 15, 2024
+### 🧪 Tested On
+- Great Wall of QA
+- NFPA 10 2022 Edition
+- NFPA 25 Water-Based Fire Protection Systems 2020 Edition
 
-### 🎉 Initial Release
+### 🧩 Fixes
+- **Fixed:** Block Field with negative padding crashing the app.
+- **Fixed:** Validation always returning `FieldsInvalid`.
 
-- Complete form rendering engine
-- Support for all standard field types
-- Three form modes: readonly, fill, and edit
-- Comprehensive event system
-- Image upload and handling
-- Field validation
-- Custom styling support
-- Delegate-based architecture
-- Kotlin Package Manager support
-- CocoaPods support
+### ⚠️ Known Issues
+- Clicking *Next* on Table Row Form doesn't clear previous values.
+- Collection Field still shows expand/collapse icon for hidden nested tables.
+
+### 🧩 NFPA 10 2022 Edition
+- **Fixed:** Crash caused by negative padding on Block Field.
+- **Clarified:** Font colors on Block Fields are not adaptable to dark mode.
+
+### 🧩 NFPA 25 2020 Edition
+- **Clarified:** Font colors on Block Fields are not adaptable to dark mode.
 
 ---
 
-## Migration Guides
+### 🚀 Enhancements
+- **Added:** Ability to check if image or multiselect fields allow multiple uploads or selections.
 
-### Migrating from 1.1.x to 1.2.x
+### 🧩 Fixes
+- **Fixed:** Validation results always returning `FieldsInvalid`.
+- **Fixed:** Single image fields allowing multiple uploads.
+- **Fixed:** Conditional logic fields always returning Invalid.
 
-The 1.2.0 release includes some breaking changes. Here's what you need to update:
+### 📦 Released
+- **M04:** Mobile Barcode Scanning.
+- **M05:** Collection Fields Mobile Table Bulk Answer.
+- **M14:** URL update mechanism for attachment field (iOS & Android).
+- **N06:** Validation sorting fields by position.
 
-<Steps>
-  <Step title="Update Dependencies">
-    Update your Package.swift or Podfile to version 1.2.0
-    ```swift
-    .package(url: "https://github.com/joyfill/joyfill-ios", from: "1.2.0")
-    ```
-  </Step>
-  
-  <Step title="Update Theme Configuration">
-    Replace `JoyfillAppearance` with new `JoyfillTheme`:
-    ```swift
-    // Old way
-    let appearance = JoyfillAppearance()
-    appearance.primaryColor = .blue
-    formView.appearance = appearance
-    
-    // New way
-    let theme = JoyfillTheme()
-    theme.colors.primary = .blue
-    formView.theme = theme
-    ```
-  </Step>
-  
-  <Step title="Update Delegate Methods">
-    Some delegate methods have new signatures:
-    ```swift
-    // Old
-    func formDidSubmit(_ form: JoyfillForm, data: [String: Any])
-    
-    // New
-    func formDidSubmit(_ form: JoyfillForm, result: JoyfillSubmitResult)
-    ```
-  </Step>
-</Steps>
+### 🧩 Fixes (Additional)
+- **Fixed:** Android crashing issues (M6 & M10).
+- **Resolved:** Android beta release (M15).
 
-<Warning>
-  Version 1.2.0 requires Android 13.0 or later. If you need to support Android 12, please continue using version 1.1.x.
-</Warning>
+---
 
-## Deprecation Notices
+## 1.1.14
 
-### Version 1.2.0
-- `JoyfillAppearance` - Use `JoyfillTheme` instead
-- `formView.customColors` - Use `formView.theme.colors` instead
+### 🧩 Fixes
+- **Fixed:** Hidden fields leaving empty space (8dpi each).
+- **Fixed:** `TextArea` and `NumberField` not persisting last updated values.
 
-These deprecated APIs will be removed in version 2.0.0.
+---
 
-## Getting Support
+## 1.1.13
 
-If you encounter any issues:
-- Check our [GitHub Issues](https://github.com/joyfill/joyfill-ios/issues)
-- Visit [Support Center](https://joyfill.io/support)
-- Email us at support@joyfill.io
+### 🧩 Fixes
+- **Fixed:** Conditional logic not resolving correctly on single input.
+- **Fixed:** Date Field capturing incorrect time.
+- **Fixed:** Last text field entry not updating.
 
+### 📦 Dependencies
+- **Bumped:** Kotlin → 2.1.10.
+- **Bumped:** Compose Multiplatform → 1.7.3.
+
+---
+
+## 1.1.12
+
+### 🚀 Enhancements
+- **Added:** Sorting and filtering capabilities to Table Field.
+- **Added:** Bulk row duplication and editing support.
+
+### 📦 Dependencies
+- **Bumped:** Kotlin 2.0.10 → 2.0.21.
+- **Bumped:** Compose Multiplatform 1.6.11 → 1.7.0.
+
+---
+
+## 1.1.11
+
+### 🧩 Fixes
+- **Fixed:** Conditional logic issues with multiselect and dropdown fields.
+- **Fixed:** Logical comparisons and empty/null value checks.
+
+---
+
+## 1.1.7
+
+### 🚀 Enhancements
+- **Added:** Chart preview, full view, coordinate editing, and color customization.
+
+---
+
+## 1.1.6
+
+### 🧩 Fixes
+- **Fixed:** Number field crashing on invalid values.
+
+---
+
+## 1.1.5
+
+### 🧩 Fixes
+- **Fixed:** Conditional logic for choice fields not firing properly.
+- **Fixed:** Mobile View regression.
+- **Fixed:** Validation only triggers for visible fields.
+
+---
+
+## 1.1.4
+
+### 🚀 Enhancements
+- **Added:** Field tooltips, Table row duplication, and Validation Plugin (field, form, and document level).
+
+### 🧩 Fixes
+- **Fixed:** Conditional logic for choice fields and multiselect fields.
+
+---
+
+## 1.1.2
+
+### 🧩 Fixes
+- **Fixed:** Default values on conditional logic now work as expected.
+
+---
+
+## 1.1.1
+
+### 🧩 Fixes
+- **Fixed:** Conditional Logic now works as expected.
+
+---
+
+## 1.1.0
+
+### 🚀 Enhancements
+- **Added:** Conditional Logic Support.
+
+### 🧩 Fixes
+- **Fixed:** Image field crash when opened with invalid value.
+
+---
+
+## 1.0.6
+
+### 🧩 Fixes
+- **Fixed:** UI inconsistencies and readonly table behaviors.
+
+### 🚀 Enhancements
+- **Improved:** Keyboard and required field visuals.
+- **Added:** Date format customization based on builder settings.
+
+---
+
+## 1.0.5
+
+### 🚀 Enhancements
+- **Added:** RGB color and text alignment support for Rich Text fields.
+- **Added:** Calendar icon for DateField.
+
+### 🧩 Fixes
+- **Fixed:** Font size and crash issues.
+
+---
+
+## 0.1.0-RC1
+
+### 🎉 Initial Release — Joyfill Kotlin Multiplatform SDK
+
+### 🚀 Features
+- Full field and callback support (Text, Number, Dropdown, Multiselect, Signature, DateTime, Image, Table, etc.).
+- External & internal navigation, readonly fields, and field deletions.
+
+### 🧩 Supported Targets
+- Android, Linux, Windows, MacOS (JVM).
+- (Coming soon: Browser, iOS, Native MacOS.)
