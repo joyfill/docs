@@ -2,7 +2,7 @@
 
 ---
 
-## 3.0.0-rc5 | 2025-10-30
+## 3.0.0-rc5 | Oct 30, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc5).
 
@@ -20,7 +20,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 3.0.0-rc4 | 2025-10-10
+## 3.0.0-rc4 | Oct 10, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc4).
 
@@ -44,7 +44,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 3.0.0-rc3 | 2025-09-25
+## 3.0.0-rc3 | Sep 25, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc3).
 
@@ -59,7 +59,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 3.0.0-rc2 | 2025-09-19
+## 3.0.0-rc2 | Sep 19, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc2).
 
@@ -72,7 +72,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 3.0.0-rc1 | 2025-09-17
+## 3.0.0-rc1 | Sep 17, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc1).
 
@@ -100,7 +100,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 2.0.6 | 2025-07-06
+## 2.0.6 | Jul 06, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/2.0.6).
 
@@ -122,7 +122,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 2.0.5 | 2025-04-25
+## 2.0.5 | Apr 25, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/2.0.5).
 
@@ -133,7 +133,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 2.0.4 | 2025-04-17
+## 2.0.4 | Apr 17, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/2.0.4).
 
@@ -152,7 +152,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 2.0.3 | 2025-02-26
+## 2.0.3 | Feb 26, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/2.0.3).
 
@@ -161,7 +161,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 2.0.2 | 2025-02-19
+## 2.0.2 | Feb 19, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/2.0.2).
 
@@ -172,7 +172,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 2.0.1 | 2025-02-14
+## 2.0.1 | Feb 14, 2025
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/2.0.1).
 
@@ -184,7 +184,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 2.0.0 | 2024-12-24
+## 2.0.0 | Dec 24, 2024
 
 Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/2.0.0).
 
@@ -199,21 +199,21 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 1.2.2 | 2024-11-12
+## 1.2.2 | Nov 12, 2024
 
 ### 🚀 Enhancements
 - **Added:** Insert below & move row in table field
 
 ---
 
-## 1.2.1 | 2024-11-09
+## 1.2.1 | Nov 09, 2024
 
 ### 🧩 Fixes
 - **Fixed:** Model version issues 
 
 ---
 
-## 1.2.0 | 2024-10-15
+## 1.2.0 | Oct 15, 2024
 
 ### 🚀 Enhancements
 - **Added:** Only validate current visible view for field validator 
@@ -221,7 +221,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 1.1.0 | 2024-09-25
+## 1.1.0 | Sep 25, 2024
 
 ### 🚀 Enhancements
 - **Improved:** Table field — added search, filter, sort, bulk update, and more.
@@ -234,7 +234,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 1.0.6 | 2024-07-26
+## 1.0.6 | Jul 26, 2024
 
 ### 🧩 Fixes
 - **Fixed:** Validation not working properly with conditional logic.  
@@ -244,7 +244,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 1.0.5 | 2024-07-24
+## 1.0.5 | Jul 24, 2024
 
 ### 🚀 Enhancements
 - **Added:** New validation APIs for improved form handling.  
@@ -256,7 +256,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 1.0.4 | 2024-07-09
+## 1.0.4 | Jul 09, 2024
 
 ### 🧩 Fixes
 - **Added:** Conditional logic functionality.  
@@ -264,7 +264,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 1.0.3 | 2024-06-06
+## 1.0.3 | Jun 06, 2024
 
 ### 🧩 Fixes
 - **Fixed:** Page navigation now hidden when page count is 1.  
@@ -272,7 +272,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 1.0.2 | 2024-06-05
+## 1.0.2 | Jun 05, 2024
 
 ### 🚀 Enhancements
 - **Added:** Page navigation functionality.  
@@ -286,14 +286,14 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 - **Improved:** Overall performance and minor stability enhancements.  
 ---
 
-## v1.0.1 | 2024-05-13
+## v1.0.1 | May 13, 2024
 
 ### 🧩 Fixes
 - **Fixed:** An issue in the `JoyDoc` model where the app was crashing when values in some of the fields were nil.
 
 ---
 
-## v1.0.0 | 2024-05-07
+## v1.0.0 | May 07, 2024
 ### 🚀 Enhancements
 - **Updated:** JoyDoc model to be JSON/dictionary-backed for future-proofing.  
   - No changes to public APIs (getters/setters).  
@@ -309,7 +309,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## v0.2.17 | 2024-04-16
+## v0.2.17 | Apr 16, 2024
 
 ### 🚀 Enhancements
 - **Added:** Support for the `disabled` field across the entire form.  
@@ -321,7 +321,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## v0.2.16 | 2024-04-04
+## v0.2.16 | Apr 04, 2024
 
 ### 🚀 Enhancements
 - **Updated:** Public API — `JoyFillView` renamed to `Form`, and `currentPageID` renamed to `pageID` for consistency with Android SDK naming conventions.  
@@ -333,7 +333,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## v0.2.15 | 2024-04-01
+## v0.2.15 | Apr 01, 2024
 
 ### 🧩 Fixes
 - **Improved:** Overall performance and stability.  
@@ -341,14 +341,14 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 0.2.14 | 2024-03-27
+## 0.2.14 | Mar 27, 2024
 
 ### 🧩 Fixes
 - **Removed:** Unused dependency `SwiftUICharts`.  
 
 ---
 
-## 0.2.13 | 2024-03-26
+## 0.2.13 | Mar 26, 2024
 
 ### 🚀 Enhancements
 - **Added:** Chart field.  
@@ -360,11 +360,13 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 0.2.12 | 2024-03-18
+## 0.2.12 | Mar 18, 2024
 
+### 🧩 Fixes
+- **Fixed:** Minor bugs and issues. 
 ---
 
-## 0.2.11 | 2024-03-15
+## 0.2.11 | Mar 15, 2024
 
 ### 🚀 Enhancements
 - **Completed:** Implementation of all field types with full support.  
@@ -376,7 +378,7 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 0.2.10 | 2024-03-15
+## 0.2.10 | Mar 15, 2024
 
 ### 🚀 Enhancements
 - **Released:** 🎉 First public version of the Joyfill Swift SDK.  
@@ -391,13 +393,34 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 
 ---
 
-## 0.2.9 | 2024-03-15
+## 0.2.9 | Mar 15, 2024
 
+### 🧩 Fixes
+- **Fixed:** Minor bugs and issues. 
 ---
 
-## 0.2.8 | 2024-03-14
+## 0.2.8 | Mar 14, 2024
 
 ### 🚀 Enhancements
 - **Released:** Pre-release version for testing as the main release.  
 
+---
+
+## 0.2.7 | Mar 14, 2024
+
+### 🚀 Enhancements
+
+- **Added:** Handle TableView onFocus
+
+---
+## 0.2.3 | Mar 14, 2024
+
+### 🚀 Enhancements
+- **Added:**Handle TableView onFocus
+---
+
+## v0.2.3-beta | Mar 14, 2024
+
+### 🚀 Enhancements
+- **Added:**Handle TableView onFocus
 ---
