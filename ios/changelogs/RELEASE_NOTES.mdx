@@ -1,0 +1,434 @@
+# joyfill/components-swift — Release Notes (combined from GitHub Releases)
+
+> Source: https://github.com/joyfill/components-swift/releases  
+> Note: API results may be incomplete (limited to 30 results). View full list on GitHub.
+
+---
+
+## Release: 3.0.0-rc5
+url: https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc5
+published_at: 2025-10-30T16:32:34Z
+Body:
+## What's Changed
+**Fixes**
+	• Fixed: Multi-selection text-to-box image alignment issue.
+	• Fixed: Crash in Table Quick View in change handler.
+	• Fixed: Handling of decimal numbers without a leading zero in formulas.
+**Enhancements**
+	• Added: Support for custom date and time formats.
+	• Improved: Required field validation — added page ID to validation status object for more accurate field tracking.
+**UI / UX Improvements**
+	• Added: Highlighting for the selected row in Table and Collection fields to improve user visibility.
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/3.0.0-rc4...3.0.0-rc5
+
+---
+
+## Release: 3.0.0-rc4
+url: https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc4
+published_at: 2025-10-10T13:05:17Z
+Body:
+## What's Changed
+**Fixes**
+	•	Fixed: Table/Collection image cell triggering onChange twice.
+	•	Fixed: Date field calling onFocus before the onChange event.
+	•	Fixed: Memory leak and retain cycle between DocumentEditor and JoyfillDocContext.
+	•	Fixed: Block field appearance when color value is empty.
+	•	Fixed: Issue where filtering number columns with 0 returned empty rows.
+        •	Fixed: Including timezone (tz) property in changelog when updating date columns in tables to ensure accurate time handling.
+**Read-only Mode Enhancements**
+	•	Disabled: Editing of text and barcode column cells in Table/Collection when in read-only mode.
+	•	Disabled: Duplicate page functionality in read-only mode.
+	•	Disabled: All event handlers while in read-only mode to prevent unintended interactions.
+**UI / UX Improvements**
+	•	Adjusted: Table/Collection colors for proper appearance in dark mode.
+	•	Added: Scrolling support in table column titles to ensure visibility of content when titles are very large.
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/3.0.0-rc3...3.0.0-rc4
+
+---
+
+## Release: 3.0.0-rc3
+url: https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc3
+published_at: 2025-09-25T15:40:23Z
+Body:
+## What's Changed
+* Fixed multithreading crash related to collection field initialization
+* Fixed issues with onBlur events not getting called
+* Fixed collection field quick view image column count not updating
+* Updated readme documentation 
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/3.0.0-rc2...3.0.0-rc3
+
+---
+
+## Release: 3.0.0-rc2
+url: https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc2
+published_at: 2025-09-19T13:32:15Z
+Body:
+## What's Changed
+* Fix changes made by change handler getting discarded on page switch
+* Update README documentation
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/3.0.0-rc1...3.0.0-rc2
+
+---
+
+## Release: 3.0.0-rc1
+url: https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc1
+published_at: 2025-09-17T15:19:05Z
+Body:
+## What's Changed
+* Added Collection field
+* Added Formula support
+* Additional parameter for on uplaod event 
+* Add license-based collection field enforcement
+* Support new table column types in Table and Collection field
+* Collection sort and filter
+* Collection conditional logic 
+* Collection field validation 
+* Added support for Change handler to modify the form externally/programmatically 
+* Date time zone 
+* Image field url replacement
+* Block field additional styling 
+* Remove force unwraps to fix crash issues 
+* Add Insensitive conditional logic for texts 
+* Error handling 
+* Fix field ordering
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/2.0.6...3.0.0-rc1
+
+---
+
+## Release: 2.0.6
+url: https://github.com/joyfill/components-swift/releases/tag/2.0.6
+published_at: 2025-07-06T16:29:38Z
+Body:
+## What's Changed
+* Support block field styles. 
+* Fix showing image picker in already presented sheets
+* Remove 'UIScrollView bounce disabling' to fix pull to refresh issue
+* Removed force unwraps across the project to fix random crashes
+* Fix issues related to image field like 'image reset bug on re-upload of same image in single-selection'
+* Remove case sensitive text in Conditional logic 
+* Support single and multiple images for table image column
+* Fix the title visibility when converting web view to mobile view
+* Fix checkbox issue related to multi property 
+* Add empty cells object when inserting new rows in table 
+* Fix memory leaks by using weak self in table closures
+* Add support for updating the image urls from outside via document editor with live UI refreshing
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/2.0.5...2.0.6
+
+---
+
+## Release: 2.0.5
+url: https://github.com/joyfill/components-swift/releases/tag/2.0.5
+published_at: 2025-04-25T12:50:56Z
+Body:
+## What's Changed
+* Fix image getting replaced in image field if upload handler is not called on upload button tapped
+* Fix int64 parsing issue in model
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/2.0.4...2.0.5
+
+---
+
+## Release: 2.0.4
+url: https://github.com/joyfill/components-swift/releases/tag/2.0.4
+published_at: 2025-04-17T11:21:12Z
+Body:
+## What's Changed
+* Implement page duplication.
+* Fix table image view UI on iPad
+* Handle user access token in example project
+* Fix field ordering in validations
+* Handle crash on invalid json
+* Add missing int case in valueUnion in model to fix crash
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/2.0.3...2.0.4
+
+---
+
+## Release: 2.0.3
+url: https://github.com/joyfill/components-swift/releases/tag/2.0.3
+published_at: 2025-02-26T08:56:01Z
+Body:
+## What's Changed
+* Make dictionaries public in the JoyDoc Model
+
+---
+
+## Release: 2.0.2
+url: https://github.com/joyfill/components-swift/releases/tag/2.0.2
+published_at: 2025-02-19T07:00:16Z
+Body:
+## What's Changed
+* Fix the Form content gets obscured by the keyboard for the text fields 
+* Fix extra space in the table field on iOS 15 
+* Fix keyboard auto dismiss on table text cell for the first row on iOS 15
+
+---
+
+## Release: 2.0.1
+url: https://github.com/joyfill/components-swift/releases/tag/2.0.1
+published_at: 2025-02-14T08:59:21Z
+Body:
+* Fix logical "AND" and "OR" corner cases in conditional logic
+* Fix iPad rotation issue in UIKit Sample Project
+* Apply conditional logic to the current page id passed in the Form init
+* Fix web view to mobile view conversion if we don't have mobile view in the document and multiple fields are at the same Y position
+
+---
+
+## Release: 2.0.0
+url: https://github.com/joyfill/components-swift/releases/tag/2.0.0
+published_at: 2024-12-24T07:53:00Z
+Body:
+## What's Changed
+* Fix unsupported column type 
+* Table navigation fix on iPad
+* Use update conditional logic APIs
+* Table field performance improvements
+* Performance improvements for the large forms
+* Support hidden property for the fields header
+
+---
+
+## Release: 1.2.2
+url: https://github.com/joyfill/components-swift/releases/tag/1.2.2
+published_at: 2024-11-12T13:44:53Z
+Body:
+## What's Changed
+Added insert below & move row in table field
+
+---
+
+## Release: 1.2.1
+url: https://github.com/joyfill/components-swift/releases/tag/1.2.1
+published_at: 2024-11-09T04:55:37Z
+Body:
+## What's Changed
+* Fix Model version issues 
+
+---
+
+## Release: 1.2.0
+url: https://github.com/joyfill/components-swift/releases/tag/1.2.0
+published_at: 2024-10-15T13:06:52Z
+Body:
+## What's Changed
+* Only validate current visible view for field validator 
+* Cocoapods support
+
+---
+
+## Release: 1.1.0
+url: https://github.com/joyfill/components-swift/releases/tag/1.1.0
+published_at: 2024-09-25T12:38:56Z
+Body:
+## What's Changed
+* Table field improvements, adding search, filter, sort, bulk update and more by @VishnuBishnoi in https://github.com/joyfill/components-swift/pull/55
+* Fix table title issue by @VishnuBishnoi in https://github.com/joyfill/components-swift/pull/51
+* Performance improvements for large tables ( 1000 + ) crash issue by @VishnuBishnoi in https://github.com/joyfill/components-swift/pull/52
+* Fix padding for fields in form view by @VishnuBishnoi in https://github.com/joyfill/components-swift/pull/54
+* Handle unsupported field types by @VishnuBishnoi in https://github.com/joyfill/components-swift/pull/53
+* Test cases for selection field by @VishnuBishnoi in https://github.com/joyfill/components-swift/pull/49
+* Add unit test cases for validation fields by @VishnuBishnoi in https://github.com/joyfill/components-swift/pull/50
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/1.0.6...1.1.0
+
+---
+
+## Release: 1.0.6
+url: https://github.com/joyfill/components-swift/releases/tag/1.0.6
+published_at: 2024-07-26T08:19:56Z
+Body:
+## What's Changed
+* Fixed validation not working properly with conditional logic
+* Update readme for Validation 
+* Added UI test case for selection fields 
+* Fix the drop-down field showing deleted options
+
+---
+
+## Release: 1.0.5
+url: https://github.com/joyfill/components-swift/releases/tag/1.0.5
+published_at: 2024-07-24T11:10:46Z
+Body:
+## What's new
+* Added new Validation APIs 
+* Added Duplicate rows in table field
+
+## Fixes: 
+* Fixed conditional logic was not working for single-select and multi-select fields.
+* Fixed a crash when adding new row in empty table view
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/1.0.4...1.0.5
+
+---
+
+## Release: 1.0.4
+url: https://github.com/joyfill/components-swift/releases/tag/1.0.4
+published_at: 2024-07-09T11:44:25Z
+Body:
+## What's Changed
+* Add Conditional logic by @VishnuBishnoi in https://github.com/joyfill/components-swift/pull/41
+* Fix the multiple choice issue where deleted options were showing by @VishnuBishnoi in https://github.com/joyfill/components-swift/pull/40
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/1.0.3...1.0.4
+
+---
+
+## Release: 1.0.3
+url: https://github.com/joyfill/components-swift/releases/tag/1.0.3
+published_at: 2024-06-06T12:33:56Z
+Body:
+## What's Changed
+- Fixed page navigation should be hidden if page count is 1
+- Fixed tooltip is visible even if its explicitly set as hidden 
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/1.0.2...1.0.3
+
+---
+
+## Release: 1.0.2
+url: https://github.com/joyfill/components-swift/releases/tag/1.0.2
+published_at: 2024-06-05T16:58:10Z
+Body:
+## What's Changed
+- Added page navigation
+- Added field tooltip
+- Added documentation of the public APIs
+- Added UI test cases in the example project
+- Added unit test cases in the example project 
+- Fixed issues related to the signature field 
+- Other minor fixes and performance improvements
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/v1.0.1...1.0.2
+
+---
+
+## Release: v1.0.1
+url: https://github.com/joyfill/components-swift/releases/tag/v1.0.1
+published_at: 2024-05-13T12:50:26Z
+Body:
+## What's Changed
+Fixed an issue in the `JoyDoc` model where the app was crashing when values in some of the fields were nil.
+
+---
+
+## Release: v1.0.0
+url: https://github.com/joyfill/components-swift/releases/tag/v1.0.0
+published_at: 2024-05-07T13:37:16Z
+Body:
+- JoyDoc model is now JSON/dictionary backed to make JoyDoc future-proof. There have been no changes to the public APIs (getters and setters) of JoyDoc. 
+Now, to get data from JoyDoc, we can use the dictionary property (document.dictionary). Similarly, we need to pass the dictionary to initialise the JoyDoc.
+- Fixed an issues where empty form was shown for newly created document.
+- Table add row on change fixed.
+- Fixed chart coordinate values are not updating.
+- Removed API service dependency.
+- Fixed signature filled in mobile is not shown in web
+- Other minor issues, fixes, and performance improvements. 
+
+---
+
+## Release: v0.2.17
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.17
+published_at: 2024-04-16T12:10:01Z
+Body:
+Added support for the `disabled` field for the entire form.
+Fixed UI alignment-related issues  for `Date field`
+Update the model with newly added fields to fix parsing issues and missing fields when saving the document. 
+Code cleanup and performance improvements
+
+---
+
+## Release: v0.2.16
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.16
+published_at: 2024-04-04T18:24:54Z
+Body:
+1. Updated public API: `JoyFillView` renamed to `Form` and `currentPageID` changed to `pageID`. Those are just naming changes to be consistent with our Android public APIs, there are no changes functionality wise.
+2. Fixed image alignment  issue in image view 
+3. Fixed console warnings
+4. Fixed table editing not reflecting in the table quick view issue.
+
+---
+
+## Release: v0.2.15
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.15
+published_at: 2024-04-01T13:14:09Z
+Body:
+Bug fixes and performance improvements
+
+---
+
+## Release: 0.2.14
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.14
+published_at: 2024-03-27T07:04:14Z
+Body:
+Remove unused dependency SwiftUICharts
+
+---
+
+## Release: 0.2.13
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.13
+published_at: 2024-03-26T16:49:19Z
+Body:
+Added Chart field
+Added Richtext field 
+Bug fixes and performance improvements
+
+---
+
+## Release: 0.2.12
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.12
+published_at: 2024-03-18T14:44:01Z
+Body:
+
+
+---
+
+## Release: 0.2.11
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.11
+published_at: 2024-03-15T17:57:45Z
+Body:
+All fields are finished and supported
+Change handlers for each field now have proper varying support (see docs/readme)
+Deprecation of the previous SDK is now complete
+Light mode is fully supported with dark mode support on the way!
+Keep in mind this is a beta release and you may run into an occasional bug, please report those to the Joyfill team.
+As always we recommend checking out our official docs: https://docs.joyfill.io/docs/swift
+
+---
+
+## Release: 0.2.10
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.10
+published_at: 2024-03-15T13:53:50Z
+Body:
+Our first public release of the Joyfill Swift SDK
+
+All fields are finished and supported
+Change handlers for each field now have proper varying support (see docs/readme)
+Deprecation of the previous SDK is now complete
+Light mode is fully supported with dark mode support on the way!
+Keep in mind this is a beta release and you may run into an occasional bug, please report those to the Joyfill team.
+As always we recommend checking out our official docs: https://docs.joyfill.io/docs/swift
+
+---
+
+## Release: 0.2.9
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.9
+published_at: 2024-03-15T13:43:40Z
+Body:
+
+
+---
+
+## Release: 0.2.8
+url: https://github.com/joyfill/components-swift/releases/tag/0.2.8
+published_at: 2024-03-14T18:18:12Z
+Body:
+Pre-release for testing as main release
+
+---
