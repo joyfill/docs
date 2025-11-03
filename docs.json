@@ -73,7 +73,7 @@
           {
             "group": "Resources",
             "pages": [
-              "ios/changelogs/releases",
+              "ios/changelogs/RELEASE_NOTES",
               "ios/about/security"
             ]
           }
