@@ -226,7 +226,7 @@ The Joyfill SDK provides the following public event handlers:
 - `onChange` - Document changes (field, fieldposition, page, style changes)
 - `onCaptureAsync` - Barcode capture events
 - `onUploadAsync` - File upload events (images)
-- `onFileUpload` - File upload events
+- `onFileUploadAsync` - File upload events
 - `onFileClick` - File click events
 - `onFileDelete` - File deletion events
 
@@ -399,7 +399,9 @@ function MyForm() {
 
 ### `onChange`
 
-The primary event handler for all document changes. Triggered for:
+The primary event handler for all document changes. 
+
+Triggered for:
 
 - **Field changes** - Field value or property updates
 - **Field position changes** - Field position, size, or display changes
@@ -551,6 +553,8 @@ onCaptureAsync() => Promise<string>
 **Usage Example:**
 
 ```jsx
+import { JoyDoc } from "@joyfill/components";
+
 function MyForm() {
   const handleCaptureAsync = async () => {
     console.log('Barcode capture initiated');
@@ -651,6 +655,9 @@ onUploadAsync(params, files) => Promise<Array<ImageObject>>
 **Usage Example:**
 
 ```jsx
+import { useState } from "react";
+import { JoyDoc } from "@joyfill/components";
+
 function MyForm() {
   const [document, setDocument] = useState(initialDocument);
 
@@ -751,31 +758,35 @@ const uploadFileAsync = async (identifier, dataUri, tableContext = null) => {
 
 ```
 
-### `onFileUpload`
+### `onFileUploadAsync`
 
-Triggered when a file upload is initiated.
+- onFileUploadAsync is an async callback in `fieldSettings.field` that handles file uploads for specific fields. It overrides the global onUploadAsync when provided.
 
 **Function Signature:**
 
 ```jsx
-onFileUpload(params, files) => Promise<Array<ImageObject>>
+
+		onFileUploadAsync(params, files) => Promise<Array<ImageObject>>
 
 ```
 
 **Parameters:**
 
-- `params` (Object): '
+- `params` (Object): Upload context information
 - `files` (Array&lt;File&gt;): Array of File objects selected by the user
 
 **Usage Example:**
 
 ```jsx
+import { useState } from "react";
+import { JoyDoc } from "@joyfill-components";
+
 function MyForm() {
   const [document, setDocument] = useState(initialDocument);
 
   const handleFileUploadAsync = async (params, fileUploads) => {
-    console.log('onFileUploadAsync params:', params);
-    console.log('onFileUploadAsync files:', fileUploads);
+    console.log("onFileUploadAsync params:", params);
+    console.log("onFileUploadAsync files:", fileUploads);
 
     const uploadPromises = fileUploads.map(async (file) => {
       const dataUri = await getDataUriForFileUpload(file);
@@ -787,25 +798,25 @@ function MyForm() {
   };
 
   const handleChange = (changelogs, updatedDoc) => {
-    console.log('Document changed:', changelogs);
+    console.log("Document changed:", changelogs);
 
     // Process each changelog
-    changelogs.forEach(changelog => {
-      if (changelog.target === 'field.update') {
-        console.log('Field updated:', changelog.fieldId);
+    changelogs.forEach((changelog) => {
+      if (changelog.target === "field.update") {
+        console.log("Field updated:", changelog.fieldId);
 
         // Check if this was a table field upload
         if (changelog.rowId && changelog.columnId) {
-          console.log('Table field upload completed:', {
+          console.log("Table field upload completed:", {
             fieldId: changelog.fieldId,
             rowId: changelog.rowId,
             columnId: changelog.columnId,
-            multi: changelog.multi
+            multi: changelog.multi,
           });
         } else {
-          console.log('Normal field upload completed:', {
+          console.log("Normal field upload completed:", {
             fieldId: changelog.fieldId,
-            multi: changelog.multi
+            multi: changelog.multi,
           });
         }
       }
@@ -814,15 +825,26 @@ function MyForm() {
     setDocument(updatedDoc);
   };
 
+  const fieldSettings = {
+    field: {
+      onFileUploadAsync: async (params, fileUploads) => {
+        console.log("onFileUploadAsync: ", params, fileUploads);
+        return {
+          _id: new Date().getTime(),
+          url: "sampleImageUrl",
+        };
+      },
+    },
+  };
+  
   return (
     <JoyDoc
       doc={document}
       onChange={handleChange}
-      onFileUploadAsync={handleFileUploadAsync}
+			fieldSettings={fieldSettings}
     />
   );
 }
-
 ```
 
 ## File Interaction Events
@@ -863,7 +885,7 @@ onFileClick(params, urlObject) => Promise<void>
 ```jsx
 {
   "_id": "68ef8fb9874dbbcfd1189f88",
-  "url": "<https://s3.amazonaws.com/docspace.dev.documents/68a47e5d32dddce3ee2c31a5/documents/my-document/68ef8fb38f7d1d3e8348f894-1760530355509.jpg>",
+  "url": "<https://placehold.co/600x400>",
   "fileName": "68ef8fb38f7d1d3e8348f894-1760530355509.jpg",
   "filePath": "68a47e5d32dddce3ee2c31a5/documents/my-document"
 }
@@ -875,44 +897,46 @@ onFileClick(params, urlObject) => Promise<void>
 ```jsx
 function MyForm() {
   const handleFileClick = async (params, urlObject) => {
-    console.log('File clicked:', {
+    console.log("File clicked:", {
       params,
-      urlObject
+      urlObject,
     });
 
     const { fieldId, fieldIdentifier } = params;
     const { url, fileName, _id: fileId } = urlObject;
 
-    console.log('File details:', {
+    console.log("File details:", {
       fieldId,
       fieldIdentifier,
       fileId,
       fileName,
-      url
+      url,
     });
 
     // Open file in new tab
-    window.open(url, '_blank');
+    window.open(url, "_blank");
 
     // Or handle file action based on file type
-    const fileExtension = fileName.split('.').pop().toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+    const fileExtension = fileName.split(".").pop().toLowerCase();
+    if (["jpg", "jpeg", "png", "gif"].includes(fileExtension)) {
       // Handle image files
-      console.log('Image file clicked:', fileName);
-    } else if (['pdf'].includes(fileExtension)) {
+      console.log("Image file clicked:", fileName);
+    } else if (["pdf"].includes(fileExtension)) {
       // Handle PDF files
-      console.log('PDF file clicked:', fileName);
+      console.log("PDF file clicked:", fileName);
     }
   };
 
-  return (
-    <JoyDoc
-      doc={document}
-      onFileClick={handleFileClick}
-    />
-  );
-}
+  const fieldSettings = {
+    field: {
+      onFileClick: async (params, urlObject) => {
+        console.log("onFileClick: ", params, urlObject);
+      },
+    },
+  };
 
+  return <JoyDoc doc={document} onFileClick={handleFileClick} />;
+}
 ```
 
 ### `onFileDelete`
@@ -936,43 +960,45 @@ onFileDelete(params, urlObject) => Promise<void>
 ```jsx
 function MyForm() {
   const handleFileDelete = async (params, urlObject) => {
-    console.log('File delete requested:', {
+    console.log("File delete requested:", {
       params,
-      urlObject
+      urlObject,
     });
 
     const { fieldId, fieldIdentifier } = params;
     const { url, fileName, _id: fileId } = urlObject;
 
-    console.log('File to be deleted:', {
+    console.log("File to be deleted:", {
       fieldId,
       fieldIdentifier,
       fileId,
       fileName,
-      url
+      url,
     });
 
     // Confirm deletion
     const confirmed = confirm(`Are you sure you want to delete "${fileName}"?`);
 
     if (confirmed) {
-      console.log('File deletion confirmed by user');
+      console.log("File deletion confirmed by user");
       // File deletion is handled by the SDK
       // This handler is called before the actual deletion
     } else {
-      console.log('File deletion cancelled by user');
+      console.log("File deletion cancelled by user");
       // Prevent deletion (if the SDK supports it)
     }
   };
 
-  return (
-    <JoyDoc
-      doc={document}
-      onFileDelete={handleFileDelete}
-    />
-  );
-}
+  const fieldSettings = {
+    field: {
+      onFileDelete: async (params, urlObject) => {
+        console.log("onFileDelete: ", params, urlObject);
+      },
+    },
+  };
 
+  return <JoyDoc doc={document} onFileDelete={handleFileDelete} />;
+}
 ```
 
 ## Advanced Change Processing
@@ -997,37 +1023,67 @@ const handleChange = (changelogs, updatedDoc) => {
 
 ```
 
-### Tracking Specific Events
-
-```jsx
-const handleChange = (changelogs, updatedDoc) => {
-  // Track theme changes specifically
-  const themeChanges = changelogs.filter(c =>
-    c.target === 'style.update' && c.change.theme
-  );
-
-  if (themeChanges.length > 0) {
-    console.log('Theme changed to:', themeChanges[0].change.theme);
-  }
-
-  setDocument(updatedDoc);
-};
-
-```
-
 ## Real-World Examples
 
 ### Form Validation
 
 ```jsx
+import { useState } from "react";
+import { JoyDoc, validator } from "@joyfill-components";
+
 function MyForm() {
   const [document, setDocument] = useState(initialDocument);
   const [errors, setErrors] = useState({});
 
+  /**
+   * Validates a field using the JoyDoc validator
+   *
+   * @param {string} fieldId - The ID of the field to validate
+   * @param {any} fieldValue - The value to validate
+   * @param {Object} document - The JoyDoc document containing field definitions
+   * @returns {Object} Validation result with isValid (boolean) and message (string)
+   */
+  const validateField = (fieldId, fieldValue, document) => {
+    // Find the field in the document
+    const field = document?.fields?.find((f) => f._id === fieldId);
+
+    // If field not found, return invalid
+    if (!field) {
+      return {
+        isValid: false,
+        message: `Field with ID ${fieldId} not found`,
+      };
+    }
+
+    // Create a field object with the updated value for validation
+    const fieldToValidate = {
+      ...field,
+      value: fieldValue,
+    };
+
+    // Use the JoyDoc validator to validate the field
+    const validationResult = validator.validateField(fieldToValidate);
+
+    // Convert the validation result to the expected format
+    if (validationResult.status === "invalid") {
+      return {
+        isValid: false,
+        message: field.title
+          ? `${field.title} is required`
+          : "This field is required",
+      };
+    }
+
+    return {
+      isValid: true,
+      message: "",
+    };
+  };
+
   const handleChange = (changelogs, updatedDoc) => {
     // Process changes
-    changelogs.forEach(changelog => {
-      if (changelog.target === 'field.update') {
+    changelogs.forEach((changelog) => {
+      if (changelog.target === "field.update") {
         // Validate field
         const fieldId = changelog.fieldId;
         const fieldValue = changelog.change.value;
@@ -1036,12 +1092,12 @@ function MyForm() {
         const validationResult = validateField(fieldId, fieldValue);
 
         if (!validationResult.isValid) {
-          setErrors(prev => ({
+          setErrors((prev) => ({
             ...prev,
-            [fieldId]: validationResult.message
+            [fieldId]: validationResult.message,
           }));
         } else {
-          setErrors(prev => {
+          setErrors((prev) => {
             const newErrors = { ...prev };
             delete newErrors[fieldId];
             return newErrors;
@@ -1058,7 +1114,7 @@ function MyForm() {
       <JoyDoc
         doc={document}
         features={{
-          validateSchema: true
+          validateSchema: true,
         }}
         onChange={handleChange}
       />
@@ -1074,47 +1130,80 @@ function MyForm() {
     </div>
   );
 }
-
 ```
 
 ### Auto-Save
 
 ```jsx
+import { useState, useCallback, useRef } from "react";
+import { JoyDoc, validator } from "@builttocreate/joyfill-components";
+import debounce from "lodash.debounce";
+
 function MyForm() {
   const [document, setDocument] = useState(initialDocument);
   const [lastSaved, setLastSaved] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleChange = useCallback((changelogs, updatedDoc) => {
-    console.log('Document changed:', changelogs);
-    setDocument(updatedDoc);
+  // Create a save function
+  const saveDocument = async (docToSave) => {
+    try {
+      setIsSaving(true);
 
-    // Auto-save after changes
-    debounce(() => {
-      saveDocument(updatedDoc);
+      // Replace this with your actual save API call
+      // Example: await fetch('/api/documents', { method: 'POST', body: JSON.stringify(docToSave) });
+      console.log("Saving document:", docToSave);
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       setLastSaved(new Date());
-    }, 1000)();
-  }, []);
+      setIsSaving(false);
+    } catch (error) {
+      console.error("Error saving document:", error);
+      setIsSaving(false);
+    }
+  };
+
+  // Create a debounced save function using useRef to persist across renders
+  const debouncedSave = useRef(
+    debounce((docToSave) => {
+      saveDocument(docToSave);
+    }, 1000)
+  ).current;
+
+  const handleChange = useCallback(
+    (changelogs, updatedDoc) => {
+      console.log("Document changed:", changelogs);
+
+      // Update document immediately
+      setDocument(updatedDoc);
+
+      // Trigger debounced auto-save
+      debouncedSave(updatedDoc);
+    },
+    [debouncedSave]
+  );
 
   return (
     <div>
-      <JoyDoc
-        doc={document}
-        onChange={handleChange}
-      />
-      {lastSaved && (
-        <div className="save-status">
-          Last saved: {lastSaved.toLocaleTimeString()}
-        </div>
-      )}
+      <JoyDoc doc={document} onChange={handleChange} />
+      <div className="save-status">
+        {isSaving && <span>Saving...</span>}
+        {lastSaved && !isSaving && (
+          <span>Last saved: {lastSaved.toLocaleTimeString()}</span>
+        )}
+      </div>
     </div>
   );
 }
 
+export default MyForm;
 ```
 
 ### Analytics Tracking
 
 ```jsx
+import { JoyDoc } from "@joyfill/components";
 function MyForm() {
   const [document, setDocument] = useState(initialDocument);
 
@@ -1145,6 +1234,7 @@ function MyForm() {
 ### Undo/Redo Functionality
 
 ```jsx
+import { JoyDoc } from "@joyfill/components";
 function MyForm() {
   const [document, setDocument] = useState(initialDocument);
   const [history, setHistory] = useState([]);
@@ -1264,38 +1354,28 @@ const handleChange = (changelogs, updatedDoc) => {
 **Solution:** Check that the handlers are properly defined and passed to JoyDoc:
 
 ```jsx
+const fieldSettings = {
+	field:{
+		 onFileUploadAsync: async (params, fileUploads) => {
+        console.log('onFileUploadAsync: ', params, fileUploads);
+        return {
+          _id: new Date().getTime(),
+          url: 'sample fileUrl'
+        };
+      },
+      onFileClick: async (params, urlObject) => { console.log('onFileClick: ', params, urlObject); },
+      onFileDelete: async (params, urlObject) => { console.log('onFileDelete: ', params, urlObject); },
+	}
+
+}
+
 <JoyDoc
   doc={document}
   onFocus={handleFocus}
   onBlur={handleBlur}
-  onFileClick={handleFileClick}
-  onFileDelete={handleFileDelete}
-  onUploadAsync={handleUploadAsync}
-  onCaptureAsync={handleCaptureAsync}
+  fieldSettings={fieldSettings}
 />
 
 ```
 
-### 3. Upload Events Not Working
-
-**Problem:** File upload events are not being triggered.
-
-**Solution:** Ensure you're using the correct event handler and that your upload function returns the expected format:
-
-```jsx
-const handleUploadAsync = async (params, files) => {
-  // Your upload logic here
-  return [
-    {
-      _id: 'upload-id',
-      url: 'uploaded-file-url',
-      fileName: 'file-name.jpg',
-      filePath: 'file-path'
-    }
-  ];
-};
-
-```
-
 This comprehensive guide covers all available event handlers in the Joyfill SDK, providing developers with the complete information needed to implement robust form handling and user interaction tracking.
-
