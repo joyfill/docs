@@ -182,7 +182,8 @@
             "pages": [
               "web/api-reference/overview",
               "web/api-reference/classes",
-              "web/api-reference/functions"
+              "web/api-reference/functions",
+              "web/api-reference/complete-reference"
             ]
           },
           {
