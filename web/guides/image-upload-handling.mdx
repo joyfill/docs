@@ -9,10 +9,9 @@ When users interact with image fields, the SDK triggers upload events that your 
 **Flow:**
 
 1. User selects image field → SDK creates upload event
-2. Your upload handler receives the event with file data
-3. You process selected images (resize, upload to server, etc.)
-4. Return processed file URLs to the SDK
-5. SDK updates the form with the provided URLs
+2. Your upload handler receives the event
+3. You handle the image processing and pass the image url back to SDK
+4. SDK updates the form with the provided URLs
 
 ## Upload Methods
 
@@ -350,35 +349,6 @@ const getHeaders = () => {
     Authorization: `Bearer ${userAccessToken}`,
     'Content-Type': 'application/json'
   };
-};
-
-```
-
-## Common Usage Patterns
-
-### Immediate Server Upload
-
-```jsx
-// Using onFileUploadAsync
-const fieldSettings = {
-  field: {
-    onFileUploadAsync: async (params, fileUploads) => {
-      const uploadPromises = fileUploads.map(async (file) => {
-        const dataUri = await getDataUriForFileUpload(file);
-        return uploadFileAsync(params.fieldIdentifier, dataUri);
-      });
-      return Promise.all(uploadPromises);
-    }
-  }
-};
-
-// Using onUploadAsync
-const handleUpload = async (params, fileUploads) => {
-  const resultPromises = await fileUploads.map(async (fileUpload) => {
-    const dataUri = await getDataUriForFileUpload(fileUpload);
-    return uploadFileAsync(params.fieldIdentifier, dataUri);
-  });
-  return Promise.all(resultPromises);
 };
 
 ```
