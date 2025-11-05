@@ -1,0 +1,264 @@
+# JS CDN
+
+## Overview
+
+This guide shows you how to integrate Joyfill Components into your web application using the CDN Approach.
+
+## 🚀 Quick Start
+
+1. Identify the version of joyfill/components you want to test and copy the script url using the following steps
+
+2. Open https://www.jsdelivr.com/package/npm/@joyfill/components?tab=files and pick the version that works for you on the right
+
+3. We are choosing `4.0.0-rc4` in this example
+
+4. You will find the script url under the default tab
+
+## Include the CDN Script
+
+Add this script tag to your HTML `<head>` section:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@joyfill/components@4.0.0-rc4/dist/joyfill.min.js"></script>
+```
+
+## Create a Container Element
+
+```html
+<div id="joyfill-container"></div>
+```
+
+## Load a Form
+
+Here is a sample contact form that you could use:
+
+```html
+<script>
+  // Complete contact form example
+  const contactForm = {
+    "_id": "contact_form",
+    "v": "1.0.0",
+    "title": "Contact Form",
+    "description": "A simple contact form with basic fields",
+    "files": [{
+      "_id": "file_contact",
+      "name": "Contact Information",
+      "pages": [{
+        "_id": "page_contact",
+        "name": "Contact Details",
+        "fields": [
+          {
+            "_id": "field_name",
+            "type": "text",
+            "label": "Full Name",
+            "required": true,
+            "placeholder": "Enter your full name"
+          },
+          {
+            "_id": "field_email",
+            "type": "email",
+            "label": "Email Address",
+            "required": true,
+            "placeholder": "Enter your email address"
+          },
+          {
+            "_id": "field_phone",
+            "type": "text",
+            "label": "Phone Number",
+            "required": false,
+            "placeholder": "Enter your phone number"
+          },
+          {
+            "_id": "field_message",
+            "type": "textarea",
+            "label": "Message",
+            "required": true,
+            "placeholder": "Enter your message"
+          }
+        ]
+      }]
+    }],
+    "fields": [
+      {
+        "_id": "field_name",
+        "type": "text",
+        "label": "Full Name",
+        "required": true,
+        "placeholder": "Enter your full name"
+      },
+      {
+        "_id": "field_email",
+        "type": "email",
+        "label": "Email Address",
+        "required": true,
+        "placeholder": "Enter your email address"
+      },
+      {
+        "_id": "field_phone",
+        "type": "text",
+        "label": "Phone Number",
+        "required": false,
+        "placeholder": "Enter your phone number"
+      },
+      {
+        "_id": "field_message",
+        "type": "textarea",
+        "label": "Message",
+        "required": true,
+        "placeholder": "Enter your message"
+      }
+    ]
+  };
+
+  // Initialize the form
+  Joyfill.JoyDoc(
+    document.getElementById('joyfill-container'),
+    {
+      doc: contactForm,
+      mode: 'edit',
+      onChange: (changelogs, doc) => {
+        console.log('Form updated:', doc);
+      }
+    }
+  );
+</script>
+```
+
+## Complete HTML Example
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Joyfill Contact Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/@joyfill/components@latest/dist/joyfill.min.js"></script>
+  </head>
+  <body>
+    <h1>Contact Us</h1>
+    <div id="joyfill-container"></div>
+
+    <script>
+      const contactForm = {
+        "_id": "68f231604484695c16d65f97",
+        "identifier": "doc_68f231604484695c16d65f97",
+        "name": "Contact Form",
+        "files": [
+          {
+            "_id": "68f231607dee0bbd73994f87",
+            "name": "New File",
+            "pageOrder": [
+              "68f23160b929e32e60e663a0"
+            ],
+            "pages": [
+              {
+                "_id": "68f23160b929e32e60e663a0",
+                "name": "New Page",
+                "width": 816,
+                "height": 1056,
+                "rowHeight": 8,
+                "cols": 8,
+                "fieldPositions": [
+                  {
+                    "_id": "68f23164c57b7fe946d32b1b",
+                    "type": "text",
+                    "displayType": "original",
+                    "x": 0,
+                    "y": 0,
+                    "width": 4,
+                    "height": 8,
+                    "field": "68f23164886cdb084afec912"
+                  },
+                  {
+                    "_id": "68f231663b6a898390b23fec",
+                    "type": "textarea",
+                    "displayType": "original",
+                    "x": 4,
+                    "y": 0,
+                    "width": 4,
+                    "height": 23,
+                    "field": "68f2316612113f6141fac40a"
+                  },
+                  {
+                    "_id": "68f231673dc5e58c883c8437",
+                    "type": "number",
+                    "displayType": "original",
+                    "x": 0,
+                    "y": 8,
+                    "width": 4,
+                    "height": 8,
+                    "field": "68f23167998040ea25a54fa8"
+                  },
+                  {
+                    "_id": "68f231796f5ea38ae37f951b",
+                    "type": "text",
+                    "displayType": "original",
+                    "x": 0,
+                    "y": 16,
+                    "width": 4,
+                    "height": 8,
+                    "field": "68f23179479739cf0883d27e"
+                  }
+                ],
+                "layout": "grid",
+                "presentation": "normal",
+                "padding": 24
+              }
+            ],
+            "styles": {
+              "margin": 4
+            }
+          }
+        ],
+        "fields": [
+          {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23164886cdb084afec912",
+            "type": "text",
+            "title": "Name",
+            "identifier": "field_68f23164886cdb084afec912"
+          },
+          {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f2316612113f6141fac40a",
+            "type": "textarea",
+            "title": "Comments",
+            "identifier": "field_68f2316612113f6141fac40a",
+            "value": ""
+          },
+          {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23167998040ea25a54fa8",
+            "type": "number",
+            "title": "Phone number",
+            "identifier": "field_68f23167998040ea25a54fa8"
+          },
+          {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23179479739cf0883d27e",
+            "type": "text",
+            "title": "Email",
+            "identifier": "field_68f23179479739cf0883d27e"
+          }
+        ],
+        "type": "document"
+      };
+
+      Joyfill.JoyDoc(
+        document.getElementById('joyfill-container'),
+        {
+          doc: contactForm,
+          mode: 'edit',
+          onChange: (changelogs, doc) => {
+            console.log('Form updated:', doc);
+          }
+        }
+      );
+    </script>
+  </body>
+</html>
+```
+
+## That's it! 🎉
+
+Your contact form is now ready. The `onChange` callback will fire whenever the user makes changes to the form.
+

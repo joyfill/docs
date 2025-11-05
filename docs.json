@@ -10,48 +10,44 @@
   "favicon": "/favicon.svg",
   "navigation": {
     "dropdowns": [
-        {
-          "dropdown": "Overview",
-          "icon": "list",
-          "groups": [
-            {
-              "group": "Joyfill",
-              "pages": [
-                "joyfill/index"
-              ]
-            },
-            {
-                "group": "JoyDoc",
-                "pages": [
-                  "joyfill/joydoc-usage",
-                  "joyfill/schema-json",
-                  "joyfill/usage-guide",
-                  "joyfill/metadata",
-                  "joyfill/field-identifiers"
-                ]
-            },
-            {
-              "group": "API reference",
-              "openapi": "OpenApi.json"
-            },
-            {
-              "group": "Extra",
-              "pages": [
-                "joyfill/identifiers",
-                "joyfill/custom-data-population-via-identifiers"
-              ]
-            }
-          ]
-        },
+      {
+        "dropdown": "Overview",
+        "icon": "list",
+        "groups": [
+          {
+            "group": "Joyfill",
+            "pages": ["joyfill/index"]
+          },
+          {
+            "group": "JoyDoc",
+            "pages": [
+              "joyfill/joydoc-usage",
+              "joyfill/schema-json",
+              "joyfill/usage-guide",
+              "joyfill/metadata",
+              "joyfill/field-identifiers"
+            ]
+          },
+          {
+            "group": "API reference",
+            "openapi": "OpenApi.json"
+          },
+          {
+            "group": "Extra",
+            "pages": [
+              "joyfill/identifiers",
+              "joyfill/custom-data-population-via-identifiers"
+            ]
+          }
+        ]
+      },
       {
         "dropdown": "iOS SDK",
         "icon": "apple",
         "groups": [
           {
             "group": "Getting Started",
-            "pages": [
-              "ios/getting-started"
-            ]
+            "pages": ["ios/getting-started"]
           },
           {
             "group": "Guides",
@@ -66,16 +62,11 @@
           },
           {
             "group": "API Reference",
-            "pages": [
-              "ios/api-reference/overview"
-            ]
+            "pages": ["ios/api-reference/overview"]
           },
           {
             "group": "Resources",
-            "pages": [
-              "ios/changelogs/RELEASE_NOTES",
-              "ios/about/security"
-            ]
+            "pages": ["ios/changelogs/RELEASE_NOTES", "ios/about/security"]
           }
         ]
       },
@@ -85,9 +76,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": [
-              "kotlin/getting-started"
-            ]
+            "pages": ["kotlin/getting-started"]
           },
           {
             "group": "Guides",
@@ -102,16 +91,11 @@
           },
           {
             "group": "API Reference",
-            "pages": [
-              "kotlin/api-reference/overview"
-            ]
+            "pages": ["kotlin/api-reference/overview"]
           },
           {
             "group": "Resources",
-            "pages": [
-              "kotlin/changelogs/releases",
-              "kotlin/about/security"
-            ]
+            "pages": ["kotlin/changelogs/releases", "kotlin/about/security"]
           }
         ]
       },
@@ -174,8 +158,15 @@
               "web/guides/required-field-validation",
               "web/guides/populating-and-extracting-data",
               "web/guides/schema-validation",
-              "web/guides/event-handling",
-              "web/guides/sample-projects"
+              "web/guides/event-handling"
+            ]
+          },
+          {
+            "group": "Sample Projects",
+            "pages": [
+              "web/guides/sample-projects-js-cdn",
+              "web/guides/sample-projects-js-module",
+              "web/guides/sample-projects-react"
             ]
           },
           {
@@ -189,10 +180,7 @@
           },
           {
             "group": "Resources",
-            "pages": [
-              "web/changelogs/releases",
-              "web/about/security"
-            ]
+            "pages": ["web/changelogs/releases", "web/about/security"]
           }
         ]
       },
@@ -202,10 +190,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": [
-              "api/introduction",
-              "api/authentication"
-            ]
+            "pages": ["api/introduction", "api/authentication"]
           },
           {
             "group": "Documents",
@@ -222,7 +207,6 @@
               "api/documents/create-a-image-upload-data-uri",
               "api/documents/create-a-document-pdf-export",
               "api/documents/create-a-document-pdf-export-using-raw-json-payload"
-              
             ]
           },
           {
@@ -263,17 +247,13 @@
           },
           {
             "group": "Utilities",
-            "pages": [
-              "api/utilities/convert-pdf-to-pngs-data-uri"
-            ]
+            "pages": ["api/utilities/convert-pdf-to-pngs-data-uri"]
           }
         ]
       }
     ],
     "global": {
-      "anchors": [
-          
-      ]
+      "anchors": []
     }
   },
   "logo": {
@@ -294,13 +274,7 @@
     }
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "cursor"
-    ]
+    "options": ["copy", "view", "chatgpt", "claude", "cursor"]
   },
   "footer": {
     "socials": {
