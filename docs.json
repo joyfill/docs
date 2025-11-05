@@ -174,7 +174,8 @@
               "web/guides/required-field-validation",
               "web/guides/populating-and-extracting-data",
               "web/guides/schema-validation",
-              "web/guides/event-handling"
+              "web/guides/event-handling",
+              "web/guides/sample-projects"
             ]
           },
           {

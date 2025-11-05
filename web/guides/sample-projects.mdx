@@ -1,0 +1,1353 @@
+## Overview
+
+This page provides sample projects demonstrating common patterns in JoyDoc. Each example is available in three different implementation styles: JS CDN, JS Module, and React.
+
+## Sample Projects
+
+### JS CDN
+
+Examples using vanilla JavaScript with CDN script tags.
+
+#### 🌐 Joyfill Components - CDN Integration Guide
+
+This guide shows you how to integrate Joyfill Components into your web application using the CDN Approach.
+
+##### 🚀 Quick Start
+
+1. Identify the version of joyfill/components you want to test and copy the script url using the following steps
+
+2. Open https://www.jsdelivr.com/package/npm/@joyfill/components?tab=files and pick the version that works for you on the right
+
+3. We are choosing `4.0.0-rc4` in this example
+
+4. You will find the script url under the default tab
+
+##### Include the CDN Script
+
+Add this script tag to your HTML `<head>` section:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@joyfill/components@4.0.0-rc4/dist/joyfill.min.js"></script>
+```
+
+##### Create a Container Element
+
+```html
+<div id="joyfill-container"></div>
+```
+
+##### Load a Form
+
+Here is a sample contact form that you could use:
+
+```html
+<script>
+  // Complete contact form example
+  const contactForm = {
+    "_id": "contact_form",
+    "v": "1.0.0",
+    "title": "Contact Form",
+    "description": "A simple contact form with basic fields",
+    "files": [{
+      "_id": "file_contact",
+      "name": "Contact Information",
+      "pages": [{
+        "_id": "page_contact",
+        "name": "Contact Details",
+        "fields": [
+          {
+            "_id": "field_name",
+            "type": "text",
+            "label": "Full Name",
+            "required": true,
+            "placeholder": "Enter your full name"
+          },
+          {
+            "_id": "field_email",
+            "type": "email",
+            "label": "Email Address",
+            "required": true,
+            "placeholder": "Enter your email address"
+          },
+          {
+            "_id": "field_phone",
+            "type": "text",
+            "label": "Phone Number",
+            "required": false,
+            "placeholder": "Enter your phone number"
+          },
+          {
+            "_id": "field_message",
+            "type": "textarea",
+            "label": "Message",
+            "required": true,
+            "placeholder": "Enter your message"
+          }
+        ]
+      }]
+    }],
+    "fields": [
+      {
+        "_id": "field_name",
+        "type": "text",
+        "label": "Full Name",
+        "required": true,
+        "placeholder": "Enter your full name"
+      },
+      {
+        "_id": "field_email",
+        "type": "email",
+        "label": "Email Address",
+        "required": true,
+        "placeholder": "Enter your email address"
+      },
+      {
+        "_id": "field_phone",
+        "type": "text",
+        "label": "Phone Number",
+        "required": false,
+        "placeholder": "Enter your phone number"
+      },
+      {
+        "_id": "field_message",
+        "type": "textarea",
+        "label": "Message",
+        "required": true,
+        "placeholder": "Enter your message"
+      }
+    ]
+  };
+
+  // Initialize the form
+  Joyfill.JoyDoc(
+    document.getElementById('joyfill-container'),
+    {
+      doc: contactForm,
+      mode: 'edit',
+      onChange: (changelogs, doc) => {
+        console.log('Form updated:', doc);
+      }
+    }
+  );
+</script>
+```
+
+##### Complete HTML Example
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Joyfill Contact Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/@joyfill/components@latest/dist/joyfill.min.js"></script>
+  </head>
+  <body>
+    <h1>Contact Us</h1>
+    <div id="joyfill-container"></div>
+
+    <script>
+      const contactForm = {
+        "_id": "68f231604484695c16d65f97",
+        "identifier": "doc_68f231604484695c16d65f97",
+        "name": "Contact Form",
+        "files": [
+          {
+            "_id": "68f231607dee0bbd73994f87",
+            "name": "New File",
+            "pageOrder": [
+              "68f23160b929e32e60e663a0"
+            ],
+            "pages": [
+              {
+                "_id": "68f23160b929e32e60e663a0",
+                "name": "New Page",
+                "width": 816,
+                "height": 1056,
+                "rowHeight": 8,
+                "cols": 8,
+                "fieldPositions": [
+                  {
+                    "_id": "68f23164c57b7fe946d32b1b",
+                    "type": "text",
+                    "displayType": "original",
+                    "x": 0,
+                    "y": 0,
+                    "width": 4,
+                    "height": 8,
+                    "field": "68f23164886cdb084afec912"
+                  },
+                  {
+                    "_id": "68f231663b6a898390b23fec",
+                    "type": "textarea",
+                    "displayType": "original",
+                    "x": 4,
+                    "y": 0,
+                    "width": 4,
+                    "height": 23,
+                    "field": "68f2316612113f6141fac40a"
+                  },
+                  {
+                    "_id": "68f231673dc5e58c883c8437",
+                    "type": "number",
+                    "displayType": "original",
+                    "x": 0,
+                    "y": 8,
+                    "width": 4,
+                    "height": 8,
+                    "field": "68f23167998040ea25a54fa8"
+                  },
+                  {
+                    "_id": "68f231796f5ea38ae37f951b",
+                    "type": "text",
+                    "displayType": "original",
+                    "x": 0,
+                    "y": 16,
+                    "width": 4,
+                    "height": 8,
+                    "field": "68f23179479739cf0883d27e"
+                  }
+                ],
+                "layout": "grid",
+                "presentation": "normal",
+                "padding": 24
+              }
+            ],
+            "styles": {
+              "margin": 4
+            }
+          }
+        ],
+        "fields": [
+          {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23164886cdb084afec912",
+            "type": "text",
+            "title": "Name",
+            "identifier": "field_68f23164886cdb084afec912"
+          },
+          {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f2316612113f6141fac40a",
+            "type": "textarea",
+            "title": "Comments",
+            "identifier": "field_68f2316612113f6141fac40a",
+            "value": ""
+          },
+          {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23167998040ea25a54fa8",
+            "type": "number",
+            "title": "Phone number",
+            "identifier": "field_68f23167998040ea25a54fa8"
+          },
+          {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23179479739cf0883d27e",
+            "type": "text",
+            "title": "Email",
+            "identifier": "field_68f23179479739cf0883d27e"
+          }
+        ],
+        "type": "document"
+      };
+
+      Joyfill.JoyDoc(
+        document.getElementById('joyfill-container'),
+        {
+          doc: contactForm,
+          mode: 'edit',
+          onChange: (changelogs, doc) => {
+            console.log('Form updated:', doc);
+          }
+        }
+      );
+    </script>
+  </body>
+</html>
+```
+
+##### That's it! 🎉
+
+Your contact form is now ready. The `onChange` callback will fire whenever the user makes changes to the form.
+
+
+### JS Module
+
+Examples using ES modules.
+
+#### 📦 Joyfill Components - JavaScript Module Integration Guide
+
+This guide shows you how to integrate Joyfill Components into your JavaScript application using ES modules and a build tool like Parcel.
+
+##### 🚀 Quick Start
+
+###### Setup Project
+
+Create a new project and install dependencies:
+
+```bash
+mkdir my-joyfill-app
+cd my-joyfill-app
+npm init -y
+npm install @joyfill/components@latest
+npm install --save-dev parcel
+```
+
+###### Create HTML File
+
+Create `src/index.html`:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Joyfill Form - ES Module</title>
+    <meta charset="UTF-8" />
+</head>
+<body>
+    <h1>Contact Form</h1>
+    <div id="joyfill-container"></div>
+
+    <script type="module" src="./index.js"></script>
+</body>
+</html>
+```
+
+###### Create JavaScript Module
+
+Create `src/index.js`:
+
+```javascript
+import Joyfill from "@joyfill/components/dist/joyfill.min.js";
+
+// Complete contact form example
+const contactForm = {
+    "_id": "68f231604484695c16d65f97",
+    "identifier": "doc_68f231604484695c16d65f97",
+    "name": "New Doc",
+    "files": [
+        {
+            "_id": "68f231607dee0bbd73994f87",
+            "name": "New File",
+            "pageOrder": [
+                "68f23160b929e32e60e663a0"
+            ],
+            "pages": [
+                {
+                    "_id": "68f23160b929e32e60e663a0",
+                    "name": "New Page",
+                    "width": 816,
+                    "height": 1056,
+                    "rowHeight": 8,
+                    "cols": 8,
+                    "fieldPositions": [
+                        {
+                            "_id": "68f23164c57b7fe946d32b1b",
+                            "type": "text",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 0,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23164886cdb084afec912"
+                        },
+                        {
+                            "_id": "68f231663b6a898390b23fec",
+                            "type": "textarea",
+                            "displayType": "original",
+                            "x": 4,
+                            "y": 0,
+                            "width": 4,
+                            "height": 23,
+                            "field": "68f2316612113f6141fac40a"
+                        },
+                        {
+                            "_id": "68f231673dc5e58c883c8437",
+                            "type": "number",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 8,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23167998040ea25a54fa8"
+                        },
+                        {
+                            "_id": "68f231796f5ea38ae37f951b",
+                            "type": "text",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 16,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23179479739cf0883d27e"
+                        }
+                    ],
+                    "layout": "grid",
+                    "presentation": "normal",
+                    "padding": 24
+                }
+            ],
+            "styles": {
+                "margin": 4
+            }
+        }
+    ],
+    "fields": [
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23164886cdb084afec912",
+            "type": "text",
+            "title": "Name",
+            "identifier": "field_68f23164886cdb084afec912"
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f2316612113f6141fac40a",
+            "type": "textarea",
+            "title": "Comments",
+            "identifier": "field_68f2316612113f6141fac40a",
+            "value": ""
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23167998040ea25a54fa8",
+            "type": "number",
+            "title": "Phone number",
+            "identifier": "field_68f23167998040ea25a54fa8"
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23179479739cf0883d27e",
+            "type": "text",
+            "title": "Email",
+            "identifier": "field_68f23179479739cf0883d27e"
+        }
+    ],
+    "type": "document"
+};
+
+// Initialize the form
+Joyfill.JoyDoc(
+  document.getElementById('joyfill-container'),
+  {
+    doc: contactForm,
+    mode: 'edit',
+    onChange: (changelogs, doc) => {
+      console.log('Form updated:', doc);
+    }
+  }
+);
+```
+
+###### Add Package.json Scripts
+
+Update your `package.json`:
+
+```json
+{
+  "name": "my-joyfill-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "dependencies": {
+    "@joyfill/components": "latest"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.2"
+  }
+}
+```
+
+###### Start Development Server
+
+```bash
+npm start
+```
+
+Open `http://localhost:1234` in your browser.
+
+##### Complete Project Structure
+
+```
+my-joyfill-app/
+├── src/
+│   ├── index.html          # Main HTML file
+│   └── index.js            # JavaScript module
+├── package.json            # Project configuration
+└── dist/                   # Built files (auto-generated)
+```
+
+##### Complete HTML Example
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Joyfill Form - ES Module</title>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #f5f5f5;
+      }
+
+      .container {
+          background: white;
+          border-radius: 8px;
+          padding: 30px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+
+      h1 {
+          color: #333;
+          text-align: center;
+          margin-bottom: 30px;
+      }
+
+      #joyfill-container {
+          min-height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Contact Us</h1>
+      <div id="joyfill-container"></div>
+    </div>
+
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
+```
+
+##### Complete JavaScript Example
+
+```javascript
+import Joyfill from "@joyfill/components/dist/joyfill.min.js";
+
+// Complete contact form with validation
+const contactForm = {
+    "_id": "68f231604484695c16d65f97",
+    "identifier": "doc_68f231604484695c16d65f97",
+    "name": "New Doc",
+    "files": [
+        {
+            "_id": "68f231607dee0bbd73994f87",
+            "name": "New File",
+            "pageOrder": [
+                "68f23160b929e32e60e663a0"
+            ],
+            "pages": [
+                {
+                    "_id": "68f23160b929e32e60e663a0",
+                    "name": "New Page",
+                    "width": 816,
+                    "height": 1056,
+                    "rowHeight": 8,
+                    "cols": 8,
+                    "fieldPositions": [
+                        {
+                            "_id": "68f23164c57b7fe946d32b1b",
+                            "type": "text",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 0,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23164886cdb084afec912"
+                        },
+                        {
+                            "_id": "68f231663b6a898390b23fec",
+                            "type": "textarea",
+                            "displayType": "original",
+                            "x": 4,
+                            "y": 0,
+                            "width": 4,
+                            "height": 23,
+                            "field": "68f2316612113f6141fac40a"
+                        },
+                        {
+                            "_id": "68f231673dc5e58c883c8437",
+                            "type": "number",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 8,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23167998040ea25a54fa8"
+                        },
+                        {
+                            "_id": "68f231796f5ea38ae37f951b",
+                            "type": "text",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 16,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23179479739cf0883d27e"
+                        }
+                    ],
+                    "layout": "grid",
+                    "presentation": "normal",
+                    "padding": 24
+                }
+            ],
+            "styles": {
+                "margin": 4
+            }
+        }
+    ],
+    "fields": [
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23164886cdb084afec912",
+            "type": "text",
+            "title": "Name",
+            "identifier": "field_68f23164886cdb084afec912"
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f2316612113f6141fac40a",
+            "type": "textarea",
+            "title": "Comments",
+            "identifier": "field_68f2316612113f6141fac40a",
+            "value": ""
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23167998040ea25a54fa8",
+            "type": "number",
+            "title": "Phone number",
+            "identifier": "field_68f23167998040ea25a54fa8"
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23179479739cf0883d27e",
+            "type": "text",
+            "title": "Email",
+            "identifier": "field_68f23179479739cf0883d27e"
+        }
+    ],
+    "type": "document"
+};
+
+// Initialize the form
+const joyDocInstance = Joyfill.JoyDoc(
+  document.getElementById('joyfill-container'),
+  {
+    doc: contactForm,
+    mode: 'edit',
+    onChange: (changelogs, doc) => {
+      console.log('Form updated:', doc);
+      console.log('Changes:', changelogs);
+
+      // Save form data
+      saveFormData(doc);
+    },
+    onError: (error) => {
+      console.error('Form error:', error);
+    }
+  }
+);
+
+// Helper function to save form data
+async function saveFormData(doc) {
+  try {
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(doc)
+    });
+
+    if (response.ok) {
+      console.log('Form saved successfully');
+    } else {
+      console.error('Failed to save form');
+    }
+  } catch (error) {
+    console.error('Error saving form:', error);
+  }
+}
+```
+
+##### Build for Production
+
+```bash
+npm run build
+```
+
+This creates optimized files in the `dist/` folder ready for deployment.
+
+##### Common Configuration Options
+
+```javascript
+Joyfill.JoyDoc(container, {
+    doc: yourFormData,           // Your form JSON
+    mode: 'edit',               // 'edit' | 'view' | 'preview'
+    view: 'desktop',            // 'desktop' | 'mobile' | 'tablet'
+    width: 800,                 // Component width
+    height: 600,                // Component height
+    onChange: (changes, doc) => {
+        // Handle form changes
+    },
+    onError: (error) => {
+        // Handle errors
+    },
+    onFocus: (fieldId, fieldData) => {
+        // Handle field focus
+    },
+    onBlur: (fieldId, fieldData) => {
+        // Handle field blur
+    }
+});
+```
+
+##### That's it! 🎉
+
+Your form is now ready with ES modules. The build process will bundle everything for production deployment.
+
+
+### React
+
+Examples using React components.
+
+#### ⚛️ Joyfill Components - React v18 Integration Guide
+
+This guide shows you how to integrate Joyfill Components into your React v18 application.
+
+##### 🚀 Quick Start
+
+###### Setup React Project
+
+Create a new React project:
+
+```bash
+npx create-react-app my-joyfill-app
+cd my-joyfill-app
+npm install @joyfill/components
+```
+
+###### Create JoyDoc Component
+
+Create `src/components/JoyDocForm.js`:
+
+```jsx
+import React, { useState } from 'react';
+import { JoyDoc } from '@joyfill/components';
+
+const JoyDocForm = () => {
+  const [doc, setDoc] = useState(null);
+
+  // Complete contact form example
+  const contactForm = {
+    "_id": "68f231604484695c16d65f97",
+    "identifier": "doc_68f231604484695c16d65f97",
+    "name": "New Doc",
+    "files": [
+        {
+            "_id": "68f231607dee0bbd73994f87",
+            "name": "New File",
+            "pageOrder": [
+                "68f23160b929e32e60e663a0"
+            ],
+            "pages": [
+                {
+                    "_id": "68f23160b929e32e60e663a0",
+                    "name": "New Page",
+                    "width": 816,
+                    "height": 1056,
+                    "rowHeight": 8,
+                    "cols": 8,
+                    "fieldPositions": [
+                        {
+                            "_id": "68f23164c57b7fe946d32b1b",
+                            "type": "text",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 0,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23164886cdb084afec912"
+                        },
+                        {
+                            "_id": "68f231663b6a898390b23fec",
+                            "type": "textarea",
+                            "displayType": "original",
+                            "x": 4,
+                            "y": 0,
+                            "width": 4,
+                            "height": 23,
+                            "field": "68f2316612113f6141fac40a"
+                        },
+                        {
+                            "_id": "68f231673dc5e58c883c8437",
+                            "type": "number",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 8,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23167998040ea25a54fa8"
+                        },
+                        {
+                            "_id": "68f231796f5ea38ae37f951b",
+                            "type": "text",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 16,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23179479739cf0883d27e"
+                        }
+                    ],
+                    "layout": "grid",
+                    "presentation": "normal",
+                    "padding": 24
+                }
+            ],
+            "styles": {
+                "margin": 4
+            }
+        }
+    ],
+    "fields": [
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23164886cdb084afec912",
+            "type": "text",
+            "title": "Name",
+            "identifier": "field_68f23164886cdb084afec912"
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f2316612113f6141fac40a",
+            "type": "textarea",
+            "title": "Comments",
+            "identifier": "field_68f2316612113f6141fac40a",
+            "value": ""
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23167998040ea25a54fa8",
+            "type": "number",
+            "title": "Phone number",
+            "identifier": "field_68f23167998040ea25a54fa8"
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23179479739cf0883d27e",
+            "type": "text",
+            "title": "Email",
+            "identifier": "field_68f23179479739cf0883d27e"
+        }
+    ],
+    "type": "document"
+  };
+
+  const handleChange = (changelogs, updatedDoc) => {
+    console.log('Form updated:', updatedDoc);
+    console.log('Changes:', changelogs);
+    setDoc(updatedDoc);
+  };
+
+  const handleError = (error) => {
+    console.error('Form error:', error);
+  };
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>Contact Form</h1>
+      <JoyDoc
+        doc={contactForm}
+        mode="edit"
+        onChange={handleChange}
+        onError={handleError}
+      />
+    </div>
+  );
+};
+
+export default JoyDocForm;
+```
+
+###### Update App Component
+
+Update `src/App.js`:
+
+```jsx
+import React from 'react';
+import JoyDocForm from './components/JoyDocForm';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <JoyDocForm />
+    </div>
+  );
+}
+
+export default App;
+```
+
+###### Start Development Server
+
+```bash
+npm start
+```
+
+Open `http://localhost:3000` in your browser.
+
+##### Complete Project Structure
+
+```
+my-joyfill-app/
+├── src/
+│   ├── components/
+│   │   └── JoyDocForm.js      # JoyDoc component
+│   ├── App.js                 # Main app component
+│   ├── App.css                # App styles
+│   └── index.js               # Entry point
+├── public/
+│   └── index.html             # HTML template
+└── package.json               # Dependencies
+```
+
+##### Complete React Example
+
+###### App.js
+
+```jsx
+import React from 'react';
+import JoyDocForm from './components/JoyDocForm';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>🎉 Joyfill Components</h1>
+        <p>React v18 Integration Example</p>
+      </header>
+      <main>
+        <JoyDocForm />
+      </main>
+    </div>
+  );
+}
+
+export default App;
+```
+
+###### App.css
+
+```css
+.App {
+  text-align: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.App-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.App-header p {
+  margin: 10px 0 0 0;
+  opacity: 0.9;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+```
+
+###### JoyDocForm.js
+
+```jsx
+import React, { useState, useCallback } from 'react';
+import { JoyDoc } from '@joyfill/components';
+
+const JoyDocForm = () => {
+  const [doc, setDoc] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Complete contact form example
+  const contactForm = {
+    "_id": "68f231604484695c16d65f97",
+    "identifier": "doc_68f231604484695c16d65f97",
+    "name": "New Doc",
+    "files": [
+        {
+            "_id": "68f231607dee0bbd73994f87",
+            "name": "New File",
+            "pageOrder": [
+                "68f23160b929e32e60e663a0"
+            ],
+            "pages": [
+                {
+                    "_id": "68f23160b929e32e60e663a0",
+                    "name": "New Page",
+                    "width": 816,
+                    "height": 1056,
+                    "rowHeight": 8,
+                    "cols": 8,
+                    "fieldPositions": [
+                        {
+                            "_id": "68f23164c57b7fe946d32b1b",
+                            "type": "text",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 0,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23164886cdb084afec912"
+                        },
+                        {
+                            "_id": "68f231663b6a898390b23fec",
+                            "type": "textarea",
+                            "displayType": "original",
+                            "x": 4,
+                            "y": 0,
+                            "width": 4,
+                            "height": 23,
+                            "field": "68f2316612113f6141fac40a"
+                        },
+                        {
+                            "_id": "68f231673dc5e58c883c8437",
+                            "type": "number",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 8,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23167998040ea25a54fa8"
+                        },
+                        {
+                            "_id": "68f231796f5ea38ae37f951b",
+                            "type": "text",
+                            "displayType": "original",
+                            "x": 0,
+                            "y": 16,
+                            "width": 4,
+                            "height": 8,
+                            "field": "68f23179479739cf0883d27e"
+                        }
+                    ],
+                    "layout": "grid",
+                    "presentation": "normal",
+                    "padding": 24
+                }
+            ],
+            "styles": {
+                "margin": 4
+            }
+        }
+    ],
+    "fields": [
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23164886cdb084afec912",
+            "type": "text",
+            "title": "Name",
+            "identifier": "field_68f23164886cdb084afec912"
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f2316612113f6141fac40a",
+            "type": "textarea",
+            "title": "Comments",
+            "identifier": "field_68f2316612113f6141fac40a",
+            "value": ""
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23167998040ea25a54fa8",
+            "type": "number",
+            "title": "Phone number",
+            "identifier": "field_68f23167998040ea25a54fa8"
+        },
+        {
+            "file": "68f231607dee0bbd73994f87",
+            "_id": "68f23179479739cf0883d27e",
+            "type": "text",
+            "title": "Email",
+            "identifier": "field_68f23179479739cf0883d27e"
+        }
+    ],
+    "type": "document"
+  };
+
+  const handleChange = useCallback((changelogs, updatedDoc) => {
+    console.log('Form updated:', updatedDoc);
+    console.log('Changes:', changelogs);
+    setDoc(updatedDoc);
+  }, []);
+
+  const handleError = useCallback((error) => {
+    console.error('Form error:', error);
+  }, []);
+
+  const handleFocus = useCallback((fieldId, fieldData) => {
+    console.log('Field focused:', fieldId);
+  }, []);
+
+  const handleBlur = useCallback((fieldId, fieldData) => {
+    console.log('Field blurred:', fieldId);
+  }, []);
+
+  const saveForm = async () => {
+    if (!doc) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(doc)
+      });
+
+      if (response.ok) {
+        console.log('Form saved successfully');
+        alert('Form saved successfully!');
+      } else {
+        console.error('Failed to save form');
+        alert('Failed to save form');
+      }
+    } catch (error) {
+      console.error('Error saving form:', error);
+      alert('Error saving form');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div style={{
+      background: 'white',
+      borderRadius: '8px',
+      padding: '30px',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+      marginBottom: '20px'
+    }}>
+      <h2 style={{ color: '#333', marginBottom: '20px' }}>Contact Us</h2>
+
+      <JoyDoc
+        doc={contactForm}
+        mode="edit"
+        onChange={handleChange}
+        onError={handleError}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        width={800}
+        height={600}
+      />
+
+      <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        <button
+          onClick={saveForm}
+          disabled={isLoading}
+          style={{
+            background: '#007bff',
+            color: 'white',
+            border: 'none',
+            padding: '12px 24px',
+            borderRadius: '4px',
+            cursor: isLoading ? 'not-allowed' : 'pointer',
+            fontSize: '16px',
+            opacity: isLoading ? 0.6 : 1
+          }}
+        >
+          {isLoading ? 'Saving...' : 'Save Form'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default JoyDocForm;
+```
+
+##### Advanced React Integration
+
+###### Custom Hook for Form Management
+
+Create `src/hooks/useJoyDocForm.js`:
+
+```jsx
+import { useState, useCallback } from 'react';
+
+export const useJoyDocForm = (initialDoc) => {
+  const [doc, setDoc] = useState(initialDoc);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleChange = useCallback((changelogs, updatedDoc) => {
+    setDoc(updatedDoc);
+    setError(null);
+  }, []);
+
+  const handleError = useCallback((error) => {
+    setError(error);
+  }, []);
+
+  const saveForm = useCallback(async (saveUrl) => {
+    if (!doc) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(saveUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(doc)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save form');
+      }
+
+      return await response.json();
+    } catch (error) {
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [doc]);
+
+  return {
+    doc,
+    isLoading,
+    error,
+    handleChange,
+    handleError,
+    saveForm
+  };
+};
+```
+
+###### Using the Custom Hook
+
+```jsx
+import React from 'react';
+import { JoyDoc } from '@joyfill/components';
+import { useJoyDocForm } from '../hooks/useJoyDocForm';
+
+const ContactForm = () => {
+  const contactForm = {
+    // ... your form data
+  };
+
+  const {
+    doc,
+    isLoading,
+    error,
+    handleChange,
+    handleError,
+    saveForm
+  } = useJoyDocForm(contactForm);
+
+  const handleSave = async () => {
+    try {
+      await saveForm('/api/contact');
+      alert('Form saved successfully!');
+    } catch (error) {
+      alert('Error saving form');
+    }
+  };
+
+  return (
+    <div>
+      {error && (
+        <div style={{ color: 'red', marginBottom: '10px' }}>
+          Error: {error.message}
+        </div>
+      )}
+
+      <JoyDoc
+        doc={doc}
+        mode="edit"
+        onChange={handleChange}
+        onError={handleError}
+      />
+
+      <button onClick={handleSave} disabled={isLoading}>
+        {isLoading ? 'Saving...' : 'Save Form'}
+      </button>
+    </div>
+  );
+};
+
+export default ContactForm;
+```
+
+##### Common Configuration Options
+
+```jsx
+<JoyDoc
+  doc={yourFormData}           // Your form JSON
+  mode="edit"                  // 'edit' | 'fill' | 'readonly'
+  view="desktop"               // 'desktop' | 'mobile' | 'tablet'
+  width={800}                  // Component width
+  height={600}                 // Component height
+  theme={{                     // Custom theme
+    primaryColor: '#007bff',
+    secondaryColor: '#6c757d'
+  }}
+  features={{                  // Feature flags
+    formulas: true,    // formulas
+    readableIds: false,  // readableIds
+    validateSchema: false // schemaValidations
+  }}
+  onChange={(changes, doc) => {
+    // Handle form changes
+  }}
+  onError={(error) => {
+    // Handle errors
+  }}
+  onFocus={(fieldId, fieldData) => {
+    // Handle field focus
+  }}
+  onBlur={(fieldId, fieldData) => {
+    // Handle field blur
+  }}
+  onCaptureAsync={async (fieldId, data) => {
+    // Handle field capture
+    return data;
+  }}
+  onUploadAsync={async (file) => {
+    // Handle file upload
+    return { url: 'uploaded-file-url' };
+  }}
+/>
+```
+
+##### That's it! 🎉
+
+Your React v18 application with Joyfill Components is now ready. The form will render with proper React state management and event handling.
+
+
+
