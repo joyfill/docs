@@ -1,0 +1,583 @@
+---
+title: "Conditional Logic"
+---
+
+Conditional logic allows you to show or hide fields and pages based on the values of other fields. This enables dynamic forms that adapt based on user input, creating a more intuitive and streamlined user experience.
+
+## **Overview**
+
+Conditional logic in JoyDoc uses a rule-based system where you define conditions that determine when fields or pages should be shown or hidden. The logic is evaluated in real-time as users interact with the form, automatically showing or hiding elements based on the current field values.
+
+## **How Conditional Logic Works**
+
+Conditional logic consists of three main components:
+
+1. **Action** - What should happen when conditions are met (`show` or `hide`)
+
+2. **Evaluation** - How conditions should be combined (`and` or `or`)
+
+3. **Conditions** - The actual rules to check (field values, comparisons, etc.)
+
+## **Logic Structure**
+
+### **Basic Structure**
+
+```jsx
+{
+  action: 'show' | 'hide',  // Action to take when conditions match
+  eval: 'and' | 'or',       // How to combine conditions
+  conditions: [             // Array of conditions to check
+    {
+      file: 'file_id',      // File ID containing the field
+      page: 'page_id',      // Page ID containing the field
+      field: 'field_id',    // Field ID to check
+      condition: '=',       // Comparison operator
+      value: 'some_value'   // Value to compare against
+    }
+  ]
+}
+```
+
+### **Actions**
+
+The `action` property determines what happens when the conditions are met:
+
+- **`show`** - Show the field/page when conditions match (field/page starts hidden)
+
+- **`hide`** - Hide the field/page when conditions match (field/page starts visible)
+
+### **Evaluation Types**
+
+The `eval` property determines how multiple conditions are combined:
+
+- **`and`** - All conditions must be true for the action to trigger
+
+- **`or`** - Any condition must be true for the action to trigger
+
+### **Condition Operators**
+
+The `condition` property supports different comparison operators depending on the field type:
+
+### **Text and Textarea Fields**
+
+- `*=` - **is filled** - Field has any value
+
+- `null=` - **is empty** - Field is empty or null
+
+- `=` - **is** - Field value equals the specified value
+
+- `!=` - **is not** - Field value does not equal the specified value
+
+- `?=` - **contains** - Field value contains the specified substring (case-insensitive)
+
+### **Number Fields**
+
+- `*=` - **is filled** - Field has a numeric value
+
+- `null=` - **is empty** - Field is empty or null
+
+- `=` - **is** - Field value equals the specified number
+
+- `!=` - **is not** - Field value does not equal the specified number
+
+- `>` - **is greater than** - Field value is greater than the specified number
+
+- `<` - **is less than** - Field value is less than the specified number
+
+### **Dropdown and MultiSelect Fields**
+
+- `*=` - **is filled** - Field has at least one option selected
+
+- `null=` - **is empty** - Field has no options selected
+
+- `=` - **is** - Field value equals the specified option
+
+- `!=` - **is not** - Field value does not equal the specified option
+
+## **Field-Level Conditional Logic**
+
+Fields can have conditional logic applied to show or hide themselves based on other field values.
+
+### **Example: Show Field When Another Field Has Value**
+
+```jsx
+{
+  _id: 'conditional_field',
+  type: 'text',
+  title: 'Additional Information',
+  value: '',
+  hidden: true,  // Start hidden
+  logic: {
+    action: 'show',
+    eval: 'and',
+    conditions: [
+      {
+        file: 'file1',
+        page: 'page1',
+        field: 'main_field',
+        condition: '*=',  // is filled
+        value: null        // Not needed for "is filled"
+      }
+    ]
+  }
+}
+```
+
+### **Example: Hide Field Based on Number Comparison**
+
+```jsx
+{
+  _id: 'discount_field',
+  type: 'number',
+  title: 'Discount Amount',
+  value: 0,
+  logic: {
+    action: 'hide',
+    eval: 'and',
+    conditions: [
+      {
+        file: 'file1',
+        page: 'page1',
+        field: 'total_amount',
+        condition: '<',
+        value: 100
+      }
+    ]
+  }
+}
+```
+
+### **Example: Multiple Conditions with AND**
+
+```jsx
+{
+  _id: 'premium_field',
+  type: 'text',
+  title: 'Premium Feature',
+  value: '',
+  hidden: true,
+  logic: {
+    action: 'show',
+    eval: 'and',  // All conditions must be true
+    conditions: [
+      {
+        file: 'file1',
+        page: 'page1',
+        field: 'user_type',
+        condition: '=',
+        value: 'premium'
+      },
+      {
+        file: 'file1',
+        page: 'page1',
+        field: 'account_status',
+        condition: '=',
+        value: 'active'
+      }
+    ]
+  }
+}
+```
+
+### **Example: Multiple Conditions with OR**
+
+```jsx
+{
+  _id: 'notification_field',
+  type: 'text',
+  title: 'Notification',
+  value: '',
+  hidden: true,
+  logic: {
+    action: 'show',
+    eval: 'or',  // Any condition can be true
+    conditions: [
+      {
+        file: 'file1',
+        page: 'page1',
+        field: 'priority',
+        condition: '=',
+        value: 'high'
+      },
+      {
+        file: 'file1',
+        page: 'page1',
+        field: 'status',
+        condition: '=',
+        value: 'urgent'
+      }
+    ]
+  }
+}
+```
+
+### **Example: Text Contains Condition**
+
+```jsx
+{
+  _id: 'follow_up_field',
+  type: 'textarea',
+  title: 'Follow-up Details',
+  value: '',
+  hidden: true,
+  logic: {
+    action: 'show',
+    eval: 'and',
+    conditions: [
+      {
+        file: 'file1',
+        page: 'page1',
+        field: 'main_description',
+        condition: '?=',  // contains
+        value: 'issue'     // Case-insensitive substring match
+      }
+    ]
+  }
+}
+```
+
+## **Page-Level Conditional Logic**
+
+Pages can also have conditional logic applied to show or hide entire pages based on field values.
+
+### **Example: Show Page When Condition Met**
+
+```jsx
+{
+  _id: 'conditional_page',
+  name: 'Additional Details',
+  hidden: true,  // Start hidden
+  logic: {
+    action: 'show',
+    eval: 'and',
+    conditions: [
+      {
+        file: 'file1',
+        page: 'page1',  // Reference to the page with the condition field
+        field: 'show_details',
+        condition: '=',
+        value: 'yes'
+      }
+    ]
+  },
+  fieldPositions: [
+    // ... field positions
+  ]
+}
+```
+
+### **Example: Hide Page Based on Number Range**
+
+```jsx
+{
+  _id: 'summary_page',
+  name: 'Summary',
+  logic: {
+    action: 'hide',
+    eval: 'and',
+    conditions: [
+      {
+        file: 'file1',
+        page: 'page1',
+        field: 'total_score',
+        condition: '<',
+        value: 50
+      }
+    ]
+  },
+  fieldPositions: [
+    // ... field positions
+  ]
+}
+```
+
+## **Supported Field Types**
+
+Conditional logic can reference the following field types in conditions:
+
+- **Text** (`text`) - Supports all text operators
+
+- **Textarea** (`textarea`) - Supports all text operators
+
+- **Number** (`number`) - Supports all number operators
+
+- **Dropdown** (`dropdown`) - Supports dropdown operators
+
+- **MultiSelect** (`multiSelect`) - Supports dropdown operators
+
+**Note:** Fields used in conditions must be on a different page than the field/page being controlled (you cannot reference a field from the same page).
+
+## **Complete Example**
+
+```jsx
+{
+  fields: [
+    {
+      _id: 'customer_type',
+      type: 'dropdown',
+      title: 'Customer Type',
+      value: '',
+      options: [
+        { _id: 'opt1', value: 'individual' },
+        { _id: 'opt2', value: 'business' }
+      ]
+    },
+    {
+      _id: 'business_name',
+      type: 'text',
+      title: 'Business Name',
+      value: '',
+      hidden: true,  // Hidden by default
+      logic: {
+        action: 'show',
+        eval: 'and',
+        conditions: [
+          {
+            file: 'file1',
+            page: 'page1',
+            field: 'customer_type',
+            condition: '=',
+            value: 'business'
+          }
+        ]
+      }
+    },
+    {
+      _id: 'individual_ssn',
+      type: 'text',
+      title: 'Social Security Number',
+      value: '',
+      hidden: true,  // Hidden by default
+      logic: {
+        action: 'show',
+        eval: 'and',
+        conditions: [
+          {
+            file: 'file1',
+            page: 'page1',
+            field: 'customer_type',
+            condition: '=',
+            value: 'individual'
+          }
+        ]
+      }
+    },
+    {
+      _id: 'total_amount',
+      type: 'number',
+      title: 'Total Amount',
+      value: 0
+    },
+    {
+      _id: 'discount_field',
+      type: 'number',
+      title: 'Discount',
+      value: 0,
+      logic: {
+        action: 'hide',
+        eval: 'and',
+        conditions: [
+          {
+            file: 'file1',
+            page: 'page1',
+            field: 'total_amount',
+            condition: '<',
+            value: 1000
+          }
+        ]
+      }
+    }
+  ],
+  files: [
+    {
+      _id: 'file1',
+      pages: [
+        {
+          _id: 'page1',
+          name: 'Customer Information',
+          fieldPositions: [
+            // ... field positions
+          ]
+        },
+        {
+          _id: 'page2',
+          name: 'Additional Details',
+          hidden: true,
+          logic: {
+            action: 'show',
+            eval: 'and',
+            conditions: [
+              {
+                file: 'file1',
+                page: 'page1',
+                field: 'total_amount',
+                condition: '>',
+                value: 5000
+              }
+            ]
+          },
+          fieldPositions: [
+            // ... field positions
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+## **Best Practices**
+
+1. **Start with Hidden State** - When using `show` action, set `hidden: true` initially so the field/page starts hidden
+
+2. **Use Specific Field IDs** - Always reference fields by their `_id` property
+
+3. **Cross-Page References** - Conditions must reference fields from different pages
+
+4. **Test Edge Cases** - Test with empty values, null values, and boundary conditions
+
+5. **Keep Conditions Simple** - Complex logic with many conditions can be harder to maintain
+
+6. **Use AND for Required Conditions** - Use `and` when all conditions must be met
+
+7. **Use OR for Optional Conditions** - Use `or` when any condition can trigger the action
+
+## **Common Patterns**
+
+### **Pattern 1: Show/Hide Based on Dropdown Selection**
+
+```jsx
+// Show field when dropdown equals specific value
+logic: {
+  action: 'show',
+  eval: 'and',
+  conditions: [
+    {
+      file: 'file1',
+      page: 'page1',
+      field: 'dropdown_field',
+      condition: '=',
+      value: 'selected_option'
+    }
+  ]
+}
+```
+
+### **Pattern 2: Show/Hide Based on Text Contains**
+
+```jsx
+// Show field when text contains specific substring
+logic: {
+  action: 'show',
+  eval: 'and',
+  conditions: [
+    {
+      file: 'file1',
+      page: 'page1',
+      field: 'text_field',
+      condition: '?=',
+      value: 'keyword'
+    }
+  ]
+}
+```
+
+### **Pattern 3: Show/Hide Based on Number Range**
+
+```jsx
+// Show field when number is greater than threshold
+logic: {
+  action: 'show',
+  eval: 'and',
+  conditions: [
+    {
+      file: 'file1',
+      page: 'page1',
+      field: 'number_field',
+      condition: '>',
+      value: 100
+    }
+  ]
+}
+```
+
+### **Pattern 4: Multiple Required Conditions**
+
+```jsx
+// Show field when multiple conditions are all true
+logic: {
+  action: 'show',
+  eval: 'and',
+  conditions: [
+    {
+      file: 'file1',
+      page: 'page1',
+      field: 'field1',
+      condition: '=',
+      value: 'value1'
+    },
+    {
+      file: 'file1',
+      page: 'page1',
+      field: 'field2',
+      condition: '>',
+      value: 50
+    }
+  ]
+}
+```
+
+### **Pattern 5: Any Condition Can Trigger**
+
+```jsx
+// Show field when any condition is true
+logic: {
+  action: 'show',
+  eval: 'or',
+  conditions: [
+    {
+      file: 'file1',
+      page: 'page1',
+      field: 'status',
+      condition: '=',
+      value: 'pending'
+    },
+    {
+      file: 'file1',
+      page: 'page1',
+      field: 'priority',
+      condition: '=',
+      value: 'high'
+    }
+  ]
+}
+```
+
+## **Troubleshooting**
+
+### **Field Not Showing/Hiding**
+
+1. **Check `hidden` property** - Ensure `hidden: true` when using `show` action
+
+2. **Verify field references** - Ensure field IDs in conditions match actual field IDs
+
+3. **Check page references** - Ensure page IDs are correct
+
+4. **Verify condition syntax** - Check that condition operators match field types
+
+5. **Test condition values** - Ensure comparison values match actual field values
+
+### **Condition Not Working**
+
+1. **Field type compatibility** - Verify the condition operator is supported for the field type
+
+2. **Value matching** - For dropdown/multiSelect, ensure the value matches exactly
+
+3. **Empty vs null** - Check if field is empty (`null=`) or filled (`*=`)
+
+4. **Case sensitivity** - Text contains (`?=`) is case-insensitive, but equals (`=`) is case-sensitive
+
+### Bonus Tip:
+
+- Checkout the github repo here - https://github.com/joyfill/conditional-logic
+
