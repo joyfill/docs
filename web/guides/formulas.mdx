@@ -1,0 +1,862 @@
+---
+title: "Formulas"
+---
+
+Formulas enable automatic calculation of field values based on expressions that reference other fields. When a user changes a field value, all dependent formulas are automatically recalculated in the correct order, keeping your forms dynamic and always up-to-date.
+
+## Overview
+
+Formulas allow you to create calculated fields that automatically update based on other field values. The formula system handles dependency resolution automatically, ensuring formulas are evaluated in the correct order even when fields depend on each other.
+
+**Key Features:**
+
+- Automatic dependency resolution
+
+- Circular dependency detection
+
+- Support for arithmetic, functions, and array operations
+
+- Real-time recalculation when field values change
+
+- Type-safe comparisons (no automatic type coercion)
+
+## Enabling Formulas
+
+Formulas are automatically resolved by the JoyDoc component when enabled in the `features` prop:
+
+```jsx
+import { JoyDoc } from '@builttocreate/joyfill-components';
+
+function MyForm() {
+  const [document, setDocument] = useState(myDocument);
+
+  return (
+    <JoyDoc
+      doc={document}
+      features={{
+        formulas: true  // Enable formulas feature
+      }}
+      onChange={(changelogs, updatedDoc) => {
+        // Formulas are automatically resolved before onChange is called
+        // updatedDoc contains fields with calculated values
+        setDocument(updatedDoc);
+      }}
+    />
+  );
+}
+```
+
+## How Formulas Work
+
+Formulas consist of two parts:
+
+1. **Formula Definition** - The calculation expression stored in `doc.formulas`
+
+2. **Formula Application** - The link between a field and a formula stored in `field.formulas`
+
+When a field value changes:
+
+1. JoyDoc automatically identifies all formulas that reference that field
+
+2. Determines the correct evaluation order (handles dependencies automatically)
+
+3. Evaluates all dependent formulas
+
+4. Updates field values with calculated results
+
+5. Calls `onChange` with the updated document
+
+## Formula Structure
+
+### Document-Level Formula Definitions
+
+Define formulas at the document level in a `formulas` array:
+
+```jsx
+{
+  formulas: [
+    {
+      _id: 'calculateTotal',        // Unique formula identifier
+      desc: 'Calculate total price', // Optional: Description
+      expression: 'price * quantity', // The calculation expression
+      type: 'calc',                  // Optional: Formula type
+      scope: 'private'               // Optional: Formula scope
+    }
+  ]
+}
+```
+
+### Field-Level Formula Applications
+
+Fields that should receive formula results have a `formulas` property:
+
+```jsx
+{
+  _id: 'total',
+  type: 'number',
+  title: 'Total',
+  value: 0,
+  formulas: [
+    {
+      _id: 'applied_total',         // Unique application ID
+      formula: 'calculateTotal',     // References formula._id
+      key: 'value'                   // Field property to update (always 'value')
+    }
+  ]
+}
+```
+
+## Field References
+
+Formulas reference fields by their `_id` property. You can reference any field in the document:
+
+```jsx
+{
+  fields: [
+    { _id: 'price', type: 'number', value: 100 },
+    { _id: 'quantity', type: 'number', value: 3 },
+    {
+      _id: 'total',
+      type: 'number',
+      value: 0,
+      formulas: [{ formula: 'calculateTotal', key: 'value' }]
+    }
+  ],
+  formulas: [
+    {
+      _id: 'calculateTotal',
+      desc: 'Calculate total',
+      expression: 'price * quantity'  // References field IDs: price and quantity
+    }
+  ]
+}
+```
+
+## Basic Arithmetic
+
+Formulas support standard arithmetic operations:
+
+```jsx
+{
+  formulas: [
+    {
+      _id: 'add',
+      desc: 'Add two values',
+      expression: 'field1 + field2'
+    },
+    {
+      _id: 'subtract',
+      desc: 'Subtract values',
+      expression: 'total - discount'
+    },
+    {
+      _id: 'multiply',
+      desc: 'Multiply values',
+      expression: 'quantity * price'
+    },
+    {
+      _id: 'divide',
+      desc: 'Divide values',
+      expression: 'total / items'
+    },
+    {
+      _id: 'complex',
+      desc: 'Complex calculation',
+      expression: '(price * quantity) + tax - discount'
+    }
+  ]
+}
+```
+
+**Note:** Formulas can contain literal values (`"5 + 3"`), field references (`field1 + field2`), or a mix of both (`field1 + 5`).
+
+## Built-in Functions
+
+The formula engine includes 50+ built-in functions across multiple categories.
+
+### Math Functions
+
+```jsx
+sum(1, 2, 3)                    // 6 - Sum of numbers or arrays
+average(10, 20, 30)             // 20 - Average of numbers
+min(5, 2, 8)                    // 2 - Minimum value
+max(5, 2, 8)                    // 8 - Maximum value
+round(3.14159, 2)               // 3.14 - Round to decimal places
+abs(-5)                         // 5 - Absolute value
+pow(2, 3)                       // 8 - Power (2^3)
+ceil(4.2)                       // 5 - Round up
+floor(4.8)                      // 4 - Round down
+mod(10, 3)                      // 1 - Modulo (remainder)
+sqrt(16)                        // 4 - Square root
+```
+
+### String Functions
+
+```jsx
+concat('Hello', ' ', 'World')   // 'Hello World' - Concatenate strings
+contains('Hello World', 'World') // true - Check if contains substring (case-insensitive)
+upper('hello')                  // 'HELLO' - Convert to uppercase
+lower('HELLO')                  // 'hello' - Convert to lowercase
+toNumber('123')                 // 123 - Convert string to number
+```
+
+### Array Functions
+
+Array functions work with table fields and other array values:
+
+```jsx
+count(array)                    // Count elements
+length(array)                   // Alias for count
+filter(array, predicate)        // Filter array with function
+map(array, transform)          // Transform array elements
+some(array, predicate)         // Test if some elements match
+every(array, predicate)        // Test if all elements match
+reduce(array, reducer, initial) // Reduce to single value
+find(array, predicate)         // Find first matching element
+flat(array, depth)             // Flatten nested arrays
+flatMap(array, transform)      // Map and flatten
+countIf(array, value)          // Count occurrences (case-insensitive)
+```
+
+### Logic Functions
+
+```jsx
+iff(condition, trueValue, falseValue)  // Conditional (if-then-else)
+not(value)                            // Logical NOT
+and(true, true, false)                // Logical AND (all must be true)
+or(true, false, false)                // Logical OR (any must be true)
+empty(value)                          // Check if empty/null/undefined
+```
+
+### Date Functions
+
+```jsx
+now()                              // Current timestamp
+year(timestamp)                    // Extract year (returns null if timestamp is null)
+month(timestamp)                   // Extract month (1-12, returns null if timestamp is null)
+day(timestamp)                     // Extract day of month (returns null if timestamp is null)
+date(year, month, day)             // Create timestamp from components
+dateAdd(timestamp, amount, unit)   // Add time ('days', 'months', 'years', returns null if timestamp is null)
+dateSubtract(timestamp, amount, unit) // Subtract time (returns null if timestamp is null)
+```
+
+**Important:** Date functions preserve null values. If a date field is null/empty, date functions return null rather than treating it as the current date.
+
+## Arrow Functions (Lambda Functions)
+
+Formulas support arrow functions for array operations. You can use either Notion-style (`->`) or JavaScript (`=>`) syntax:
+
+```jsx
+// Filter array elements - Both syntaxes work
+filter(scores, (score) -> score >= 80)
+filter(scores, (score) => score >= 80)
+
+// Map array elements
+map(items, (item) => item.price * item.quantity)
+
+// Complex nested operations
+filter(
+  table1,
+  (row) => and(
+    row.status == "active",
+    row.priority > 5
+  )
+)
+```
+
+### Working with Table Fields
+
+When working with table fields in lambda functions, access columns directly by their column field ID:
+
+```jsx
+// Access table row by index
+table1[0].text1                    // First row, text1 column
+
+// In lambda functions, access columns directly
+filter(table1, (row) => row.number1 > 80)
+map(table1, (row) => row.price * row.quantity)
+
+// Column names correspond to the field IDs defined in the table's column schema
+```
+
+## Comparison Operators
+
+All comparison operators use strict type checking (no automatic type coercion):
+
+### Equality (`==`)
+
+Type and value must be exactly the same:
+
+```jsx
+1 == 1              // true
+"hello" == "hello"  // true
+"1" == 1            // false (different types)
+[] == []            // false (arrays always false)
+```
+
+### Inequality (`!=`)
+
+Returns true if types or values differ:
+
+```jsx
+1 != 2              // true
+"1" != 1            // true (different types)
+[] != []            // true (arrays always true)
+```
+
+### Greater Than (`>`)
+
+Only works with numbers:
+
+```jsx
+12 > 10             // true
+"10" > 5            // false (not numbers)
+[] > 1              // false (arrays always false)
+```
+
+### Less Than (`<`)
+
+Only works with numbers:
+
+```jsx
+10 < 12             // true
+5 < "10"            // false (not numbers)
+1 < []              // false (arrays always false)
+```
+
+### Greater/Less Than or Equal (`>=`, `<=`)
+
+Work like `>` and `<` but include equality:
+
+```jsx
+10 >= 10            // true
+10 <= 12            // true
+```
+
+## Complete Examples
+
+### Example 1: Basic Calculation
+
+```jsx
+import { JoyDoc } from '@builttocreate/joyfill-components';
+
+function InvoiceForm() {
+  const [document, setDocument] = useState({
+    fields: [
+      { _id: 'price', type: 'number', value: 25.50 },
+      { _id: 'quantity', type: 'number', value: 3 },
+      {
+        _id: 'total',
+        type: 'number',
+        title: 'Total',
+        value: 0,
+        formulas: [{ formula: 'calculateTotal', key: 'value' }]
+      }
+    ],
+    formulas: [
+      {
+        _id: 'calculateTotal',
+        desc: 'Calculate total price',
+        expression: 'price * quantity'
+      }
+    ],
+    files: [/* ... */]
+  });
+
+  return (
+    <JoyDoc
+      doc={document}
+      features={{ formulas: true }}
+      onChange={(changelogs, updatedDoc) => {
+        // When price or quantity changes, total is automatically recalculated
+        setDocument(updatedDoc);
+      }}
+    />
+  );
+}
+```
+
+### Example 2: Conditional Logic
+
+```jsx
+{
+  fields: [
+    { _id: 'score', type: 'number', value: 85 },
+    {
+      _id: 'grade',
+      type: 'text',
+      title: 'Grade',
+      value: '',
+      formulas: [{ formula: 'calculateGrade', key: 'value' }]
+    }
+  ],
+  formulas: [
+    {
+      _id: 'calculateGrade',
+      desc: 'Calculate grade based on score',
+      expression: 'iff(score >= 90, "A", iff(score >= 80, "B", "C"))'
+    }
+  ]
+}
+// Result: grade = "B" when score = 85
+```
+
+### Example 3: Table Operations
+
+```jsx
+{
+  fields: [
+    {
+      _id: 'orderItems',
+      type: 'table',
+      value: [
+        { _id: 'r1', cells: { itemName: 'Widget', price: 10, quantity: 2 } },
+        { _id: 'r2', cells: { itemName: 'Gadget', price: 20, quantity: 3 } },
+        { _id: 'r3', cells: { itemName: 'Thing', price: 15, quantity: 1 } }
+      ]
+    },
+    {
+      _id: 'totalRevenue',
+      type: 'number',
+      title: 'Total Revenue',
+      value: 0,
+      formulas: [{ formula: 'calculateRevenue', key: 'value' }]
+    },
+    {
+      _id: 'highValueCount',
+      type: 'number',
+      title: 'High Value Items',
+      value: 0,
+      formulas: [{ formula: 'countHighValue', key: 'value' }]
+    }
+  ],
+  formulas: [
+    {
+      _id: 'calculateRevenue',
+      desc: 'Sum of all item prices times quantities',
+      expression: 'sum(map(orderItems, (row) => row.price * row.quantity))'
+    },
+    {
+      _id: 'countHighValue',
+      desc: 'Count items with revenue > 50',
+      expression: 'length(filter(orderItems, (row) => row.price * row.quantity > 50))'
+    }
+  ]
+}
+```
+
+**Table Access:**
+
+- `table1[0]` - Access first row (zero-indexed)
+
+- `table1[0].columnName` - Access specific column in first row
+
+- In lambda functions: `(row) => row.columnName` - Access column by field ID
+
+### Example 4: String Operations
+
+```jsx
+{
+  fields: [
+    { _id: 'first_name', type: 'text', value: 'John' },
+    { _id: 'last_name', type: 'text', value: 'Doe' },
+    {
+      _id: 'full_name',
+      type: 'text',
+      title: 'Full Name',
+      value: '',
+      formulas: [{ formula: 'combineNames', key: 'value' }]
+    }
+  ],
+  formulas: [
+    {
+      _id: 'combineNames',
+      desc: 'Combine first and last name',
+      expression: 'concat(first_name, " ", last_name)'
+    }
+  ]
+}
+// Result: full_name = "John Doe"
+```
+
+### Example 5: Date Operations
+
+```jsx
+{
+  fields: [
+    { _id: 'start_date', type: 'date', value: 1748797200000 },
+    {
+      _id: 'end_date',
+      type: 'date',
+      title: 'End Date',
+      value: 0,
+      formulas: [{ formula: 'calculateEndDate', key: 'value' }]
+    },
+    {
+      _id: 'year',
+      type: 'number',
+      title: 'Year',
+      value: 0,
+      formulas: [{ formula: 'extractYear', key: 'value' }]
+    }
+  ],
+  formulas: [
+    {
+      _id: 'calculateEndDate',
+      desc: 'Calculate end date 30 days after start',
+      expression: 'dateAdd(start_date, 30, "days")'
+    },
+    {
+      _id: 'extractYear',
+      desc: 'Extract year from start date',
+      expression: 'year(start_date)'
+    }
+  ]
+}
+```
+
+### Example 6: Complex Table Operations
+
+```jsx
+{
+  fields: [
+    {
+      _id: 'orders',
+      type: 'table',
+      value: [
+        { _id: 'r1', cells: { product: 'Product A', status: 'active', quantity: 10, price: 50 } },
+        { _id: 'r2', cells: { product: 'Product B', status: 'pending', quantity: 5, price: 30 } },
+        { _id: 'r3', cells: { product: 'Product C', status: 'active', quantity: 8, price: 40 } }
+      ]
+    },
+    {
+      _id: 'activeOrdersTotal',
+      type: 'number',
+      title: 'Active Orders Total',
+      value: 0,
+      formulas: [{ formula: 'calculateActiveTotal', key: 'value' }]
+    }
+  ],
+  formulas: [
+    {
+      _id: 'calculateActiveTotal',
+      desc: 'Sum of active orders only',
+      expression: `sum(
+        map(
+          filter(orders, (row) => row.status == "active"),
+          (row) => row.quantity * row.price
+        )
+      )`
+    }
+  ]
+}
+```
+
+## Dependency Resolution
+
+Formulas automatically resolve dependencies and evaluate in the correct order:
+
+```jsx
+{
+  fields: [
+    { _id: 'a', type: 'number', value: 1 },
+    { _id: 'b', type: 'number', value: 2 },
+    {
+      _id: 'sum',
+      type: 'number',
+      value: 0,
+      formulas: [{ formula: 'addAB', key: 'value' }]
+    },
+    {
+      _id: 'product',
+      type: 'number',
+      value: 0,
+      formulas: [{ formula: 'multiplySum', key: 'value' }]
+    }
+  ],
+  formulas: [
+    {
+      _id: 'addAB',
+      desc: 'Add field a and b',
+      expression: 'a + b'  // Evaluated first
+    },
+    {
+      _id: 'multiplySum',
+      desc: 'Multiply sum by 2',
+      expression: 'sum * 2'  // Evaluated after sum is calculated
+    }
+  ]
+}
+```
+
+The system automatically detects that `multiplySum` depends on `sum`, so it evaluates `addAB` first, then `multiplySum`.
+
+## Field Types and Formulas
+
+### Supported Field Types
+
+Formulas can write calculated values to:
+
+- `text` - String results
+
+- `textarea` - String results
+
+- `number` - Numeric results
+
+- `dropdown` - String results
+
+- `multiSelect` - Array results
+
+- `date` - Timestamp results
+
+- `chart` - Array of chart line objects
+
+### Read-Only Field Types
+
+These field types do NOT support formula writes:
+
+- `signature`
+
+- `image`
+
+- `file`
+
+- `table`
+
+- `collection`
+
+**Note:** While table and collection fields cannot receive formula results, you can read their values in formulas (e.g., `sum(map(table1, (row) => row.price))`).
+
+## Common Patterns
+
+### Pattern 1: Calculate Total from Table
+
+```jsx
+expression: 'sum(map(orderItems, (row) => row.price * row.quantity))'
+```
+
+### Pattern 2: Conditional Calculation
+
+```jsx
+expression: 'iff(quantity > 10, price * quantity * 0.9, price * quantity)'
+```
+
+### Pattern 3: Filter and Count
+
+```jsx
+expression: 'length(filter(items, (item) => item.status == "active"))'
+```
+
+### Pattern 4: Average with Filter
+
+```jsx
+expression: 'average(map(filter(scores, (s) => s > 0), (s) => s.value))'
+```
+
+### Pattern 5: String Concatenation
+
+```jsx
+expression: 'concat(first_name, " ", last_name)'
+```
+
+### Pattern 6: Multiple Conditions
+
+```jsx
+expression: `length(
+  filter(table1, (row) => 
+    and(
+      row.status == "active",
+      row.priority > 5,
+      or(row.category == "urgent", row.category == "high")
+    )
+  )
+)`
+```
+
+## Integration with Conditional Logic
+
+Formulas and conditional logic work independently:
+
+- **Formulas** - Calculate field values automatically
+
+- **Conditional Logic** - Control field/page visibility
+
+A field can have both formulas and conditional logic:
+
+```jsx
+{
+  _id: 'calculated_field',
+  type: 'number',
+  value: 0,
+  hidden: true,
+  formulas: [{ formula: 'calc', key: 'value' }],  // Calculates value
+  logic: {
+    action: 'show',
+    eval: 'and',
+    conditions: [
+      {
+        file: 'file1',
+        page: 'page1',
+        field: 'trigger_field',
+        condition: '=',
+        value: 'show'
+      }
+    ]
+  }
+}
+```
+
+## Error Handling
+
+Formulas are evaluated automatically by JoyDoc. If a formula has errors:
+
+1. The formula is skipped (doesn't crash the form)
+
+2. Other formulas continue to evaluate
+
+3. The field retains its previous value
+
+**Common Errors:**
+
+- **Unknown Function** - Function name typo (e.g., `lenght` instead of `length`)
+
+- **Undefined Variable** - Variable name doesn't match lambda parameter
+
+- **Circular Dependency** - Fields reference each other in a loop
+
+- **Type Mismatch** - Formula result type doesn't match field type
+
+## Best Practices
+
+1. **Use Descriptive Formula IDs** - Make formula IDs meaningful (`calculateTotal` vs `f1`)
+
+2. **Add Descriptions** - Use the `desc` field to document what each formula does
+
+3. **Handle Null Values** - Use `empty()` or null checks for optional fields
+
+4. **Test Edge Cases** - Test with empty arrays, null values, and zero values
+
+5. **Keep Expressions Readable** - Break complex formulas into multiple steps when possible
+
+6. **Use Arrow Functions** - Use `=>` or `->` syntax for cleaner array operations
+
+7. **Validate Field Types** - Ensure formula results match target field types
+
+8. **Reference Existing Fields** - Ensure referenced fields exist before using them
+
+## Troubleshooting
+
+### Formula Not Updating
+
+1. **Check Formula Feature** - Ensure `features.formulas: true` is set
+
+2. **Check Formula Application** - Ensure field has `formulas` array with correct `formula` reference
+
+3. **Verify Field References** - Ensure field IDs in expression match actual field IDs
+
+4. **Check Field Type** - Ensure field type supports formula writes
+
+### Formula Errors
+
+1. **Unknown Function** - Check function name spelling
+
+2. **Undefined Variable** - Verify variable names match lambda parameters
+
+3. **Type Mismatch** - Ensure formula result type matches field type
+
+4. **Circular Dependency** - Check for circular references between formulas
+
+### Debugging Tips
+
+1. **Start Simple** - Test with basic arithmetic first
+
+2. **Check onChange** - Verify `onChange` is being called with updated values
+
+3. **Validate Document Structure** - Ensure formulas array exists and is properly formatted
+
+4. **Test Individual Formulas** - Isolate formulas to identify issues
+
+## Complete Integration Example
+
+```jsx
+import { useState } from 'react';
+import { JoyDoc } from '@builttocreate/joyfill-components';
+
+function InvoiceForm() {
+  const [document, setDocument] = useState({
+    _id: 'invoice_doc',
+    identifier: 'invoice',
+    name: 'Invoice Form',
+    fields: [
+      { _id: 'unit_price', type: 'number', value: 0 },
+      { _id: 'quantity', type: 'number', value: 0 },
+      { _id: 'discount_percent', type: 'number', value: 0 },
+      {
+        _id: 'subtotal',
+        type: 'number',
+        title: 'Subtotal',
+        value: 0,
+        formulas: [{ formula: 'calculateSubtotal', key: 'value' }]
+      },
+      {
+        _id: 'discount_amount',
+        type: 'number',
+        title: 'Discount',
+        value: 0,
+        formulas: [{ formula: 'calculateDiscount', key: 'value' }]
+      },
+      {
+        _id: 'total',
+        type: 'number',
+        title: 'Total',
+        value: 0,
+        formulas: [{ formula: 'calculateTotal', key: 'value' }]
+      }
+    ],
+    formulas: [
+      {
+        _id: 'calculateSubtotal',
+        desc: 'Calculate subtotal before discount',
+        expression: 'unit_price * quantity'
+      },
+      {
+        _id: 'calculateDiscount',
+        desc: 'Calculate discount amount',
+        expression: 'subtotal * (discount_percent / 100)'
+      },
+      {
+        _id: 'calculateTotal',
+        desc: 'Calculate final total',
+        expression: 'subtotal - discount_amount'
+      }
+    ],
+    files: [/* ... */]
+  });
+
+  return (
+    <JoyDoc
+      doc={document}
+      features={{
+        formulas: true  // Enable formulas
+      }}
+      onChange={(changelogs, updatedDoc) => {
+        // Formulas are automatically resolved
+        // updatedDoc contains all calculated values
+        console.log('Document updated:', updatedDoc);
+        setDocument(updatedDoc);
+      }}
+    />
+  );
+}
+```
+
+In this example:
+
+- When `unit_price` or `quantity` changes, `subtotal` is automatically recalculated
+
+- When `subtotal` or `discount_percent` changes, `discount_amount` is recalculated
+
+- When `subtotal` or `discount_amount` changes, `total` is recalculated
+
+- All calculations happen automatically in the correct order
+
