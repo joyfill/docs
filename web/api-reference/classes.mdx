@@ -1,159 +1,274 @@
 ---
-title: "Classes Reference"
-description: "Detailed documentation for all SDK classes"
+title: "Components Reference"
+description: "Detailed documentation for JoyDoc components"
 icon: "box"
 ---
 
-# Classes Reference
+# Components Reference
 
-Complete reference for all classes and types in the Joyfill Web SDK.
+Complete reference for all React components in the Joyfill Web SDK.
 
-## JoyfillFormView
+## JoyDoc
 
-The main view component for displaying forms.
+Main form builder component for creating and editing JoyDoc forms.
 
-```swift
-class JoyfillFormView: UIView
+**Kind**: React Component  
+**Returns**: `JSX.Element` - The JoyDoc component
+
+### Props
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| doc | `Object` |  | The JoyDoc document object containing form structure and data |
+| mode | `string` | `'edit'` | Display mode: 'edit', 'view', or 'preview' |
+| view | `string` | `'desktop'` | View type: 'desktop', 'mobile', or 'tablet' |
+| theme | `Object` |  | Custom theme object for styling |
+| width | `number` | `816` | Component width in pixels |
+| height | `number` | `1056` | Component height in pixels |
+| initialPageId | `string` |  | ID of the initially active page |
+| lazyload | `boolean` | `false` | Enable lazy loading for performance |
+| features | `Object` |  | Feature flags object |
+| features.formulas | `boolean` | `false` | Enable formula support |
+| features.readableIds | `boolean` | `false` | Use readable IDs instead of object IDs |
+| features.repeatingHeaderAndFooter | `boolean` | `false` | Enable repeating headers/footers |
+| features.validateSchema | `boolean` | `false` | Enable schema validation |
+| fieldOptions | `Array` |  | Custom field options array |
+| fieldSettings | `Object` |  | Custom settings for different targets (page, field, table column) |
+| identifiers | `Object` |  | Identifier configuration |
+| onChange | `function` |  | Callback fired when document changes |
+| onCaptureAsync | `function` |  | Async callback for field capture |
+| onUploadAsync | `function` |  | Async callback for file uploads |
+| onError | `function` |  | Error handler callback |
+| onFocus | `function` |  | Field focus handler |
+| onBlur | `function` |  | Field blur handler |
+| validateSchema | `boolean` | `false` | Enable schema validation |
+
+### Example
+
+```jsx
+import { JoyDoc } from '@joyfill/components';
+
+<JoyDoc
+  doc={myDocument}
+  mode="edit"
+  view="desktop"
+  onChange={(updatedDoc) => console.log('Document updated:', updatedDoc)}
+  features={{
+    validateSchema: true,
+    readableIds: true
+  }}
+/>
 ```
 
-**Properties:**
-- `delegate`: `JoyfillFormDelegate?` - The form delegate
-- `appearance`: `JoyfillAppearance` - Visual appearance configuration
-- `imageConfig`: `JoyfillImageConfig` - Image handling configuration
+### Features Configuration
 
-**Methods:**
-- See [Functions Reference](/web/api-reference/functions) for detailed method documentation
+The `features` prop allows you to enable/disable various functionalities:
 
-## JoyfillFormConfig
-
-Configuration object for initializing forms.
-
-```swift
-struct JoyfillFormConfig
+```jsx
+<JoyDoc
+  doc={myDocument}
+  features={{
+    formulas: true,              // Enable formula calculations
+    readableIds: true,           // Use human-readable IDs
+    repeatingHeaderAndFooter: true, // Repeat headers/footers on each page
+    validateSchema: true         // Enable schema validation
+  }}
+/>
 ```
 
-**Properties:**
-- `mode`: `JoyfillFormMode` - The form mode
-- `templateId`: `String` - Template identifier
-- `documentId`: `String?` - Document identifier (for edit mode)
-- `initialData`: `[String: Any]?` - Pre-populated data
-- `validateOnSubmit`: `Bool` - Enable validation on submit
-- `validateOnChange`: `Bool` - Enable real-time validation
+### Event Handlers
 
-## JoyfillForm
-
-Represents a loaded form instance.
-
-```swift
-class JoyfillForm
+```jsx
+<JoyDoc
+  doc={myDocument}
+  onChange={(updatedDoc) => {
+    // Called when any field value changes
+    console.log('Document updated:', updatedDoc);
+  }}
+  onFocus={(field) => {
+    // Called when a field receives focus
+    console.log('Field focused:', field);
+  }}
+  onBlur={(field) => {
+    // Called when a field loses focus
+    console.log('Field blurred:', field);
+  }}
+  onError={(error) => {
+    // Called when an error occurs
+    console.error('Error:', error);
+  }}
+/>
 ```
 
-**Properties:**
-- `id`: `String` - Form identifier
-- `title`: `String` - Form title
-- `fields`: `[JoyfillField]` - Array of form fields
-- `mode`: `JoyfillFormMode` - Current form mode
+### File Upload Handling
 
-**Methods:**
-- `validate() -> Bool` - Validate the form
-- `getData() -> [String: Any]` - Get form data
-- `getValue(forField:) -> Any?` - Get field value
-
-## JoyfillField
-
-Represents a form field.
-
-```swift
-struct JoyfillField
+```jsx
+<JoyDoc
+  doc={myDocument}
+  onUploadAsync={async (file) => {
+    // Handle file upload
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await fetch('/upload', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const { url } = await response.json();
+    return url; // Return the uploaded file URL
+  }}
+/>
 ```
 
-**Properties:**
-- `identifier`: `String` - Unique field identifier
-- `type`: `JoyfillFieldType` - Field type
-- `label`: `String` - Display label
-- `value`: `Any?` - Current value
-- `required`: `Bool` - Whether field is required
-- `disabled`: `Bool` - Whether field is disabled
+---
 
-## JoyfillFormMode
+## JoyDocExporter
 
-Enum representing form modes.
+PDF export component for rendering JoyDoc forms as PDF-ready layouts.
 
-```swift
-enum JoyfillFormMode {
-    case readonly
-    case fill
-    case edit
+**Kind**: React Component  
+**Returns**: `JSX.Element` - The JoyDocExporter component
+
+### Props
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| doc | `Object` |  | The JoyDoc document to export |
+| theme | `Object` |  | Custom theme object for styling |
+| license | `string` |  | JWT license key for validation |
+| config | `Object` |  | Export configuration |
+| config.page | `Object` |  | Page configuration |
+| config.page.height | `number` | `1056` | Page height in pixels |
+| config.page.width | `number` | `816` | Page width in pixels |
+| config.page.padding | `number` | `0` | Page padding in pixels |
+
+### Example
+
+```jsx
+import { JoyDocExporter } from '@joyfill/components';
+
+<JoyDocExporter
+  doc={myDocument}
+  config={{
+    page: {
+      height: 1056,
+      width: 816,
+      padding: 20
+    }
+  }}
+/>
+```
+
+### PDF Export Workflow
+
+Here's a complete example of exporting a JoyDoc to PDF:
+
+```jsx
+import React from 'react';
+import { JoyDocExporter } from '@joyfill/components';
+import html2pdf from 'html2pdf.js';
+
+function ExportToPDF({ document }) {
+  const exportRef = React.useRef();
+  
+  const handleExport = () => {
+    const element = exportRef.current;
+    const options = {
+      margin: 0,
+      filename: 'document.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'px', format: [816, 1056], orientation: 'portrait' }
+    };
+    
+    html2pdf().set(options).from(element).save();
+  };
+  
+  return (
+    <div>
+      <button onClick={handleExport}>Export to PDF</button>
+      <div ref={exportRef}>
+        <JoyDocExporter
+          doc={document}
+          config={{
+            page: {
+              height: 1056,
+              width: 816,
+              padding: 20
+            }
+          }}
+        />
+      </div>
+    </div>
+  );
 }
 ```
 
-## JoyfillFieldType
+### Custom Styling
 
-Enum representing field types.
+Apply custom themes to the exporter:
 
-```swift
-enum JoyfillFieldType {
-    case text
-    case number
-    case email
-    case phone
-    case date
-    case datetime
-    case checkbox
-    case radio
-    case dropdown
-    case textarea
-    case file
-    case image
-}
+```jsx
+<JoyDocExporter
+  doc={myDocument}
+  theme={{
+    primaryColor: '#0066FF',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: 14
+  }}
+  config={{
+    page: {
+      height: 1056,
+      width: 816,
+      padding: 20
+    }
+  }}
+/>
 ```
 
-## JoyfillAppearance
+---
 
-Configuration for visual appearance.
+## PublicAPI Object
 
-```swift
-struct JoyfillAppearance
+Default export object containing all public APIs of @joyfill/components.
+
+**Kind**: global namespace
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| JoyDoc | `Component` | Main form builder component |
+| JoyDocExporter | `Component` | PDF export component |
+| applyLogic | `function` | Conditional logic application function |
+| duplicate | `function` | Document duplication function |
+| duplicatePage | `function` | Page duplication function |
+| getDefaultPage | `function` | Default page creation function |
+| getDefaultDocument | `function` | Default document creation function |
+| getDefaultTemplate | `function` | Default template creation function |
+| getDocumentFromTemplate | `function` | Document from template creation function |
+| generateObjectId | `function` | Object ID generation function |
+| validator | `function` | Document validation function |
+| validateSchema | `function` | Schema validation function |
+| fieldOptions | `Array` | Default field options configuration |
+| fieldColumnTypes | `Object` | Field table column types configuration |
+
+### Example
+
+```javascript
+import {
+  JoyDoc,
+  JoyDocExporter,
+  getDefaultDocument,
+  validator
+} from '@joyfill/components';
+
+// Use components
+<JoyDoc doc={doc} />
+<JoyDocExporter doc={doc} />
+
+// Use utility functions
+const newDoc = getDefaultDocument();
+const validationResult = validator(doc);
 ```
-
-**Properties:**
-- `primaryColor`: `UIColor` - Primary brand color
-- `backgroundColor`: `UIColor` - Background color
-- `textColor`: `UIColor` - Text color
-- `fontSize`: `CGFloat` - Base font size
-- `errorColor`: `UIColor` - Error message color
-
-## JoyfillImageConfig
-
-Configuration for image handling.
-
-```swift
-struct JoyfillImageConfig
-```
-
-**Properties:**
-- `compressionQuality`: `CGFloat` - JPEG compression (0.0-1.0)
-- `maxDimension`: `CGFloat` - Maximum image dimension
-- `format`: `ImageFormat` - Image format (.jpeg or .png)
-- `allowCamera`: `Bool` - Enable camera capture
-- `allowPhotoLibrary`: `Bool` - Enable photo library
-- `maxFileSize`: `Int` - Maximum file size in bytes
-
-## JoyfillFormDelegate
-
-Protocol for handling form events.
-
-```swift
-protocol JoyfillFormDelegate: AnyObject {
-    func formDidLoad(_ form: JoyfillForm)
-    func formWillSubmit(_ form: JoyfillForm) -> Bool
-    func formDidSubmit(_ form: JoyfillForm, data: [String: Any])
-    func form(_ form: JoyfillForm, didUpdateField field: JoyfillField)
-    func form(_ form: JoyfillForm, didFocusField field: JoyfillField)
-    func form(_ form: JoyfillForm, didBlurField field: JoyfillField)
-    func form(_ form: JoyfillForm, didFailWithError error: Error)
-}
-```
-
-All methods are optional with default implementations.
-

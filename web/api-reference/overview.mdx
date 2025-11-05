@@ -1,106 +1,140 @@
 ---
 title: "API Overview"
-description: "Complete API reference for the Joyfill Web SDK"
+description: "Complete API reference for the Joyfill Web SDK (@joyfill/components)"
 icon: "code"
 ---
 
 # API Reference
 
-Comprehensive documentation for all classes, methods, and properties in the Joyfill Web SDK.
+Comprehensive documentation for all components, functions, and utilities in the Joyfill Web SDK.
 
 ## Core Components
 
 <CardGroup cols={2}>
-  <Card title="Functions" icon="function" href="/web/api-reference/functions">
-    Core functions and methods
+  <Card title="Components" icon="box" href="/web/api-reference/classes">
+    JoyDoc and JoyDocExporter components
   </Card>
-  <Card title="Classes" icon="box" href="/web/api-reference/classes">
-    Main SDK classes and objects
+  <Card title="Functions" icon="function" href="/web/api-reference/functions">
+    PublicAPI utility functions
   </Card>
 </CardGroup>
 
 ## Quick Reference
 
-### JoyfillFormView
+### JoyDoc Component
 
-The main view component for rendering forms.
+The main form builder component for creating and editing JoyDoc forms.
 
-```swift
-let formView = JoyfillFormView()
-formView.delegate = self
-view.addSubview(formView)
+```jsx
+import { JoyDoc } from '@joyfill/components';
+
+<JoyDoc
+  doc={myDocument}
+  mode="edit"
+  view="desktop"
+  onChange={(updatedDoc) => console.log('Document updated:', updatedDoc)}
+  features={{
+    validateSchema: true,
+    readableIds: true
+  }}
+/>
 ```
 
-**Key Methods:**
-- `loadForm(config:)` - Load a form with configuration
-- `validate()` - Validate all form fields
-- `getFormData()` - Extract all form data
-- `setFieldValue(_:forField:)` - Set a field value
+**Key Props:**
+- `doc` - The JoyDoc document object containing form structure and data
+- `mode` - Display mode: 'edit', 'view', or 'preview'
+- `onChange` - Callback fired when document changes
+- `features` - Feature flags for enabling/disabling functionality
 
-### JoyfillFormConfig
+### JoyDocExporter Component
 
-Configuration object for form initialization.
+PDF export component for rendering JoyDoc forms as PDF-ready layouts.
 
-```swift
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "template_id",
-    initialData: [:]
-)
+```jsx
+import { JoyDocExporter } from '@joyfill/components';
+
+<JoyDocExporter
+  doc={myDocument}
+  config={{
+    page: {
+      height: 1056,
+      width: 816,
+      padding: 20
+    }
+  }}
+/>
 ```
 
-**Properties:**
-- `mode` - Form mode (readonly, fill, edit)
-- `templateId` - Template identifier
-- `initialData` - Pre-populated form data
-- `validateOnSubmit` - Enable validation on submit
+### PublicAPI Functions
 
-### JoyfillFormDelegate
+Default export object containing all public APIs:
 
-Protocol for handling form events.
+```javascript
+import {
+  getDefaultDocument,
+  getDefaultTemplate,
+  validator,
+  applyLogic
+} from '@joyfill/components';
 
-```swift
-func formDidLoad(_ form: JoyfillForm)
-func formDidSubmit(_ form: JoyfillForm, data: [String: Any])
-func form(_ form: JoyfillForm, didUpdateField field: JoyfillField)
+// Create a new document
+const newDoc = getDefaultDocument();
+
+// Validate a document
+const result = validator(doc, { view: 'desktop' });
 ```
 
 ## Common Patterns
 
-### Loading a Form
+### Creating a New Document
 
-```swift
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "your_template_id"
-)
-formView.loadForm(config: config)
+```javascript
+import { getDefaultDocument } from '@joyfill/components';
+
+const newDoc = getDefaultDocument();
+console.log('Document ID:', newDoc._id);
 ```
 
-### Handling Events
+### Duplicating a Template
 
-```swift
-extension ViewController: JoyfillFormDelegate {
-    func formDidLoad(_ form: JoyfillForm) {
-        // Form loaded
-    }
+```javascript
+import { duplicate } from '@joyfill/components';
+
+const copy = duplicate(template, { name: "Template Copy" });
+```
+
+### Applying Conditional Logic
+
+```javascript
+import { applyLogic } from '@joyfill/components';
+
+const result = applyLogic(items, fields);
+console.log(result.items); // Updated items with hidden states
+```
+
+### Validating a Document
+
+```javascript
+import { validator, validateSchema } from '@joyfill/components';
+
+// Field validation
+const result = validator(doc, { view: 'desktop' });
+
+// Schema validation
+const schemaError = validateSchema(doc);
+if (schemaError) {
+  console.error('Schema validation failed:', schemaError.message);
 }
-```
-
-### Extracting Data
-
-```swift
-let formData = formView.getFormData()
 ```
 
 ## Next Steps
 
 <CardGroup cols={2}>
+  <Card title="Components Reference" icon="box" href="/web/api-reference/classes">
+    Complete component documentation
+  </Card>
   <Card title="Functions Reference" icon="function" href="/web/api-reference/functions">
     Detailed function documentation
-  </Card>
-  <Card title="Classes Reference" icon="box" href="/web/api-reference/classes">
-    Complete class documentation
   </Card>
 </CardGroup>
 

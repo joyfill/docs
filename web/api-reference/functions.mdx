@@ -1,168 +1,511 @@
 ---
 title: "Functions Reference"
-description: "Detailed documentation for all SDK functions"
+description: "Detailed documentation for all PublicAPI utility functions"
 icon: "function"
 ---
 
 # Functions Reference
 
-Complete reference for all functions and methods in the Joyfill Web SDK.
+Complete reference for all utility functions in the Joyfill Web SDK.
 
-## Form Loading
+---
 
-### loadForm(config:)
+## Document Management
 
-Loads a form with the specified configuration.
+### duplicate(original, [defaults])
 
-```swift
-func loadForm(config: JoyfillFormConfig)
+Creates a deep-cloned and properly formatted duplicate of a Template or Document.
+
+Generates a new `_id`, updates the `identifier` based on type (`template_` or `doc_`),
+resets timestamps, and merges in optional default overrides. 
+Ensures all references to the original object are removed via deep clone.
+
+**Returns**: `Object` - A new object representing the duplicated Template or Document with updated metadata.
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| original | `Object` |  | The original Template or Document object to duplicate. |
+| [defaults] | `Object` | `{}` | Optional default values to override or extend the duplicated object. |
+
+**Example**
+
+```javascript
+import { duplicate } from "@joyfill/components";
+
+const template = {
+  _id: "template_123",
+  type: "template",
+  identifier: "template_123",
+  name: "Inspection Template",
+  fields: []
+};
+
+const copy = duplicate(template, { name: "Inspection Template Copy" });
+
+console.log(copy);
+// Example output:
+// {
+//   _id: "template_67890",
+//   type: "template",
+//   identifier: "template_67890",
+//   name: "Inspection Template Copy",
+//   fields: [],
+//   createdOn: 1730068483105,
+//   source: "template_123"
+// }
 ```
 
-**Parameters:**
-- `config`: `JoyfillFormConfig` - The form configuration
+**Key Features:**
+- Creates a deep copy of the original object
+- Generates a new ObjectId and identifier
+- Adds a fresh `createdOn` timestamp
+- Stores the original identifier under `source`
+- Merges any provided `defaults` (e.g., new name)
 
-**Example:**
-```swift
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "template_123"
-)
-formView.loadForm(config: config)
+---
+
+### duplicatePage(doc, fileId, pageId, useReadableIds)
+
+Duplicates a page within a document and generates corresponding changelog entries.
+
+This function creates a copy of a specified page in a document and generates
+changelog entries to track the duplication operation. It handles both primary
+pages and view pages, as well as any associated fields that need to be created.
+
+**Returns**: `Object` - An object containing:
+  - `{Object} doc` - The updated document with the duplicated page
+  - `{Array} changelogs` - Array of changelog entries tracking the duplication
+
+| Param | Type | Description |
+| --- | --- | --- |
+| doc | `Object` | The document object containing the page to duplicate |
+| fileId | `string` | The ID of the file containing the document |
+| pageId | `string` | The ID of the page to duplicate |
+| useReadableIds | `boolean` | Whether to use readable IDs for generated elements |
+
+**Example**
+
+```javascript
+import { duplicatePage } from "@joyfill/components";
+
+const result = duplicatePage(document, 'file123', 'page456', true);
+console.log(result.doc); // Updated document
+console.log(result.changelogs); // Array of changelog entries
 ```
 
-## Data Management
+---
 
-### getFormData()
+### getDefaultPage([defaults])
 
-Returns all form data as a dictionary.
+Creates a default page object for JoyDoc documents.
 
-```swift
-func getFormData() -> [String: Any]
+**Returns**: `Object` - Default page object with _id, name, width, height, rowHeight, cols, fieldPositions, layout, presentation, and padding
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [defaults] | `Object` | `{}` | Optional configuration to override default values |
+
+**Example**
+
+```javascript
+import { getDefaultPage } from '@joyfill/components';
+
+const page = getDefaultPage();
+// Returns: { _id: "...", name: "New Page", width: 816, height: 1056, ... }
+
+// With custom defaults
+const customPage = getDefaultPage({
+  name: "Custom Page",
+  width: 1200,
+  height: 1600
+});
 ```
 
-**Returns:** Dictionary containing all form field values
+---
 
-**Example:**
-```swift
-let data = formView.getFormData()
-print(data)
+### getDefaultDocument()
+
+Creates a new JoyDoc document with standard properties and structure.
+The document will have a unique ID, proper type, and identifier.
+
+**Returns**: `Object` - returns a properly formatted Document JoyDoc
+
+**Example**
+
+```javascript
+import { getDefaultDocument } from '@joyfill/components';
+
+const newDoc = getDefaultDocument();
+console.log('Document ID:', newDoc._id);
+console.log('Document type:', newDoc.type);
+console.log('Document name:', newDoc.name);
 ```
 
-### setFieldValue(_:forField:)
+---
 
-Sets the value for a specific field.
+### getDefaultTemplate()
 
-```swift
-func setFieldValue(_ value: Any, forField fieldId: String)
+Gets a default template structure for JoyDoc documents.
+Creates a new template object that can be used to generate multiple documents with consistent structure.
+Templates include predefined layouts, field configurations, and styling options.
+
+**Returns**: `Object` - returns a properly formatted Template JoyDoc
+
+**Example**
+
+```javascript
+import { getDefaultTemplate } from '@joyfill/components';
+
+const template = getDefaultTemplate();
+console.log('Template ID:', template._id);
+console.log('Template name:', template.name);
 ```
 
-**Parameters:**
-- `value`: `Any` - The value to set
-- `fieldId`: `String` - The field identifier
+---
 
-**Example:**
-```swift
-formView.setFieldValue("John", forField: "first_name")
+### getDocumentFromTemplate(template)
+
+Get a properly formatted Document JoyDoc from Template JoyDoc
+
+Creates a new document by cloning a template and assigning it a unique ID and identifier.
+The template is deep cloned to remove all references to the original template object.
+The resulting document maintains the template's structure (name, files, fields) while
+being marked as a document type with references to the source template.
+
+**Returns**: `Object` - A new document with unique _id, identifier, and template references
+
+| Param | Type | Description |
+| --- | --- | --- |
+| template | `Object` | The template JoyDoc to create document from |
+
+**Example**
+
+```javascript
+import { getDocumentFromTemplate } from '@joyfill/components';
+
+const newDoc = getDocumentFromTemplate(template);
+console.log('New document ID:', newDoc._id);
+console.log('Document identifier:', newDoc.identifier);
+console.log('Source template:', newDoc.template);
 ```
 
-### getFieldValue(_:)
+---
 
-Retrieves the value of a specific field.
+## Conditional Logic
 
-```swift
-func getFieldValue(_ fieldId: String) -> Any?
+### applyLogic(items, fields, [fieldLookupKey])
+
+Applies conditional logic to show/hide items based on field values.
+
+**Logic object structure:**
+- `action`: `'show'` or `'hide'`
+  - `'show'`: if conditions are met, item becomes visible (`hidden = false`)
+  - `'hide'`: if conditions are met, item becomes hidden (`hidden = true`)
+- `eval`: `'and'` or `'or'`
+  - `'and'`: all conditions must evaluate true
+  - `'or'`: at least one condition must evaluate true
+- `conditions`: array of rule objects with:
+  - `field`: lookup key of the dependent field
+  - `condition`: operator (see below)
+  - `value`: value to compare against
+
+**Supported condition operators:**
+- `*=` → Filled (value exists or array non-empty)
+- `null=` → Empty (null, empty string, or empty array)
+- `=` → Equals (case-insensitive for strings; exact match for numbers)
+- `!=` → Not equals
+- `?=` → Contains substring (case-insensitive)
+- `>` → Greater than (numbers only)
+- `<` → Less than (numbers only)
+
+**Logic evaluation process:**
+1. For each item with a `logic` definition:
+   - Retrieve referenced fields using `fieldLookupKey`
+   - Evaluate all conditions using their operator and `value`
+   - Combine results with `eval` (`and`/`or`)
+   - Apply `action` to update the `hidden` property accordingly
+2. Return updated `items` array
+
+**Returns**: `Object` - Updated fields array (with `hidden` set to true or false based on the logic)
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| items | `Array<object>` |  | Array of items (fields, pages, or groups) that may include a `logic` object. |
+| fields | `Array<object>` |  | Array of field objects used for logic evaluation. |
+| [fieldLookupKey] | `string` | `'_id'` | Property name used to match conditions to field identifiers. |
+
+**Example**
+
+```javascript
+import { applyLogic } from "@joyfill/components";
+
+const fields = [
+  { _id: "field_one", type: "text", value: "hello world" },
+  { _id: "field_two", type: "number", value: 100 },
+  { _id: "field_three", type: "multiSelect", value: ["option_one"] }
+];
+
+const items = [
+  {
+    _id: "conditional_one",
+    hidden: true,
+    logic: {
+      action: "show",
+      eval: "and",
+      conditions: [
+        { field: "field_one", condition: "?=", value: "hello" },
+        { field: "field_two", condition: ">", value: 50 }
+      ]
+    }
+  },
+  {
+    _id: "conditional_two",
+    hidden: false,
+    logic: {
+      action: "hide",
+      eval: "or",
+      conditions: [
+        { field: "field_three", condition: "=", value: "option_one" }
+      ]
+    }
+  }
+];
+
+const result = applyLogic(items, fields);
+console.log(JSON.stringify(result, null, 2));
+
+// SAMPLE OUTPUT:
+// {
+//   "items": [
+//     {
+//       "_id": "conditional_one",
+//       "hidden": false, // previously true → shown because both conditions passed
+//       "logic": { ... }
+//     },
+//     {
+//       "_id": "conditional_two",
+//       "hidden": true, // previously false → hidden because one condition passed
+//       "logic": { ... }
+//     }
+//   ]
+// }
 ```
 
-**Parameters:**
-- `fieldId`: `String` - The field identifier
+**Explanation:**
 
-**Returns:** The field value, or `nil` if not found
+The first item (`conditional_one`) was hidden by default but became visible.
+Both its conditions evaluated true (`field_one` contains "hello" and `field_two` > 50).
+Since `action: 'show'` and all conditions passed with `eval: 'and'`, it became visible.
 
-**Example:**
-```swift
-if let name = formView.getFieldValue("first_name") as? String {
-    print(name)
-}
-```
+The second item (`conditional_two`) was visible by default but became hidden.
+Its condition matched because `field_three` includes "option_one".
+Since `action: 'hide'` and the `or` condition passed, it was set to hidden.
+
+---
 
 ## Validation
 
-### validate()
+### validator(doc, [options])
 
-Validates all form fields.
+Validates a JoyDoc document against field rules and constraints.
+Performs comprehensive validation of a JoyDoc document including field validation rules,
+required fields, data types, and business logic constraints.
 
-```swift
-func validate() -> Bool
-```
+**Returns**: `Object` - Validation result with status and field validations
 
-**Returns:** `true` if all fields are valid, `false` otherwise
+| Param | Type | Description |
+| --- | --- | --- |
+| doc | `Object` | The JoyDoc document to validate |
+| [options] | `Object` | Validation options |
+| [options.view] | `string` | View type for validation ('desktop', 'mobile', 'tablet') |
 
-**Example:**
-```swift
-if formView.validate() {
-    print("Form is valid")
+**Example**
+
+```javascript
+import { validator } from '@joyfill/components';
+
+const result = validator(doc, { view: 'desktop' });
+if (result.status === 'valid') {
+  console.log('Document is valid');
 } else {
-    print("Form has errors")
+  console.log('Validation errors:', result.errors);
+  result.fieldValidations.forEach(validation => {
+    if (!validation.valid) {
+      console.log(`Field ${validation.fieldId}: ${validation.message}`);
+    }
+  });
 }
 ```
 
-### validateField(_:)
+---
 
-Validates a specific field.
+### validateSchema(doc)
 
-```swift
-func validateField(_ fieldId: String) -> Bool
-```
+Validates a JoyDoc document against the schema definition.
+Performs schema validation to ensure the document structure conforms to the JoyDoc schema.
+Checks for required properties, data types, and structural integrity.
 
-**Parameters:**
-- `fieldId`: `String` - The field identifier
+**Returns**: `Object | undefined` - Returns an error object if validation fails, otherwise undefined.
 
-**Returns:** `true` if the field is valid
+If an error object is returned, it contains:
+  - `{string} [error.code]` - Error code (e.g., 'ERROR_SCHEMA_VALIDATION')
+  - `{string} [error.message]` - Human-readable error message
+  - `{Array} [error.errors]` - Array of detailed validation errors
+  - `{Object} [error.details]` - Additional error details including schema version
 
-**Example:**
-```swift
-if formView.validateField("email") {
-    print("Email is valid")
+| Param | Type | Description |
+| --- | --- | --- |
+| doc | `Object` | The JoyDoc document to validate against schema |
+
+**Example**
+
+```javascript
+import { validateSchema } from '@joyfill/components';
+
+const schemaError = validateSchema(doc);
+if (schemaError) {
+  console.error('Schema validation failed:', schemaError.message);
+  console.error('Error code:', schemaError.code);
+  console.error('Detailed errors:', schemaError.errors);
+} else {
+  console.log('Document schema is valid');
 }
 ```
 
-## Mode Control
+---
 
-### setMode(_:)
+## Utilities
 
-Changes the form mode.
+### generateObjectId()
 
-```swift
-func setMode(_ mode: JoyfillFormMode)
+Generates a unique object ID for JoyDoc elements.
+Creates a unique identifier string that can be used for documents, pages, fields,
+and other elements in the JoyDoc system. IDs are guaranteed to be unique.
+
+**Returns**: `string` - A unique object ID string (24-character hex string)
+
+**Example**
+
+```javascript
+import { generateObjectId } from '@joyfill/components';
+
+const newId = generateObjectId();
+console.log('New ID:', newId); // e.g., '507f1f77bcf86cd799439011'
+
+// Use in document creation
+const newDoc = {
+  _id: generateObjectId(),
+  title: 'My Document'
+};
 ```
 
-**Parameters:**
-- `mode`: `JoyfillFormMode` - The new mode (readonly, fill, or edit)
+---
 
-**Example:**
-```swift
-formView.setMode(.readonly)
+## Configuration Objects
+
+### fieldOptions
+
+Default field options configuration for the draggable field list.
+Contains predefined field types, icons, and configurations that can be used
+in the JoyDoc component to provide a standard set of available field types.
+
+You can customize the draggable field options by providing your own fieldOptions array
+with pre-configured styles, settings, and any other property supported by the JoyDoc Spec.
+When users drag and drop pre-configured fields, they will have the properties pre-set.
+
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| fieldOptions[].title | `string` | Display title for the field type |
+| fieldOptions[].type | `string` | Field type identifier (e.g., 'text', 'number', 'date', 'fieldGroup') |
+| [fieldOptions[].icon] | `string` | Icon name for the field type |
+| [fieldOptions[].iconType] | `string` | Icon type: 'custom' for SVG, 'url' for image URL |
+| [fieldOptions[].icon] | `string \| ReactElement` | Custom icon (SVG element or image URL) |
+| [fieldOptions[].displayType] | `string` | Display type (e.g., 'original', 'check') |
+| [fieldOptions[].identifier] | `string` | Custom identifier for the field |
+| [fieldOptions[].config] | `Object` | Default configuration for the field type |
+| [fieldOptions[].fields] | `Array` | Nested fields for fieldGroup type |
+| [fieldOptions[].open] | `boolean` | Whether fieldGroup is open by default |
+
+**Example**
+
+```javascript
+import { fieldOptions } from '@joyfill/components';
+
+// Use default field options in JoyDoc
+<JoyDoc fieldOptions={fieldOptions} />
+
+// Custom field options with pre-configured styles
+const customFieldOptions = [
+  {
+    title: 'Customer Name',
+    type: 'text',
+    identifier: 'custom_customer_name',
+    fontColor: '#0096FF',
+    fontWeight: 'bold'
+  },
+  {
+    type: 'fieldGroup',
+    title: 'Custom Fields',
+    open: false,
+    fields: [
+      { title: 'Grouped Text', type: 'text' }
+    ]
+  }
+];
+
+<JoyDoc fieldOptions={customFieldOptions} />
 ```
 
-## Configuration
+---
 
-### configure(accessToken:)
+### fieldColumnTypes
 
-Configures the SDK with your access token.
+Field table column types configuration.
+Defines available column types for table fields in JoyDoc forms.
+These constants can be used when creating or configuring table columns
+to ensure consistency and proper type handling.
 
-```swift
-static func configure(accessToken: String)
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| text | `string` | Text column type identifier |
+| dropdown | `string` | Dropdown column type identifier |
+| image | `string` | Image column type identifier |
+| number | `string` | Number column type identifier |
+| multiSelect | `string` | Multi-select column type identifier |
+| date | `string` | Date column type identifier |
+| block | `string` | Block column type identifier |
+| barcode | `string` | Barcode column type identifier |
+| signature | `string` | Signature column type identifier |
+
+**Example**
+
+```javascript
+import { fieldColumnTypes } from '@joyfill/components';
+
+// Use in table column configuration
+const tableColumn = {
+  type: fieldColumnTypes.text,
+  label: 'Name',
+  required: true
+};
+
+// Check available types
+console.log('Available column types:', Object.values(fieldColumnTypes));
 ```
 
-**Parameters:**
-- `accessToken`: `String` - Your Joyfill access token
+---
 
-**Example:**
-```swift
-Joyfill.configure(accessToken: "your_token_here")
-```
+## Summary
 
-<Note>
-  Call `configure(accessToken:)` once during app initialization, typically in `AppDelegate`.
-</Note>
+The Joyfill Web SDK provides a comprehensive set of utility functions for:
 
+- **Document Management**: Create, duplicate, and transform documents and templates
+- **Conditional Logic**: Apply show/hide logic based on field values
+- **Validation**: Validate documents against rules and schemas
+- **Utilities**: Generate IDs and configure field options
+
+For component-level documentation, see the [Components Reference](/web/api-reference/classes).
