@@ -4,62 +4,55 @@ description: "Complete API documentation for @joyfill/components"
 icon: "book"
 ---
 
-## Classes
+# API Reference
 
-<dl>
-<dt><a href="#JoyDoc">JoyDoc</a></dt>
-<dd></dd>
-<dt><a href="#JoyDocExporter">JoyDocExporter</a></dt>
-<dd></dd>
-</dl>
+Complete reference documentation for all classes, components, and functions in `@joyfill/components`.
 
-## Objects
+## Table of Contents
 
-<dl>
-<dt><a href="#PublicAPI">PublicAPI</a> : <code>object</code></dt>
-<dd><p>Default export object containing all public APIs of @joyfill/components.</p>
-</dd>
-</dl>
+- [JoyDoc Component](#joydoc)
+- [JoyDocExporter Component](#joydocexporter)
+- [PublicAPI Object](#publicapi)
 
-<a name="JoyDoc"></a>
+---
 
 ## JoyDoc
-**Kind**: global class  
-<a name="new_JoyDoc_new"></a>
 
-### new JoyDoc(props)
 Main form builder component for creating and editing JoyDoc forms.
 
-**Returns**: <code>JSX.Element</code> - The JoyDoc component  
+**Kind**: React Component  
+**Returns**: `JSX.Element` - The JoyDoc component
+
+### Props
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| props | <code>Object</code> |  | Component props |
-| props.doc | <code>Object</code> |  | The JoyDoc document object containing form structure and data |
-| [props.mode] | <code>string</code> | <code>&quot;&#x27;edit&#x27;&quot;</code> | Display mode: 'edit', 'view', or 'preview' |
-| [props.view] | <code>string</code> | <code>&quot;&#x27;desktop&#x27;&quot;</code> | View type: 'desktop', 'mobile', or 'tablet' |
-| [props.theme] | <code>Object</code> |  | Custom theme object for styling |
-| [props.width] | <code>number</code> | <code>816</code> | Component width in pixels |
-| [props.height] | <code>number</code> | <code>1056</code> | Component height in pixels |
-| [props.initialPageId] | <code>string</code> |  | ID of the initially active page |
-| [props.lazyload] | <code>boolean</code> | <code>false</code> | Enable lazy loadingclea for performance |
-| [props.features] | <code>Object</code> |  | Feature flags object |
-| [props.features.formulas] | <code>boolean</code> | <code>false</code> | Enable formula support |
-| [props.features.readableIds] | <code>boolean</code> | <code>false</code> | Use readable IDs instead of object IDs |
-| [props.features.repeatingHeaderAndFooter] | <code>boolean</code> | <code>false</code> | Enable repeating headers/footers |
-| [props.features.validateSchema] | <code>boolean</code> | <code>false</code> | Enable schema validation |
-| [props.fieldOptions] | <code>Array</code> |  | Custom field options array |
-| [props.fieldSettings] | <code>Object</code> |  | custom settings for different targets (page, field, table column) |
-| [props.identifiers] | <code>Object</code> |  | Identifier configuration |
-| [props.onChange] | <code>function</code> |  | Callback fired when document changes |
-| [props.onCaptureAsync] | <code>function</code> |  | Async callback for field capture |
-| [props.onUploadAsync] | <code>function</code> |  | Async callback for file uploads |
-| [props.onError] | <code>function</code> |  | Error handler callback |
-| [props.onFocus] | <code>function</code> |  | Field focus handler |
-| [props.onBlur] | <code>function</code> |  | Field blur handler |
-| [props.validateSchema] | <code>boolean</code> | <code>false</code> | Enable schema validation |
+| `doc` | `Object` |  | The JoyDoc document object containing form structure and data |
+| `mode` | `string` | `'edit'` | Display mode: 'edit', 'view', or 'preview' |
+| `view` | `string` | `'desktop'` | View type: 'desktop', 'mobile', or 'tablet' |
+| `theme` | `Object` |  | Custom theme object for styling |
+| `width` | `number` | `816` | Component width in pixels |
+| `height` | `number` | `1056` | Component height in pixels |
+| `initialPageId` | `string` |  | ID of the initially active page |
+| `lazyload` | `boolean` | `false` | Enable lazy loading for performance |
+| `features` | `Object` |  | Feature flags object |
+| `features.formulas` | `boolean` | `false` | Enable formula support |
+| `features.readableIds` | `boolean` | `false` | Use readable IDs instead of object IDs |
+| `features.repeatingHeaderAndFooter` | `boolean` | `false` | Enable repeating headers/footers |
+| `features.validateSchema` | `boolean` | `false` | Enable schema validation |
+| `fieldOptions` | `Array` |  | Custom field options array |
+| `fieldSettings` | `Object` |  | Custom settings for different targets (page, field, table column) |
+| `identifiers` | `Object` |  | Identifier configuration |
+| `onChange` | `function` |  | Callback fired when document changes |
+| `onCaptureAsync` | `function` |  | Async callback for field capture |
+| `onUploadAsync` | `function` |  | Async callback for file uploads |
+| `onError` | `function` |  | Error handler callback |
+| `onFocus` | `function` |  | Field focus handler |
+| `onBlur` | `function` |  | Field blur handler |
+| `validateSchema` | `boolean` | `false` | Enable schema validation |
 
-**Example**  
+### Example
+
 ```jsx
 import { JoyDoc } from '@joyfill/components';
 
@@ -74,30 +67,31 @@ import { JoyDoc } from '@joyfill/components';
   }}
 />
 ```
-<a name="JoyDocExporter"></a>
+
+---
 
 ## JoyDocExporter
-**Kind**: global class  
-<a name="new_JoyDocExporter_new"></a>
 
-### new JoyDocExporter(props)
 PDF export component for rendering JoyDoc forms as PDF-ready layouts.
 
-**Returns**: <code>JSX.Element</code> - The JoyDocExporter component  
+**Kind**: React Component  
+**Returns**: `JSX.Element` - The JoyDocExporter component
+
+### Props
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| props | <code>Object</code> |  | Component props |
-| props.doc | <code>Object</code> |  | The JoyDoc document to export |
-| [props.theme] | <code>Object</code> |  | Custom theme object for styling |
-| [props.license] | <code>string</code> |  | JWT license key for validation |
-| [props.config] | <code>Object</code> |  | Export configuration |
-| [props.config.page] | <code>Object</code> |  | Page configuration |
-| [props.config.page.height] | <code>number</code> | <code>1056</code> | Page height in pixels |
-| [props.config.page.width] | <code>number</code> | <code>816</code> | Page width in pixels |
-| [props.config.page.padding] | <code>number</code> | <code>0</code> | Page padding in pixels |
+| `doc` | `Object` |  | The JoyDoc document to export |
+| `theme` | `Object` |  | Custom theme object for styling |
+| `license` | `string` |  | JWT license key for validation |
+| `config` | `Object` |  | Export configuration |
+| `config.page` | `Object` |  | Page configuration |
+| `config.page.height` | `number` | `1056` | Page height in pixels |
+| `config.page.width` | `number` | `816` | Page width in pixels |
+| `config.page.padding` | `number` | `0` | Page padding in pixels |
 
-**Example**  
+### Example
+
 ```jsx
 import { JoyDocExporter } from '@joyfill/components';
 
@@ -112,64 +106,56 @@ import { JoyDocExporter } from '@joyfill/components';
   }}
 />
 ```
-<a name="PublicAPI"></a>
 
-## PublicAPI : <code>object</code>
-Default export object containing all public APIs of @joyfill/components.
+---
 
-**Kind**: global namespace  
-**Properties**
+## PublicAPI
+
+Default export object containing all public APIs of `@joyfill/components`.
+
+**Kind**: Global namespace
+
+### Properties
 
 | Name | Type | Description |
 | --- | --- | --- |
-| JoyDoc | <code>Component</code> | Main form builder component |
-| JoyDocExporter | <code>Component</code> | PDF export component |
-| applyLogic | <code>function</code> | Conditional logic application function |
-| duplicate | <code>function</code> | Document duplication function |
-| duplicatePage | <code>function</code> | Page duplication function |
-| getDefaultPage | <code>function</code> | Default page creation function |
-| getDefaultDocument | <code>function</code> | Default document creation function |
-| getDefaultTemplate | <code>function</code> | Default template creation function |
-| getDocumentFromTemplate | <code>function</code> | Document from template creation function |
-| generateObjectId | <code>function</code> | Object ID generation function |
-| validator | <code>function</code> | Document validation function |
-| validateSchema | <code>function</code> | Schema validation function |
-| fieldOptions | <code>Array</code> | Default field options configuration |
-| fieldColumnTypes | <code>Object</code> | Field table column types configuration |
+| `JoyDoc` | `Component` | Main form builder component |
+| `JoyDocExporter` | `Component` | PDF export component |
+| `applyLogic` | `function` | Conditional logic application function |
+| `duplicate` | `function` | Document duplication function |
+| `duplicatePage` | `function` | Page duplication function |
+| `getDefaultPage` | `function` | Default page creation function |
+| `getDefaultDocument` | `function` | Default document creation function |
+| `getDefaultTemplate` | `function` | Default template creation function |
+| `getDocumentFromTemplate` | `function` | Document from template creation function |
+| `generateObjectId` | `function` | Object ID generation function |
+| `validator` | `function` | Document validation function |
+| `validateSchema` | `function` | Schema validation function |
+| `fieldOptions` | `Array` | Default field options configuration |
+| `fieldColumnTypes` | `Object` | Field table column types configuration |
 
-* [PublicAPI](#PublicAPI) : <code>object</code>
-    * [.duplicate(original, [defaults])](#PublicAPI.duplicate) ⇒ <code>Object</code>
-    * [.duplicatePage(doc, fileId, pageId, useReadableIds)](#PublicAPI.duplicatePage) ⇒ <code>Object</code>
-    * [.getDefaultPage([defaults])](#PublicAPI.getDefaultPage) ⇒ <code>Object</code>
-    * [.getDefaultDocument()](#PublicAPI.getDefaultDocument) ⇒ <code>Object</code>
-    * [.getDefaultTemplate()](#PublicAPI.getDefaultTemplate) ⇒ <code>Object</code>
-    * [.getDocumentFromTemplate(template)](#PublicAPI.getDocumentFromTemplate) ⇒ <code>Object</code>
-    * [.applyLogic(items, fields, [fieldLookupKey])](#PublicAPI.applyLogic) ⇒ <code>Object</code>
-    * [.generateObjectId()](#PublicAPI.generateObjectId) ⇒ <code>string</code>
-    * [.validator(doc, [options])](#PublicAPI.validator) ⇒ <code>Object</code>
-    * [.validateSchema(doc)](#PublicAPI.validateSchema) ⇒ <code>Object</code> \| <code>undefined</code>
-    * [.fieldOptions()](#PublicAPI.fieldOptions)
-    * [.fieldColumnTypes()](#PublicAPI.fieldColumnTypes)
+---
 
-<a name="PublicAPI.duplicate"></a>
+## Functions
 
-### PublicAPI.duplicate(original, [defaults]) ⇒ <code>Object</code>
+### duplicate(original, [defaults])
+
 Creates a deep-cloned and properly formatted duplicate of a Template or Document.
 
 Generates a new `_id`, updates the `identifier` based on type (`template_` or `doc_`),
 resets timestamps, and merges in optional default overrides. 
 Ensures all references to the original object are removed via deep clone.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>Object</code> - A new object representing the duplicated Template or Document with updated metadata.  
+**Returns**: `Object` - A new object representing the duplicated Template or Document with updated metadata.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| original | <code>Object</code> |  | The original Template or Document object to duplicate. |
-| [defaults] | <code>Object</code> | <code>{}</code> | Optional default values to override or extend the duplicated object. |
+| `original` | `Object` |  | The original Template or Document object to duplicate |
+| `[defaults]` | `Object` | `{}` | Optional default values to override or extend the duplicated object |
 
-**Example**  
-```js
+**Example**
+
+```javascript
 import { duplicate } from "@joyfill/components";
 
 const template = {
@@ -183,7 +169,7 @@ const template = {
 const copy = duplicate(template, { name: "Inspection Template Copy" });
 
 console.log(copy);
-// Example output:
+// Output:
 // {
 //   _id: "template_67890",
 //   type: "template",
@@ -193,72 +179,75 @@ console.log(copy);
 //   createdOn: 1730068483105,
 //   source: "template_123"
 // }
-
-// Explanation:
-// - Creates a deep copy of the original object
-// - Generates a new ObjectId and identifier
-// - Adds a fresh `createdOn` timestamp
-// - Stores the original identifier under `source`
-// - Merges any provided `defaults` (e.g., new name)
 ```
-<a name="PublicAPI.duplicatePage"></a>
 
-### PublicAPI.duplicatePage(doc, fileId, pageId, useReadableIds) ⇒ <code>Object</code>
-Duplicates a page within a document and generates corresponding changelog entries
+---
+
+### duplicatePage(doc, fileId, pageId, useReadableIds)
+
+Duplicates a page within a document and generates corresponding changelog entries.
 
 This function creates a copy of a specified page in a document and generates
 changelog entries to track the duplication operation. It handles both primary
 pages and view pages, as well as any associated fields that need to be created.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>Object</code> - An object containing:
-  - {Object} doc - The updated document with the duplicated page
-  - {Array} changelogs - Array of changelog entries tracking the duplication:
-    - Page creation changelogs for primary pages
-    - Page creation changelogs for view pages (if any)
-    - Field creation changelogs for any new fields created during duplication  
+**Returns**: `Object` - An object containing the updated document and changelogs
 
 | Param | Type | Description |
 | --- | --- | --- |
-| doc | <code>Object</code> | The document object containing the page to duplicate |
-| fileId | <code>string</code> | The ID of the file containing the document |
-| pageId | <code>string</code> | The ID of the page to duplicate |
-| useReadableIds | <code>boolean</code> | Whether to use readable IDs for generated elements |
+| `doc` | `Object` | The document object containing the page to duplicate |
+| `fileId` | `string` | The ID of the file containing the document |
+| `pageId` | `string` | The ID of the page to duplicate |
+| `useReadableIds` | `boolean` | Whether to use readable IDs for generated elements |
 
-**Example**  
-```js
-const result = getDuplicatedPage(document, 'file123', 'page456', true);
+**Example**
+
+```javascript
+import { duplicatePage } from "@joyfill/components";
+
+const result = duplicatePage(document, 'file123', 'page456', true);
 console.log(result.doc); // Updated document
 console.log(result.changelogs); // Array of changelog entries
 ```
-<a name="PublicAPI.getDefaultPage"></a>
 
-### PublicAPI.getDefaultPage([defaults]) ⇒ <code>Object</code>
+---
+
+### getDefaultPage([defaults])
+
 Creates a default page object for JoyDoc documents.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>Object</code> - Default page object with _id, name, width, height, rowHeight, cols, fieldPositions, layout, presentation, and padding  
+**Returns**: `Object` - Default page object with _id, name, width, height, rowHeight, cols, fieldPositions, layout, presentation, and padding
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [defaults] | <code>Object</code> | <code>{}</code> | Optional configuration to override default values |
+| `[defaults]` | `Object` | `{}` | Optional configuration to override default values |
 
-**Example**  
+**Example**
+
 ```javascript
 import { getDefaultPage } from '@joyfill/components';
 
 const page = getDefaultPage();
 // Returns: { _id: "...", name: "New Page", width: 816, height: 1056, ... }
-```
-<a name="PublicAPI.getDefaultDocument"></a>
 
-### PublicAPI.getDefaultDocument() ⇒ <code>Object</code>
+const customPage = getDefaultPage({
+  name: "Custom Page",
+  width: 1200,
+  height: 1600
+});
+```
+
+---
+
+### getDefaultDocument()
+
 Creates a new JoyDoc document with standard properties and structure.
 The document will have a unique ID, proper type, and identifier.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>Object</code> - returns a properly formatted Document JoyDoc  
-**Example**  
+**Returns**: `Object` - A properly formatted Document JoyDoc
+
+**Example**
+
 ```javascript
 import { getDefaultDocument } from '@joyfill/components';
 
@@ -267,16 +256,19 @@ console.log('Document ID:', newDoc._id);
 console.log('Document type:', newDoc.type);
 console.log('Document name:', newDoc.name);
 ```
-<a name="PublicAPI.getDefaultTemplate"></a>
 
-### PublicAPI.getDefaultTemplate() ⇒ <code>Object</code>
+---
+
+### getDefaultTemplate()
+
 Gets a default template structure for JoyDoc documents.
 Creates a new template object that can be used to generate multiple documents with consistent structure.
 Templates include predefined layouts, field configurations, and styling options.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>Object</code> - returns a properly formatted Template JoyDoc  
-**Example**  
+**Returns**: `Object` - A properly formatted Template JoyDoc
+
+**Example**
+
 ```javascript
 import { getDefaultTemplate } from '@joyfill/components';
 
@@ -284,24 +276,26 @@ const template = getDefaultTemplate();
 console.log('Template ID:', template._id);
 console.log('Template name:', template.name);
 ```
-<a name="PublicAPI.getDocumentFromTemplate"></a>
 
-### PublicAPI.getDocumentFromTemplate(template) ⇒ <code>Object</code>
-Get a properly formatted Document JoyDoc from Template JoyDoc
+---
+
+### getDocumentFromTemplate(template)
+
+Get a properly formatted Document JoyDoc from Template JoyDoc.
 
 Creates a new document by cloning a template and assigning it a unique ID and identifier.
 The template is deep cloned to remove all references to the original template object.
 The resulting document maintains the template's structure (name, files, fields) while
 being marked as a document type with references to the source template.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>Object</code> - A new document with unique _id, identifier, and template references  
+**Returns**: `Object` - A new document with unique _id, identifier, and template references
 
 | Param | Type | Description |
 | --- | --- | --- |
-| template | <code>Object</code> | The template JoyDoc to create document from |
+| `template` | `Object` | The template JoyDoc to create document from |
 
-**Example**  
+**Example**
+
 ```javascript
 import { getDocumentFromTemplate } from '@joyfill/components';
 
@@ -310,22 +304,26 @@ console.log('New document ID:', newDoc._id);
 console.log('Document identifier:', newDoc.identifier);
 console.log('Source template:', newDoc.template);
 ```
-<a name="PublicAPI.applyLogic"></a>
 
-### PublicAPI.applyLogic(items, fields, [fieldLookupKey]) ⇒ <code>Object</code>
-Logic object structure:
+---
+
+### applyLogic(items, fields, [fieldLookupKey])
+
+Applies conditional logic to show/hide items based on field values.
+
+**Logic object structure:**
 - `action`: `'show'` or `'hide'`
-   - `'show'`: if conditions are met, item becomes visible (`hidden = false`)
-   - `'hide'`: if conditions are met, item becomes hidden (`hidden = true`)
+  - `'show'`: if conditions are met, item becomes visible (`hidden = false`)
+  - `'hide'`: if conditions are met, item becomes hidden (`hidden = true`)
 - `eval`: `'and'` or `'or'`
-   - `'and'`: all conditions must evaluate true
-   - `'or'`: at least one condition must evaluate true
+  - `'and'`: all conditions must evaluate true
+  - `'or'`: at least one condition must evaluate true
 - `conditions`: array of rule objects with:
-   - `field`: lookup key of the dependent field
-   - `condition`: operator (see below)
-   - `value`: value to compare against
+  - `field`: lookup key of the dependent field
+  - `condition`: operator (see below)
+  - `value`: value to compare against
 
-Supported condition operators:
+**Supported condition operators:**
 - `*=` → Filled (value exists or array non-empty)
 - `null=` → Empty (null, empty string, or empty array)
 - `=` → Equals (case-insensitive for strings; exact match for numbers)
@@ -334,26 +332,18 @@ Supported condition operators:
 - `>` → Greater than (numbers only)
 - `<` → Less than (numbers only)
 
-Logic evaluation process:
-1. For each item with a `logic` definition:
-   - Retrieve referenced fields using `fieldLookupKey`
-   - Evaluate all conditions using their operator and `value`
-   - Combine results with `eval` (`and`/`or`)
-   - Apply `action` to update the `hidden` property accordingly
-2. Return updated `items` array and a `changelogs` array documenting state changes.
-
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>Object</code> - Updated fields array (with `hidden` set to true or false based on the logic)  
+**Returns**: `Object` - Updated items array with `hidden` property set based on logic evaluation
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| items | <code>Array.&lt;object&gt;</code> |  | Array of items (fields, pages, or groups) that may include a `logic` object. |
-| fields | <code>Array.&lt;object&gt;</code> |  | Array of field objects used for logic evaluation. Each field must include:   - The lookup key (e.g., `_id`) matching `logic.conditions[].field`   - `value` representing the current field value (string, number, or array)   - `type` (optional) for informational or future logic extension. |
-| [fieldLookupKey] | <code>string</code> | <code>&quot;&#x27;_id&#x27;&quot;</code> | Property name used to match conditions to field identifiers. |
+| `items` | `Array<object>` |  | Array of items (fields, pages, or groups) that may include a `logic` object |
+| `fields` | `Array<object>` |  | Array of field objects used for logic evaluation |
+| `[fieldLookupKey]` | `string` | `'_id'` | Property name used to match conditions to field identifiers |
 
-**Example**  
-```js
-import { applyLogic } from "@joyfill/conditional-logic";
+**Example**
+
+```javascript
+import { applyLogic } from "@joyfill/components";
 
 const fields = [
   { _id: "field_one", type: "text", value: "hello world" },
@@ -388,44 +378,22 @@ const items = [
 ];
 
 const result = applyLogic(items, fields);
-console.log(JSON.stringify(result, null, 2));
-
-// SAMPLE OUTPUT:
-{
-  "items": [
-    {
-      "_id": "conditional_one",
-      "hidden": false, // previously true → shown because both conditions passed
-      "logic": { ... }
-    },
-    {
-      "_id": "conditional_two",
-      "hidden": true, // previously false → hidden because one condition passed
-      "logic": { ... }
-    }
-  ],
-
-}
-
- // Explanation:
-The first item (`conditional_one`) was hidden by default but became visible.
-Both its conditions evaluated true (`field_one` contains "hello" and `field_two` > 50).
-Since `action: 'show'` and all conditions passed with `eval: 'and'`, it became visible.
-
-The second item (`conditional_two`) was visible by default but became hidden.
-Its condition matched because `field_three` includes "option_one".
-Since `action: 'hide'` and the `or` condition passed, it was set to hidden.
+// conditional_one.hidden = false (shown)
+// conditional_two.hidden = true (hidden)
 ```
-<a name="PublicAPI.generateObjectId"></a>
 
-### PublicAPI.generateObjectId() ⇒ <code>string</code>
+---
+
+### generateObjectId()
+
 Generates a unique object ID for JoyDoc elements.
 Creates a unique identifier string that can be used for documents, pages, fields,
 and other elements in the JoyDoc system. IDs are guaranteed to be unique.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>string</code> - A unique object ID string (24-character hex string)  
-**Example**  
+**Returns**: `string` - A unique object ID string (24-character hex string)
+
+**Example**
+
 ```javascript
 import { generateObjectId } from '@joyfill/components';
 
@@ -438,23 +406,25 @@ const newDoc = {
   title: 'My Document'
 };
 ```
-<a name="PublicAPI.validator"></a>
 
-### PublicAPI.validator(doc, [options]) ⇒ <code>Object</code>
+---
+
+### validator(doc, [options])
+
 Validates a JoyDoc document against field rules and constraints.
 Performs comprehensive validation of a JoyDoc document including field validation rules,
 required fields, data types, and business logic constraints.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>Object</code> - Validation result with status and field validations  
+**Returns**: `Object` - Validation result with status and field validations
 
 | Param | Type | Description |
 | --- | --- | --- |
-| doc | <code>Object</code> | The JoyDoc document to validate |
-| [options] | <code>Object</code> | Validation options |
-| [options.view] | <code>string</code> | View type for validation ('desktop', 'mobile', 'tablet') |
+| `doc` | `Object` | The JoyDoc document to validate |
+| `[options]` | `Object` | Validation options |
+| `[options.view]` | `string` | View type for validation ('desktop', 'mobile', 'tablet') |
 
-**Example**  
+**Example**
+
 ```javascript
 import { validator } from '@joyfill/components';
 
@@ -470,65 +440,70 @@ if (result.status === 'valid') {
   });
 }
 ```
-<a name="PublicAPI.validateSchema"></a>
 
-### PublicAPI.validateSchema(doc) ⇒ <code>Object</code> \| <code>undefined</code>
+---
+
+### validateSchema(doc)
+
 Validates a JoyDoc document against the schema definition.
 Performs schema validation to ensure the document structure conforms to the JoyDoc schema.
 Checks for required properties, data types, and structural integrity.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Returns**: <code>Object</code> \| <code>undefined</code> - Returns an error object if validation fails, otherwise undefined.
-  If an error object is returned, it contains:
-  - {string} [error.code] - Error code (e.g., 'ERROR_SCHEMA_VALIDATION')
-  - {string} [error.message] - Human-readable error message
-  - {Array} [error.errors] - Array of detailed validation errors
-  - {Object} [error.details] - Additional error details including schema version  
+**Returns**: `Object | undefined` - Returns an error object if validation fails, otherwise undefined
+
+If an error object is returned, it contains:
+- `error.code` - Error code (e.g., 'ERROR_SCHEMA_VALIDATION')
+- `error.message` - Human-readable error message
+- `error.errors` - Array of detailed validation errors
+- `error.details` - Additional error details including schema version
 
 | Param | Type | Description |
 | --- | --- | --- |
-| doc | <code>Object</code> | The JoyDoc document to validate against schema |
+| `doc` | `Object` | The JoyDoc document to validate against schema |
 
-**Example**  
+**Example**
+
 ```javascript
 import { validateSchema } from '@joyfill/components';
 
 const schemaError = validateSchema(doc);
 if (schemaError) {
   console.error('Schema validation failed:', schemaError.message);
-  console.error('Error code:', schemaError.code);clear
+  console.error('Error code:', schemaError.code);
+  console.error('Detailed errors:', schemaError.errors);
 } else {
   console.log('Document schema is valid');
 }
 ```
-<a name="PublicAPI.fieldOptions"></a>
 
-### PublicAPI.fieldOptions()
+---
+
+## Configuration
+
+### fieldOptions
+
 Default field options configuration for the draggable field list.
 Contains predefined field types, icons, and configurations that can be used
 in the JoyDoc component to provide a standard set of available field types.
 
-You can customize the draggable field options by providing your own fieldOptions array
-with pre-configured styles, settings, and any other property supported by the JoyDoc Spec.
-When users drag and drop pre-configured fields, they will have the properties pre-set.
+**Type**: `Array`
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Properties**
+**Properties:**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| fieldOptions[].title | <code>string</code> | Display title for the field type |
-| fieldOptions[].type | <code>string</code> | Field type identifier (e.g., 'text', 'number', 'date', 'fieldGroup') |
-| [fieldOptions[].icon] | <code>string</code> | Icon name for the field type |
-| [fieldOptions[].iconType] | <code>string</code> | Icon type: 'custom' for SVG, 'url' for image URL |
-| [fieldOptions[].icon] | <code>string</code> \| <code>ReactElement</code> | Custom icon (SVG element or image URL) |
-| [fieldOptions[].displayType] | <code>string</code> | Display type (e.g., 'original', 'check') |
-| [fieldOptions[].identifier] | <code>string</code> | Custom identifier for the field |
-| [fieldOptions[].config] | <code>Object</code> | Default configuration for the field type |
-| [fieldOptions[].fields] | <code>Array</code> | Nested fields for fieldGroup type |
-| [fieldOptions[].open] | <code>boolean</code> | Whether fieldGroup is open by default |
+| `title` | `string` | Display title for the field type |
+| `type` | `string` | Field type identifier (e.g., 'text', 'number', 'date', 'fieldGroup') |
+| `icon` | `string` | Icon name for the field type |
+| `iconType` | `string` | Icon type: 'custom' for SVG, 'url' for image URL |
+| `displayType` | `string` | Display type (e.g., 'original', 'check') |
+| `identifier` | `string` | Custom identifier for the field |
+| `config` | `Object` | Default configuration for the field type |
+| `fields` | `Array` | Nested fields for fieldGroup type |
+| `open` | `boolean` | Whether fieldGroup is open by default |
 
-**Example**  
+**Example**
+
 ```javascript
 import { fieldOptions } from '@joyfill/components';
 
@@ -556,30 +531,34 @@ const customFieldOptions = [
 
 <JoyDoc fieldOptions={customFieldOptions} />
 ```
-<a name="PublicAPI.fieldColumnTypes"></a>
 
-### PublicAPI.fieldColumnTypes()
+---
+
+### fieldColumnTypes
+
 Field table column types configuration.
 Defines available column types for table fields in JoyDoc forms.
 These constants can be used when creating or configuring table columns
 to ensure consistency and proper type handling.
 
-**Kind**: static method of [<code>PublicAPI</code>](#PublicAPI)  
-**Properties**
+**Type**: `Object`
+
+**Properties:**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| text | <code>string</code> | Text column type identifier |
-| dropdown | <code>string</code> | Dropdown column type identifier |
-| image | <code>string</code> | Image column type identifier |
-| number | <code>string</code> | Number column type identifier |
-| multiSelect | <code>string</code> | Multi-select column type identifier |
-| date | <code>string</code> | Date column type identifier |
-| block | <code>string</code> | Block column type identifier |
-| barcode | <code>string</code> | Barcode column type identifier |
-| signature | <code>string</code> | Signature column type identifier |
+| `text` | `string` | Text column type identifier |
+| `dropdown` | `string` | Dropdown column type identifier |
+| `image` | `string` | Image column type identifier |
+| `number` | `string` | Number column type identifier |
+| `multiSelect` | `string` | Multi-select column type identifier |
+| `date` | `string` | Date column type identifier |
+| `block` | `string` | Block column type identifier |
+| `barcode` | `string` | Barcode column type identifier |
+| `signature` | `string` | Signature column type identifier |
 
-**Example**  
+**Example**
+
 ```javascript
 import { fieldColumnTypes } from '@joyfill/components';
 
@@ -593,4 +572,3 @@ const tableColumn = {
 // Check available types
 console.log('Available column types:', Object.values(fieldColumnTypes));
 ```
-
