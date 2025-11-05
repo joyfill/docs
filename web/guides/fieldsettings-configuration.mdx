@@ -1,0 +1,447 @@
+---
+title: "Configuring Field Settings"
+---
+
+# Configuring Field Settings
+
+## What Are Field Settings?
+
+Field settings allow you to customize the form builder interface by:
+
+- **Adding custom controls** for data collection
+- **Hiding unnecessary options** to simplify the interface
+- **Creating targeted settings** for different field types
+- **Collecting metadata** for your business needs
+
+## Quick Start
+
+```jsx
+import { JoyDoc } from '@joyfill/components';
+
+function MyForm() {
+  const fieldSettings = {
+    // Your custom settings go here
+  };
+
+  return (
+    <JoyDoc
+      doc={yourDocument}
+      mode="edit"
+      fieldSettings={fieldSettings}
+    />
+  );
+}
+```
+
+## Understanding Targets
+
+Targets determine **where** your settings appear in the form builder:
+
+| Target | Scope | Example Use Case |
+| --- | --- | --- |
+| `file` | Entire document | Document metadata, global settings |
+| `page` | Specific page | Page sections, completion requirements |
+| `field` | All field types | Universal field behavior |
+| `text`, `number`, `dropdown`, `table` | Specific field type | Type-specific settings |
+| `field_12345` | Individual field | Custom field requirements |
+
+## Setting Types
+
+### 1. Identifier Settings
+
+Predefined field identifier options with custom option support:
+
+```jsx
+identifier: {
+  label: 'Identifier',  // Custom label
+  options: [
+    {
+      title: 'Plain Identifier Option',
+      description: 'Identifier details for text',
+      value: 'customer_text_customidentifierselector'
+    }
+  ]
+}
+```
+
+Sample output:
+
+![Screenshot 2025-10-17 at 4.17.10 pm.png](attachment:5b10b5b6-51ec-4a51-89e1-fd87878c3162:Screenshot_2025-10-17_at_4.17.10_pm.png)
+
+### 2. Metadata Settings
+
+Custom controls that save data to field metadata:
+
+| Type | Use Case | Properties |
+| --- | --- | --- |
+| `text` | Short text | `label`, `key`, `value`, `addon` |
+| `textarea` | Long text | `label`, `key`, `value` |
+| `number` | Numeric values | `label`, `key`, `value`, `addon` |
+| `checkbox` | Yes/No options | `label`, `key`, `value` |
+| `button` | Actions | `label`, `key`, `color` |
+| `divider` | Visual separator | `key` only |
+
+**Metadata Example:**
+
+```jsx
+metadata: {
+  options: [
+    {
+      type: FieldSettingsMetadataTypes.checkbox,
+      label: 'Require Photo Uploads',
+      description: 'Should a photo be required?',
+      key: 'required'
+    },
+    {
+      type: FieldSettingsMetadataTypes.number,
+      label: 'Quantity',
+      description: 'How many photos are required?',
+      key: 'count'
+    },
+    {
+      type: FieldSettingsMetadataTypes.divider,
+      key: 'divider'
+    },
+    {
+      type: FieldSettingsMetadataTypes.checkbox,
+      label: 'Failing Option',
+      key: 'fail'
+    }
+  ]
+}
+```
+
+**Output:**
+
+![Screenshot 2025-10-17 at 4.18.19 pm.png](attachment:2900b587-3190-4a47-8fb8-a8ea5c1faf59:Screenshot_2025-10-17_at_4.18.19_pm.png)
+
+### 3. Table Columns Settings
+
+Customize table field columns:
+
+```jsx
+tableColumns: {
+  types: ['text','dropdown', 'image', 'number' 'multiSelect', 'date', 'block', 'barcode','signature'],
+  identifier: {
+    label: 'Col Identifier',
+    options: [
+      {
+        type: 'text',
+        title: 'Deficiencies',
+        description: 'Details about identifer for table',
+        value: 'table_customidentifierselector'
+      }
+    ]
+  },
+  metadata: {
+    options: [
+      {
+        type: 'number',
+        label: 'Require Photo Col',
+        description: 'Should a photo be required?',
+        key: 'required'
+      }
+    ]
+  },
+  options: {
+    metadata: {
+      options: [
+        {
+          type: 'checkbox',
+          label: 'Failing Option',
+          description: 'Trigger deficiency capture.',
+          key: 'failure'
+        }
+      ]
+    }
+  }
+}
+```
+
+### **Metadata for columns:**
+
+![Screenshot 2025-10-17 at 4.20.38 pm.png](attachment:962f8fcf-1afb-44fa-b07a-e090c739f953:Screenshot_2025-10-17_at_4.20.38_pm.png)
+
+### Custom column identifier
+
+![Screenshot 2025-10-17 at 4.21.13 pm.png](attachment:aa6ecd6d-aa47-4513-b5b8-c39e756b1cee:Screenshot_2025-10-17_at_4.21.13_pm.png)
+
+### 4. Options Settings
+
+Customize dropdown/select field options:
+
+```jsx
+options: {
+  metadata: {
+    options: [
+      {
+        type: FieldSettingsMetadataTypes.checkbox,
+        label: 'Failing Option',
+        description: 'Trigger deficiency capture.',
+        key: 'failure'
+      }
+    ]
+  }
+}
+```
+
+## Hiding Settings
+
+Hide default settings by setting them to `false`:
+
+```jsx
+const fieldSettings = {
+  field: {
+    title: false,        // Hide field title
+    required: false,     // Hide required checkbox
+    placeholder: false,  // Hide placeholder input
+    styles: {
+      fontSize: false,      // Hide font size
+      fontColor: false,     // Hide font color
+      backgroundColor: false // Hide background color
+    }
+  },
+  page: {
+    upload: false,      // Hide page background upload
+    duplicate: false    // Hide page duplication
+  }
+};
+```
+
+## Advanced Features
+
+### File Upload Handlers
+
+```jsx
+onFileUploadAsync: async (params, fileUploads) => {
+  console.log('onFileUploadAsync: ', params, fileUploads);
+  return {
+    _id: new Date().getTime(),
+    url: 'https://s3.amazonaws.com/docspace.production.documents/6702de67c6ba43a423ca035f/documents/template_680bc498b6890a1324423764/680fbf96e97c7b42ec58f988-1745862550459.jpg'
+  };
+},
+onFileClick: async (params, urlObject) => {
+  console.log('onFileClick: ', params, urlObject);
+},
+onFileDelete: async (params, urlObject) => {
+  console.log('onFileDelete: ', params, urlObject);
+}
+```
+
+### Global Settings
+
+```jsx
+const fieldSettings = {
+  autoResize: false, // Set to true to see supported fields auto resize
+  field: {
+    systemFilePicker: false   // Disable system file picker
+  }
+};
+```
+
+## Complete Example
+
+Here's the exact fieldSettings example from JoyDoc.stories.js:
+
+```jsx
+import React, { useState } from "react";
+import { JoyDoc } from "@joyfill/components";
+import FieldSettingsMetadataTypes from "../constants/FieldSettingsMetadataTypes";
+import fieldColumnTypes from "../constants/FieldTableColumnTypes";
+
+function CompleteFieldSettingsExample() {
+  const [document, setDocument] = useState(initialDocument);
+
+  const fieldSettings = {
+    autoResize: false, // Set to true to see supported fields auto resize
+    page: {
+      metadata: {
+        options: [
+          {
+            type: FieldSettingsMetadataTypes.checkbox,
+            label: "Require Photo",
+            description: "Should a photo be required?",
+            key: "required",
+          },
+        ],
+      },
+    },
+    field: {
+      systemFilePicker: false,
+      onFileUploadAsync: async (params, fileUploads) => {
+        console.log("onFileUploadAsync: ", params, fileUploads);
+        return {
+          _id: new Date().getTime(),
+          url: "https://s3.amazonaws.com/docspace.production.documents/6702de67c6ba43a423ca035f/documents/template_680bc498b6890a1324423764/680fbf96e97c7b42ec58f988-1745862550459.jpg",
+        };
+      },
+      onFileClick: async (params, urlObject) => {
+        console.log("onFileClick: ", params, urlObject);
+      },
+      onFileDelete: async (params, urlObject) => {
+        console.log("onFileDelete: ", params, urlObject);
+      },
+
+      identifier: {
+        label: "Identifier",
+        options: [
+          {
+            title: "Plain Identifier Option",
+            description: "Identifier details for text",
+            value: "customer_text_customidentifierselector",
+          },
+        ],
+      },
+      metadata: {
+        options: [
+          {
+            type: 'checkbox',
+            label: "Require Photo Uploads",
+            description: "Should a photo be required?",
+            key: "required",
+          },
+          {
+            type: 'number',
+            label: "Quantity",
+            description: "How many photos are required?",
+            key: "count",
+          },
+          {
+            type: 'divider',
+            key: "divider",
+          },
+          {
+            type: 'checkbox',
+            label: "Failing Option",
+            key: "fail",
+          },
+        ],
+      },
+      options: {
+        metadata: {
+          options: [
+            {
+              type: 'checkbox',
+              label: "Failing Option",
+              description: "Trigger deficiency capture.",
+              key: "failure",
+            },
+          ],
+        },
+      },
+      tableColumns: {
+        types: [
+          'text',
+          'dropdown',
+          'image',
+          'number',
+          'multiSelect',
+          'date',
+          'block',
+          'barcode',
+          'signature',
+        ],
+        identifier: {
+          label: "Col Identifier",
+          options: [
+            {
+              type: "text",
+              title: "Deficiencies",
+              description: "Details about identifer for table",
+              value: "table_customidentifierselector",
+            },
+          ],
+        },
+        metadata: {
+          options: [
+            {
+              type: 'number',
+              label: "Require Photo Col",
+              description: "Should a photo be required?",
+              key: "required",
+            },
+          ],
+        },
+        options: {
+          metadata: {
+            options: [
+              {
+                type: 'checkbox',
+                label: "Failing Option",
+                description: "Trigger deficiency capture.",
+                key: "failure",
+              },
+            ],
+          },
+        },
+      },
+    },
+  };
+
+  const handleChange = (changelogs, updatedDoc) => {
+    console.log("Document changed:", changelogs);
+    setDocument(updatedDoc);
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h1>Complete Field Settings Example</h1>
+      <p>
+        This example demonstrates the exact fieldSettings from JoyDoc.stories.js
+      </p>
+
+      <JoyDoc
+        doc={document}
+        mode="edit"
+        fieldSettings={fieldSettings}
+        onChange={handleChange}
+      />
+    </div>
+  );
+}
+
+export default CompleteFieldSettingsExample;
+```
+
+## Best Practices
+
+### 1. Keep It Simple
+
+Don't overwhelm users with too many custom settings. Focus on what's essential for your use case.
+
+### 2. Use Clear Labels and Descriptions
+
+Help users understand what each setting does with descriptive labels and helpful descriptions.
+
+### 3. Provide Default Values
+
+Set sensible defaults to improve user experience.
+
+### 4. Group Related Settings
+
+Use dividers to organize settings logically.
+
+## Troubleshooting
+
+### Common Issues
+
+**Settings Not Appearing:** Check your target syntax and ensure the field type matches.
+
+**Metadata Not Saving:** Ensure you're using the correct `key` property and that it's unique.
+
+**Settings Hidden When They Should Show:** Check for conflicting `false` values in your settings.
+
+## Summary
+
+Field settings customization in Joyfill allows you to:
+
+- ✅ **Add custom controls** for your specific needs
+- ✅ **Hide unnecessary options** to simplify the interface
+- ✅ **Target specific field types** with specialized settings
+- ✅ **Collect metadata** for your business processes
+- ✅ **Create a tailored experience** for your users
+
+The key is to understand your users' needs and create settings that help them build forms more efficiently while collecting the data you need for your application.
+
+For more advanced customization options, refer to the [official Joyfill documentation](https://docs.joyfill.io/docs/customize-settings#/).
+
