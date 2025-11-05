@@ -1,142 +1,687 @@
 ---
 title: "Release Notes"
-description: "Version history and changelog for the Web SDK"
-icon: "newspaper"
+description: "Complete changelog of Joyfill Web SDK releases"
+icon: "globe"
 ---
 
-# Release Notes
+## 4.0.0-rc5
 
-Stay up to date with the latest features, improvements, and bug fixes in the Joyfill Web SDK.
+**Release Date:** October 31, 2024
 
-## Version 1.2.0 (Latest)
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-**Release Date:** January 15, 2025
+- New date format helper function `replaceLegacyDateTimeFormats(data, formatReplacementsObject)` to allow overwriting default US date and time formats within the Joyfill SDK. See the example below or check the README.md for more details. (NO-1622)
 
-### ✨ New Features
-- Added support for signature fields with touch-based signing
-- Introduced offline form caching for improved performance
-- New `JoyfillTheme` system for comprehensive UI customization
-- Added batch field value updates for better performance
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
-### 🔧 Improvements
-- Enhanced image upload performance with concurrent uploads
-- Improved form validation with better error messages
-- Optimized memory usage for large forms
-- Better accessibility support with VoiceOver improvements
+- Replaced Moment.js with Day.js — Reduces bundle size and provides better long-term maintenance support. (NO-1623)
+- Enhanced validation output — Form and field validation statuses now include the `pageId` property, making it easier to identify which page an error is on. You can view this in the output of the `validator.validate` helper function. (NO-1628)
 
-### 🐛 Bug Fixes
-- Fixed date picker display issue on iOS 17
-- Resolved memory leak in form view controller
-- Fixed keyboard dismissal on submit
-- Corrected text field alignment in RTL languages
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-### 📝 Documentation
-- Added comprehensive guide for offline support
-- Updated API reference with new theme system
-- New examples for custom validators
+- PDF generation edge case — Resolved an issue where the field measuring cycle could run indefinitely for certain table field input types in the VanillaJS module. (NO-1647)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>REMOVED</span>
+
+- Legacy RTE field — The old Rich Text Editor field is now view-only but continues to display all previously saved text. It can be replaced with the newer Block field, which removes a package vulnerability, reduces bundle size, and improves load performance. (NO-1648)
 
 ---
 
-## Version 1.1.0
+### Replacing Default US Date Formats
 
-**Release Date:** December 1, 2024
+The example below demonstrates how to use the new helper function to replace US date and time formats with EU-style formats.
 
-### ✨ New Features
-- Multi-language support with localization
-- Custom validation rules API
-- Real-time collaboration support
-- Form templates library
+```tsx
+/**
+ * Example: Replace US date/time formats with European formats in JoyDoc
+ */
+let updatedDoc = <YOUR_JSON_DATA>;
 
-### 🔧 Improvements
-- Faster form loading times
-- Better error handling
-- Enhanced TypeScript definitions
-- Improved dark mode support
+if (Intl.DateTimeFormat().resolvedOptions().timeZone === 'Europe/London') {
+  updatedDoc = replaceLegacyDateTimeFormats(updatedDoc, {
+    dateTime: "DD/MM/YYYY HH:mm",
+    date: "DD/MM/YYYY",
+    time: "HH:mm",
+    defaultFormat: "DD/MM/YYYY"
+  });
+}
 
-### 🐛 Bug Fixes
-- Fixed dropdown menu positioning
-- Resolved text input cursor issues
-- Fixed image rotation on upload
-- Corrected date format parsing
-
----
-
-## Version 1.0.0
-
-**Release Date:** October 15, 2024
-
-### 🎉 Initial Release
-
-- Complete form rendering engine
-- Support for all standard field types
-- Three form modes: readonly, fill, and edit
-- Comprehensive event system
-- Image upload and handling
-- Field validation
-- Custom styling support
-- Delegate-based architecture
-- JavaScript/TypeScript Package Manager support
-- CocoaPods support
+console.log(JSON.stringify(updatedDoc, null, 2));
+```
 
 ---
 
-## Migration Guides
+## 4.0.0-rc4
 
-### Migrating from 1.1.x to 1.2.x
+**Release Date:** October 16, 2024
 
-The 1.2.0 release includes some breaking changes. Here's what you need to update:
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-<Steps>
-  <Step title="Update Dependencies">
-    Update your Package.swift or Podfile to version 1.2.0
-    ```swift
-    .package(url: "https://github.com/joyfill/joyfill-ios", from: "1.2.0")
-    ```
-  </Step>
-  
-  <Step title="Update Theme Configuration">
-    Replace `JoyfillAppearance` with new `JoyfillTheme`:
-    ```swift
-    // Old way
-    let appearance = JoyfillAppearance()
-    appearance.primaryColor = .blue
-    formView.appearance = appearance
-    
-    // New way
-    let theme = JoyfillTheme()
-    theme.colors.primary = .blue
-    formView.theme = theme
-    ```
-  </Step>
-  
-  <Step title="Update Delegate Methods">
-    Some delegate methods have new signatures:
-    ```swift
-    // Old
-    func formDidSubmit(_ form: JoyfillForm, data: [String: Any])
-    
-    // New
-    func formDidSubmit(_ form: JoyfillForm, result: JoyfillSubmitResult)
-    ```
-  </Step>
-</Steps>
+- New date/time element for all date/time fields and columns.
+- Support for optional custom date/time formats to provide consistent behavior across time zones and browsers.
+- This update addresses long-standing inconsistencies between local time zones, browsers, and native date/time input behavior. (NO-1574)
 
-<Warning>
-  Version 1.2.0 requires iOS 13.0 or later. If you need to support iOS 12, please continue using version 1.1.x.
-</Warning>
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-## Deprecation Notices
+- Crash affecting tables on PDF Forms and PDF Forms rendered in Microsoft Edge. (NO-1543)
+- Issue where underlying table cell formulas were appearing in generated PDFs. These cells will now display as empty. (NO-1452)
+- Issue where chart field line point labels were duplicated, causing a blurring effect. (NO-1575)
 
-### Version 1.2.0
-- `JoyfillAppearance` - Use `JoyfillTheme` instead
-- `formView.customColors` - Use `formView.theme.colors` instead
+## 🗓️ New Date/Time Element & Custom Formats — Details
 
-These deprecated APIs will be removed in version 2.0.0.
+The native browser date/time input element was unreliable and inconsistent across browsers, especially with different local time zones. This often caused truncated or incorrectly formatted values in table cells and fields.
+To solve this, we’ve replaced the native input with a **custom date/time picker** and added the ability to define custom display formats using tokens like `MM`, `DD`, `YYYY`, etc.
 
-## Getting Support
+### 📌 Visual Impact of Removing Native Browser Date/Time Inputs
 
-If you encounter any issues:
-- Check our [GitHub Issues](https://github.com/joyfill/joyfill-ios/issues)
-- Visit [Support Center](https://joyfill.io/support)
-- Email us at support@joyfill.io
+Previously, browsers attempted to “predict” the date/time format based on the user’s local settings (e.g., `DD/MM/YYYY` vs `MM/DD/YYYY`, or 12-hour vs 24-hour time). This prediction was **the root cause of formatting issues** and is no longer applied.
 
+Going forward, date/time formats will be strictly enforced based on either:
+
+* Existing saved formats (`MM/DD/YYYY`, `MM/DD/YYYY hh:mma`, `hh:mma`), or
+* Your **explicitly defined custom format**.
+
+If your workflow relied on the browser’s formatting, you’ll need to configure the desired format using the new **custom date format functionality**. (See below.)
+
+### 🛠️ Custom Format Usage
+
+Custom formats are currently available **only on desktop (JS SDK)** and are **disabled by default**.
+To enable them, use the `customDateTimeFormat` field setting:
+
+```tsx
+// Field Settings
+{
+  field: {
+    customDateTimeFormat: true, // Enable for date/time field
+    tableColumns: {
+      customDateTimeFormat: true, // Enable for date/time columns
+      ...
+    },
+    ...
+  },
+  ...
+}
+```
+
+Once enabled, a **Custom Format** input will appear in the field settings panel of date fields and date columns.
+
+### 📱 Native Mobile SDKs
+
+> **Important:** If you’re using the native iOS, Kotlin, or React Native SDKs, it’s recommended to keep custom date formats **disabled** for now.
+> Custom formats are **not yet fully supported** across Joyfill’s native SDKs and may cause unintended behavior.
+
+Full support for custom date formats will be introduced in a future release, at which point this feature will be enabled by default across all platforms.
+
+---
+
+## 3.19.7
+
+**Release Date:** October 6, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- Maximum depth call exceeded crash when tables are added to PDF forms.
+
+---
+
+## 3.19.6
+
+**Release Date:** June 13, 2024
+
+We've rolled out a set of targeted improvements to ensure a more reliable and consistent experience across collection and table field interactions. Below is a summary of the recent updates:
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Support for Hidden Table Columns — Hidden columns within collection fields are now fully supported and integrated, offering greater control over field layout without impacting functionality. (NO-1202 / JF-58)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Conditional Logic Reliability — Misc enhancements to conditional logic making it consistent and more reliable. (NO-1187)
+- Block Column Type Configuration — Block column types within collection and table fields can no longer be marked as required, aligning with expected usage patterns and improving form design flexibility. (NO-1186)
+- Rich Text Editor in Fill Mode — Rich Text Editor (RTE) fields are now fully editable while in fill mode, enabling more seamless data entry without requiring additional steps. (NO-1180)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Hidden Columns and Validation — Resolved an issue where hidden columns in collection fields were incorrectly triggering validation errors. Hidden fields are now excluded from validation unless explicitly required. (JF-58 pt2)
+
+---
+
+## 3.19.5
+
+**Release Date:** May 30, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- Misc bug fixes.
+
+---
+
+## 3.19.4
+
+**Release Date:** May 14, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- Misc PDF bug fixes.
+
+---
+
+## 3.19.3
+
+**Release Date:** May 9, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- Misc bug fixes.
+
+---
+
+## 3.19.2
+
+**Release Date:** May 5, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- Misc bug fixes.
+
+---
+
+## 3.19.1
+
+**Release Date:** May 4, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- Misc bug fixes.
+
+---
+
+## 3.19.0
+
+**Release Date:** April 30, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- New enhancements to the Table field.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Improved page breaking in PDF exports for dynamic fields.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Bug fixes and enhancements.
+
+---
+
+## 3.18.1
+
+**Release Date:** March 4, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- Misc bug fixes.
+
+---
+
+## 3.18.0
+
+**Release Date:** February 27, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Tree Structure v1 (NO-689) — A powerful new way to organize hierarchical data with nested data representation, expandable/collapsible nodes, and improved performance for complex structures.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Image Upload Experience (NO-990) — Fixed various issues to improve the reliability and performance of image uploads.
+- Validator Fields Sorting (NO-985) — Validator fields now appear in the correct order based on their position on the page.
+
+
+
+---
+
+## 3.17.0
+
+**Release Date:** February 14, 2024
+
+We're excited to roll out the latest updates and improvements!
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
+
+- Image Field Resizing (NO-946) — Miscellaneous improvements to ensure proper image scaling.
+- Display Text (Block) Enhancements (NO-838) — Improved behavior and display of block elements.
+- Android Upload Experience (NO-948) — Enhanced image/file upload functionality on Android devices.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Table Text Column Editing Bug (NO-940) — Resolved an issue with text column cells not editing properly.
+- Custom Icons (NO-970) — Custom icons now correctly render within field groups in the field list.
+- Multi-line Text in PDFs (NO-957) — Adjusted text measurement to prevent content from being cut off in PDF exports.
+- PDF Export Table (NO-949) — Fixed an issue where tables were cutting off bottom rows when spanning across page breaks.
+
+Enjoy the latest improvements, and as always, let us know if you have any feedback!
+
+
+
+
+
+---
+
+## 3.16.0
+
+**Release Date:** January 7, 2024
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Full-width Min/Max inputs for chart field settings. (NO-814)
+- Signature Field V2 (NO-680) — Enhanced signature field with improved design and functionality for seamless user experience.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Performance Enhancements for Very Large Forms (NO-783) — Optimized performance for handling large-scale forms efficiently.
+- Layout Engine Phase 1 (NO-578) — Improved PDF generation with better page-breaking for non-dynamic fields.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Duplicate Field Bug (NO-832) — Resolved an issue with duplicate fields in horizontal display type for MultiSelect.
+- Chart Coordinates (NO-764) — Addressed x and y label cut-off issues in chart coordinates.
+
+**Breaking Changes:**
+- JoyDocExporter no longer defaults to sans-serif font family. You are now required to set the fontFamily by using the theme property. See SDK README.md for how to properly set the theme font family.
+- JoyDocExporter now requires an initial measurement phase before PDF is ready to be captured. An element with `.pdf-capture-ready` will be added to the DOM when measuring is completed and PDF is ready to be captured.
+
+
+
+
+
+
+
+
+
+---
+
+## 3.15.1
+
+**Release Date:** December 6, 2023
+
+**Form Building, Now with Superpowers!**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Field Duplication (NO-662) — Clone fields faster with our new duplication feature.
+- Page Names In Page Navigation Bar (NO-657) — Page names now appear in the page navigation items.
+- Custom Field Option Icons (NO-817) — Customize your field options with custom icons using SVG Components and image urls.
+- New onSelect SDK Event (NO-762) — New onSelect handler to keep you in the loop every time a field is clicked.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Formula Hide-and-Seek (NO-813) — Formulas on individual table cells fields properly handle formulas, staying hidden unless the field is focused.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Signature Distortion (NO-822) — Signatures now look flawless, no matter the size of the field.
+- Corrupted Table Data Crashing (NO-795) — Missing row.cells values within table field causing an SDK crash has been patched.
+- Selection Fields Border (NO-761) — Checkbox and radio button borders are now visible at all times.
+
+We're always working to make your experience better (and maybe crack a smile or two along the way). Thanks for being part of this journey!
+
+
+
+
+
+
+
+---
+
+## 3.14.1
+
+**Release Date:** October 23, 2023
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Ability to re-order pages within the builder (NO-656)
+- Confirmation modal for toggling mobile syncing (NO-653)
+- Validation helper method. See README helper methods to learn more. (NO-677)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Updated peer dependencies to support React version >18.0.0 (NO-684)
+- Metadata field settings structure has been updated to follow consistent pattern (NO-684)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Multiple UI fixes and bug fixes (NO-686, NO-647, NO-650, NO-679, NO-639)
+
+---
+
+## 3.13.0
+
+**Release Date:** August 9, 2023
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Validation helper (NO-579)
+- Support to sort fields based on x and y coordinates inside conditional logic modal (NO-643)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Bug that would make a field disappear when zIndex is set as the negative number (NO-644)
+- Bug that would cut off field settings due to accordion height (NO-639)
+- Filter out orphaned fields (ie fields without any field positions) from the Joydoc (NO-559)
+- Style bug that cut off the field settings as a whole (NO-614)
+
+---
+
+## 3.12.0
+
+**Release Date:** July 26, 2023
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
+
+- Enhanced mobile device responsive web forms (NO-592)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Invalid JSON payload freezing SDK (NO-613)
+
+---
+
+## 3.11.0
+
+**Release Date:** July 21, 2023
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- `getDefaultPage` helper method (#NO-604)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>REMOVED</span>
+
+- Vulnerable dependencies (#NO-604)
+
+---
+
+## 3.10.0
+
+**Release Date:** July 10, 2023
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Loading indicator for image / file uploads (NO-298) — A new loading indicator lets you know exactly when your images and files are being uploaded.
+- Support for scaling pdf background images (NO-470)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Updated JS SDK Internals (NO-528)
+- Enhanced table column settings (NO-352)
+
+---
+
+## 3.9.1
+
+**Release Date:** May 13, 2023
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Transparent color support to the Settings Color Picker (NO-451) — Now you can create designs that are truly see-through.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Adjust height of field scroll selector (NO-522) — Prevents menu items of field identifiers from overflowing their wrapper.
+
+---
+
+## 3.9.0
+
+**Release Date:** May 4, 2023
+
+This update is so fly, it'll make your form builder blush.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- File Upload Field enhancements (NO-498) — Multiple files support, drag-and-drop, customizable styles, colors, and layouts, and conditional logic support.
+- Enable/Disable Field Settings Options (NO-479) — You can hide any setting now by passing it as false in the field settings object.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Default values for table columns (NO-499) — Your default values will now show up properly.
+- Identifier Filter not clearing post search (NO-492) — Your search results will no longer be haunted by the ghosts of past searches.
+- Page loading bug (NO-484) — Solved the mysterious loading indicator that haunted the Form builder after deleting the current page.
+- "Exports is Undefined" (NO-494) — Fixed the missing "Exports" issue.
+
+---
+
+## 3.8.0
+
+**Release Date:** April 2, 2023
+
+Bug Squashing Bonanza!
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Identifier Enhancements (NO-469) — You can now enable or disable custom identifier creation.
+- Field margin control for a polished look (NO-433)
+- Default page padding for a consistent design (NO-433)
+- Read-only mode to make any field read-only by the read-only option on field settings (NO-433)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Bug where the option width couldn't be removed from multi-select fields (NO-459)
+- Bug that caused the SDK to crash when encountering invalid JoyDoc payloads (NO-432)
+- Identifier filter results not clearing after removing search query (NO-469)
+
+---
+
+## 3.7.1
+
+**Release Date:** March 11, 2023
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Developer-friendly SDK for PDF generation (NO-355)
+- SDK Themes to elevate your forms (NO-396)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Tidied up some errors for a sparkling console (NO-398)
+- Improved performance for a smoother experience (NO-450)
+- Revamped SDK for a stunning experience (NO-58)
+
+---
+
+## 3.6.1
+
+**Release Date:** February 19, 2023
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- Crashes after Loading External Form (NO-395)
+
+---
+
+## 3.6.0
+
+**Release Date:** February 6, 2023
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Support for original file dimensions in PDF Form Engine (NO-349)
+- Text wrapping for text based fields (NO-307)
+- Field icon added to field settings (NO-315)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Display corresponding field settings of individual table cells when focused (NO-310)
+- Field wrapping doesn't cut off text within pdf and pdf exports (NO-107)
+- Hidden property causing validation issue in older SDK version (NO-377)
+
+---
+
+## 3.5.0
+
+**Release Date:** December 16, 2022
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Conditional logic (#NO-288)
+- `onFocus` and `onBlur` event handlers now supported in SDK (#NO-223)
+- Support for `initialPageId` on SDK for setting the initial page when the form is displayed (#NO-297)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Enhancements to PDF exports (#NO-250)
+- Enhancements to responsive web view for mobile form filling (#NO-252)
+- PDF form view enhancements (#NO-279)
+- Enhancements to required field indicators (#NO-295)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Style fix for Identifier selector (#NO-278)
+
+**Breaking Changes:**
+- Improved vanilla JS implementation for JS modules and CDN approach. See new implementation methods below (#NO-277)
+
+**Javascript Usage (CDN)**
+
+```
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Joyfill for Javascript Example</title>
+    <base href=".">
+    <meta charset="UTF-8" />
+    <script src=" https://cdn.jsdelivr.net/npm/@joyfill/components@latest/dist/joyfill.min.js"></script>
+  </head>
+  <body>
+    <div id="joyfill"></div>
+    <script>
+
+      Joyfill.JoyDoc(
+        document.getElementById('joyfill'),
+        {
+          mode: 'edit',
+          onChange: (changelogs, doc) => console.log('onChange: ', changelogs, doc),
+        }
+      );
+
+    </script>
+  </body>
+</html>
+
+```
+
+**Javascript Usage (Module)**
+
+```
+//index.html
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Joyfill for Javascript Example</title>
+    <base href=".">
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div id="joyfill"></div>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
+
+//index.js
+
+import Joyfill from "@joyfill/components/dist/joyfill.min.js";
+
+Joyfill.JoyDoc(
+  document.getElementById('joyfill'),
+  {
+    mode: 'edit',
+    onChange: (changelogs, doc) => console.log('onChange: ', changelogs, doc),
+  }
+);
+
+```
+
+---
+
+## 3.4.2
+
+**Release Date:** October 19, 2022
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- Chart field label read-only error in build.
+- Misc enhancements and bug fixes.
+
+---
+
+## 3.4.1
+
+**Release Date:** October 18, 2022
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Identifier selector field customization. Learn more [https://docs.joyfill.io/docs/customize-settings](https://docs.joyfill.io/docs/customize-settings) (NO-87)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- PDF dynamic field measurement enhancements (NO-113)
+- Auto remove individual table cell field positions associated with deleted columns (NO-254)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Misc enhancements and bug fixes.
+
+---
+
+## 3.3.1
+
+**Release Date:** October 4, 2022
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Page duplication support with page menu and `duplicatePage` helper method (#NO-95)
+- Table field now supports image uploading directly to table image cells (#NO-114)
+- Field tooltips now supported for additional field context and instructions (#NO-130)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Misc enhancements and bug fixes.
+
+---
+
+## 3.2.0
+
+**Release Date:** September 12, 2022
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Joyfill template library UI and visual requirements support (#NO-17)
+- Field groups display mode for table fields (#NO-17)
+- Rich text field support (#NO-17)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Table columns are responsive by default now (#NO-17)
+- Multi image upload adds to current images and no longer overwrites them (#NO-149)
+- Table field settings enhancements (#NO-163)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Signature is properly scaled to fit within field dimensions (#NO-172)
+
+---
+
+## 3.1.0
+
+**Release Date:** August 22, 2022
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Multi-user collaboration support via changelogs.
+- Changelogs are now passed directly to the `onChange` handler. See package README.
+- Helper methods for generating and duplicating documents and templates: `getDefaultDocument`, `getDefaultTemplate`, `getDocumentFromTemplate`, `duplicate`. See package README.
+- Field lazy loading. See package README.
+
+**Breaking Changes:**
+- `onChange` argument list has been changed. `onChange` now only receives two arguments: `changelogs` and `doc`. See README.
