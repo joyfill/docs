@@ -161,7 +161,8 @@
               "web/guides/event-handling",
               "web/guides/fieldsettings-configuration",
               "web/guides/conditional-logic",
-              "web/guides/formulas"
+              "web/guides/formulas",
+              "web/guides/pdf-generation"
             ]
           },
           {
