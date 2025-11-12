@@ -29,10 +29,6 @@
             ]
           },
           {
-            "group": "API reference",
-            "openapi": "OpenApi.json"
-          },
-          {
             "group": "Extra",
             "pages": [
               "joyfill/identifiers",
