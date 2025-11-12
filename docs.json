@@ -91,7 +91,11 @@
           },
           {
             "group": "Resources",
-            "pages": ["kotlin/changelogs/releases", "kotlin/about/security"]
+            "pages": [
+                "kotlin/changelogs/releases",
+                "kotlin/changelogs/migration-guide",
+                "kotlin/about/security"
+            ]
           }
         ]
       },
