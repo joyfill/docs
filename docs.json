@@ -58,7 +58,13 @@
           },
           {
             "group": "API Reference",
-            "pages": ["ios/api-reference/overview"]
+            "pages": [
+              "ios/api-reference/overview",
+              "ios/api-reference/joyfill-module",
+              "ios/api-reference/api-service-module",
+              "ios/api-reference/formulas-module",
+              "ios/api-reference/model-module"
+            ]
           },
           {
             "group": "Resources",
