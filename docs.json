@@ -264,16 +264,10 @@
     "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "API Docs",
-        "href": "https://docs.joyfill.io/api"
-      }
-    ],
     "primary": {
       "type": "button",
       "label": "Get Started",
-      "href": "https://joyfill.io/signup"
+      "href": "https://joyfill.io/contact-us"
     }
   },
   "contextual": {
