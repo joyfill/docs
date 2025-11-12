@@ -93,7 +93,7 @@
           },
           {
             "group": "API Reference",
-            "pages": ["kotlin/api-reference/overview"]
+            "pages": ["kotlin/api-reference/kotlin-docs"]
           },
           {
             "group": "Resources",
