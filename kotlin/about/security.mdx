@@ -1,131 +1,31 @@
 ---
-title: "Security & Support"
-description: "Security practices and support resources"
+title: "Security"
 icon: "shield-check"
 ---
 
-# Security & Support
+# Overview
 
-Learn about our security practices and how to get help with the Kotlin SDK.
+Joyfill follows industry best-practices to keep your data safe:
 
-## Security
+You can only access the Joyfill service via TLS (https). When you submit data to for storage or to generate a PDF, this data is encrypted at rest using AES-256.
 
-### Data Encryption
+All stored files are encrypted at rest, using the AWS Key Management Service. This includes template PDFs, generated PDFs, and any other files that are stored in Amazon S3.
 
-All data transmitted between your app and Joyfill servers is encrypted using TLS 1.2 or higher.
+Passwords are salted and hashed with high level expansion rounds. We do not store plaintext passwords in our database.
 
-```swift
-// SDK uses secure HTTPS connections by default
-Joyfill.configure(accessToken: "your_token")
-```
+We subscribe to security mailing lists and patch any vulnerabilities as soon as possible.
 
-### Access Tokens
+# Compliance (HITRUST, HIPAA, SOC 2, PCI DSS, etc.)
 
-Protect your access tokens and never commit them to version control:
+To maintain compliance we offer a self-hosting option. Our self-hosting option allows you to retain and manage all template, submission, file and any other data directly in your own system. [See Self-Hosting](/joyfill/self-hosted) or reach out to our team directly via live chat at [https://joyfill.io](https://joyfill.io)
 
-```swift
-// ❌ Don't do this
-let token = "your_hardcoded_token"
+# Vulnerability Disclosures
 
-// ✅ Do this instead
-guard let token = ProcessInfo.processInfo.environment["JOYFILL_TOKEN"] else {
-    fatalError("Missing token")
-}
-Joyfill.configure(accessToken: token)
-```
+Joyfill welcomes vulnerability disclosures. Please send an email to contact@joyfill.io to report any security vulnerabilties.
 
-### Data Storage
+# Questions
 
-Form data is encrypted at rest when stored locally:
+Reach out directly to our team using our live chat at [https://joyfill.io](https://joyfill.io)
 
-```swift
-let config = JoyfillFormConfig(
-    mode: .fill,
-    templateId: "template_id"
-)
-config.encryptLocalStorage = true
-```
-
-### Sensitive Data
-
-Mark fields containing sensitive information:
-
-```swift
-field.isSensitive = true // Data will be encrypted
-```
-
-## Best Practices
-
-<AccordionGroup>
-  <Accordion title="Token Management">
-    - Store tokens in Android Keychain
-    - Rotate tokens regularly
-    - Use environment-specific tokens
-    - Never log tokens in production
-  </Accordion>
-  
-  <Accordion title="Data Validation">
-    - Always validate user input
-    - Use schema validation
-    - Implement custom validators
-    - Sanitize data before submission
-  </Accordion>
-  
-  <Accordion title="Error Handling">
-    - Never expose sensitive error details to users
-    - Log errors securely
-    - Implement proper error recovery
-    - Test error scenarios
-  </Accordion>
-</AccordionGroup>
-
-## Compliance
-
-Joyfill Kotlin SDK is compliant with:
-- GDPR (General Data Protection Regulation)
-- CCPA (California Consumer Privacy Act)
-- HIPAA (Healthcare Insurance Portability and Accountability Act)
-- SOC 2 Type II
-
-## Reporting Security Issues
-
-If you discover a security vulnerability:
-
-1. **DO NOT** open a public GitHub issue
-2. Email security@joyfill.io with details
-3. Include steps to reproduce if possible
-4. We'll respond within 24 hours
-
-## Support Resources
-
-### Documentation
-- [Getting Started](/kotlin/getting-started/installation)
-- [Guides](/kotlin/guides/modes)
-- [API Reference](/kotlin/api-reference/overview)
-
-### Community
-- [GitHub Discussions](https://github.com/joyfill/joyfill-ios/discussions)
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/joyfill)
-
-### Direct Support
-- **Email:** support@joyfill.io
-- **Response Time:** Within 24 hours
-- **Priority Support:** Available for enterprise customers
-
-### Bug Reports
-Report bugs on [GitHub Issues](https://github.com/joyfill/joyfill-ios/issues)
-
-### Feature Requests
-Submit feature requests via [GitHub Discussions](https://github.com/joyfill/joyfill-ios/discussions/categories/ideas)
-
-## SDK Updates
-
-Stay informed about SDK updates:
-- Watch our [GitHub repository](https://github.com/joyfill/joyfill-ios)
-- Subscribe to our newsletter
-- Follow [@joyfill](https://twitter.com/joyfill) on Twitter
-
-## License
-
-The Joyfill Kotlin SDK is released under the MIT License. See [LICENSE](https://github.com/joyfill/joyfill-ios/blob/main/LICENSE) for details.
+***
 

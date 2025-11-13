@@ -23,16 +23,9 @@
             "pages": [
               "joyfill/joydoc-usage",
               "joyfill/schema-json",
-              "joyfill/usage-guide",
               "joyfill/metadata",
-              "joyfill/field-identifiers"
-            ]
-          },
-          {
-            "group": "Extra",
-            "pages": [
-              "joyfill/identifiers",
-              "joyfill/custom-data-population-via-identifiers"
+              "joyfill/field-identifiers",
+              "joyfill/self-hosted"
             ]
           }
         ]
@@ -112,35 +105,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "react-native/introduction",
-              "react-native/getting-started/installation",
-              "react-native/getting-started/quickstart"
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": [
-              "react-native/guides/modes",
-              "react-native/guides/image-upload-handling",
-              "react-native/guides/required-field-validation",
-              "react-native/guides/populating-and-extracting-data",
-              "react-native/guides/schema-validation",
-              "react-native/guides/event-handling"
-            ]
-          },
-          {
-            "group": "API Reference",
-            "pages": [
-              "react-native/api-reference/overview",
-              "react-native/api-reference/functions",
-              "react-native/api-reference/classes"
-            ]
-          },
-          {
-            "group": "Resources",
-            "pages": [
-              "react-native/changelogs/releases",
-              "react-native/about/security"
+              "react-native/introduction"
             ]
           }
         ]
@@ -167,7 +132,8 @@
               "web/guides/event-handling",
               "web/guides/fieldsettings-configuration",
               "web/guides/conditional-logic",
-              "web/guides/formulas"
+              "web/guides/formulas",
+              "web/guides/custom-data-population-via-identifiers"
             ]
           },
           {
@@ -199,7 +165,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["api/introduction", "api/authentication"]
+            "pages": ["api/introduction", "api/authentication", "api/identifiers"]
           },
           {
             "group": "Documents",
