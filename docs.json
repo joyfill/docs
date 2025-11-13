@@ -32,6 +32,7 @@
             "group": "Extra",
             "pages": [
               "joyfill/identifiers",
+              "joyfill/self-hosted",
               "joyfill/custom-data-population-via-identifiers"
             ]
           }
