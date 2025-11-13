@@ -23,17 +23,9 @@
             "pages": [
               "joyfill/joydoc-usage",
               "joyfill/schema-json",
-              "joyfill/usage-guide",
               "joyfill/metadata",
-              "joyfill/field-identifiers"
-            ]
-          },
-          {
-            "group": "Extra",
-            "pages": [
-              "joyfill/identifiers",
-              "joyfill/self-hosted",
-              "joyfill/custom-data-population-via-identifiers"
+              "joyfill/field-identifiers",
+              "joyfill/self-hosted"
             ]
           }
         ]
@@ -168,7 +160,8 @@
               "web/guides/event-handling",
               "web/guides/fieldsettings-configuration",
               "web/guides/conditional-logic",
-              "web/guides/formulas"
+              "web/guides/formulas",
+              "web/guides/custom-data-population-via-identifiers"
             ]
           },
           {
@@ -200,7 +193,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["api/introduction", "api/authentication"]
+            "pages": ["api/introduction", "api/authentication", "api/identifiers"]
           },
           {
             "group": "Documents",
