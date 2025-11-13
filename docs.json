@@ -105,35 +105,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "react-native/introduction",
-              "react-native/getting-started/installation",
-              "react-native/getting-started/quickstart"
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": [
-              "react-native/guides/modes",
-              "react-native/guides/image-upload-handling",
-              "react-native/guides/required-field-validation",
-              "react-native/guides/populating-and-extracting-data",
-              "react-native/guides/schema-validation",
-              "react-native/guides/event-handling"
-            ]
-          },
-          {
-            "group": "API Reference",
-            "pages": [
-              "react-native/api-reference/overview",
-              "react-native/api-reference/functions",
-              "react-native/api-reference/classes"
-            ]
-          },
-          {
-            "group": "Resources",
-            "pages": [
-              "react-native/changelogs/releases",
-              "react-native/about/security"
+              "react-native/introduction"
             ]
           }
         ]
