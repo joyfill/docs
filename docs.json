@@ -229,6 +229,16 @@
             "pages": ["api/utilities/convert-pdf-to-pngs-data-uri"]
           }
         ]
+      },
+      {
+          "dropdown": "Joyfill Dev Sandbox",
+          "icon": "cube",
+          "groups": [
+              {
+                  "group": "Getting Started",
+                  "pages": ["joyfill-dev-sandbox/platform-joyfill-manager", "joyfill-dev-sandbox/setup", "joyfill-dev-sandbox/webhooks", "joyfill-dev-sandbox/pdf-generator-joyfill", "joyfill-dev-sandbox/key-terminology"]
+              }
+          ]
       }
     ],
     "global": {

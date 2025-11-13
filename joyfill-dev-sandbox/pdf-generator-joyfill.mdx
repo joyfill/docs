@@ -1,0 +1,57 @@
+---
+title: "Joyfill Managed"
+description: "Generate PDF files with the Joyfill API"
+---
+
+# Overview
+
+In this guide I'm going to show you how to utilize the Joyfill Managed PDF Export API to generate downloadable PDFs.
+
+# Guide
+
+## Setup Requirements
+
+* Complete [Setup](/joyfill-dev-sandbox/setup)
+
+## Implementation
+
+### Step 1: Retrieve identifier
+
+You can retrieve the document or template identifier that you want to export via the Joyfill Manager (see screenshot below) or by using the Joyfill API.
+
+<Frame caption="Joyfill Manager Example">
+  <img src="/images/docs/7d5785c-Screen_Shot_2023-02-09_at_11.44.12_AM.png" />
+</Frame>
+
+Identifiers will be unique to your organization. Ensure you use the identifiers from your account. Do not use the ID from the screenshot above because it will not work for you.
+
+### Step 2: Generate PDF
+
+Once you have your identifier you can generate a PDF by using the [Export PDF API route](/api/documents/create-a-document-pdf-export).
+
+## Examples
+
+### Postman
+
+To send our HTTP request we are going to be using postman. Feel free to use whatever tool you want to make an http request to our Export API.
+
+**a. Add URL**
+
+![](/images/docs/5e74e7e-Screen_Shot_2023-10-17_at_3.04.43_PM.png)
+
+**b. Configure Authorization**
+
+* **Type:** API KEY
+* **Key:** Authorization
+* **Value:** Bearer \<User\_Access\_Token>
+* **Add to:** Header
+
+![](/images/docs/c80782e-Screen_Shot_2023-10-17_at_3.06.28_PM.png)
+
+**c. Add Body**
+
+**Important Note:** You must add an empty object in the body.
+
+![](/images/docs/3d39398-Screen_Shot_2023-10-17_at_3.10.22_PM.png)
+
+***

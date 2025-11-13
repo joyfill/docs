@@ -1,0 +1,120 @@
+---
+title: "Webhooks"
+description: "Webhooks allow you to subscribe to server-side notifications of events, like document update calls and newly available data. Webhooks are helpful to optimize your Joyfill integration."
+---
+
+## Subscribing to Webhook Events
+
+You can register a webhook by going to the [Joyfill Manager](https://app-joy.joyfill.io/login) -> Manage Settings & Users -> Webhooks. Here you can click the "**+ Enable Webhooks**" to get started.
+
+Here you will see our robust webhook manager interface. It lets you add endpoints, register for only specific events per endpoint, see event logs, and more!
+
+### Available Events
+
+We are adding more all the time but below are the currently registerable webhook events from Joyfill's API.
+
+| Event Type      | Payload                                                                            |
+| --------------- | ---------------------------------------------------------------------------------- |
+| document.create | Object[`<JoyDoc>`](/joyfill/joydoc-usage) |
+| document.update | Object[`<JoyDoc>`](/joyfill/joydoc-usage) |
+| document.delete | Object[`<JoyDoc>`](/joyfill/joydoc-usage) |
+
+**Template Events** - The events listed above are used for both template and document data types. To determine if the event is associated with a template or a document simply check the `data.type` property of the webhook payload.
+
+### Payloads
+
+All webhooks return the associated event-type data. For instance, below you can see an example of a `document.create` webhook event.
+
+<CodeGroup>
+  ```bash bash
+  {
+    "timestamp": 111414606
+    "eventType": "document.create"
+    "data": {
+      "_id": "64e541457eb07af9b070312e"
+      "createdOn": 111414605
+      "identifier": "doc_64e5z14t7eb07af9b070312e"
+      "metadata": {}
+      "name": "Testing Doc"
+      "source": "doc_64125cc452a50bdf0f84afbc"
+      "stage": "published"
+      "type": "document|template"
+    }
+  }
+  ```
+</CodeGroup>
+
+## Setup
+
+For quickly testing and post-enabling webhooks in the Joyfill Manager we recommend pressing on the Add Endpoint action and from there using [Svix Playground](https://www.svix.com/play/) (see below). This will familiarize you with the payloads of each registered event on your end.
+
+<Frame caption="Joyfill Manager - Webhooks">
+  <img src="/images/docs/1df1471-svix_playground.png" />
+</Frame>
+
+### Example
+
+Once you are familiar with the payloads coming in. You can now register your own endpoints. Repeat the steps above but put your own endpoint urls in where you plan to receive the webhooks. **Make sure to return a code 200 or a successful response**. This ensures you see proper webhook event response logs in the Joyfill Manager webhooks page.
+
+In order to retrieve the document that was associated with an event please use the `event.data.source`or `event.data.identifier`(document ID) to make a request to our API for that document.
+
+<CodeGroup>
+  ```bash bash
+  // This example uses Express to receive webhooks
+  const express = require('express');
+  const app = express();
+
+  const express = require("express")
+  const app = express()
+  const port = 3000
+
+  var bodyParser = require("body-parser")
+
+  app.use(bodyParser.json({ type: "application/json" }))
+
+  const getDocument = async (docIdentifier, userAccessToken) => {
+    const response = await fetch(`https://api-joy.joyfill.io/v1/documents/${docIdentifier}`, {
+      'method': 'GET',
+      'mode': 'cors',
+      'headers': {
+        'Authorization': `Bearer ${userAccessToken}`,
+        'Content-Type': 'application/json'
+      },
+    });
+
+    const data = await response.json();
+    return data;
+  }
+
+  app.post("/webhook", async (req, res) => {
+
+    const event = req.body
+    const eventDocument = await getDocument(event.data.identifier);
+
+    switch (event.eventType) {
+      case "document.update":
+
+        // Then define and call a method to update a related record in your DB.
+        // updateDocument(event.data.identifier, eventDocument);
+        break
+      case "document.created":
+        // Then define and call a method to create add record in your DB.
+        // createDocument(event.data.identifier, eventDocument);
+        break
+      default:
+        console.log(`Unhandled event type ${event.eventType}`)
+    }
+
+    // Return a response to acknowledge receipt of the event
+    res.send(200)
+
+  })
+
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+  })
+  ```
+</CodeGroup>
+
+***
+

@@ -1,0 +1,45 @@
+---
+title: "Key Terminology"
+description: "Descriptions of Joyfill's main data types and concepts"
+---
+
+A note about terminology used in this documentation. There are a few terms we'll use that have alternate meanings, and you may be more familiar with the other definitions. We feel it's important for us to clarify the terminology below.
+
+* **Organization** - Your company or product that is integrating with Joyfill.
+
+* **Group** - One of your customers or an entity you want to group a set of templates, documents and users underneath.
+
+* **User** - An individual interacting with the Joyfill Platform.
+
+  * **Organization User** - An individual/employee within your organization. For instance, one of your developers.
+  * **Group User** - An individual/employee that belongs to one of your customers.
+
+* **Template** - A saved Form or PDF that will be filled out via a user or populated via API request repeatedly.
+
+* **Document** - A filled out template or a single use document.
+
+  * **Template Instance** - A document that was generated from a Template.
+  * **Single Instance** - A document that is generated and meant to be used only once.
+
+* **Library** - A saved list of Templates.
+
+## Template vs Document
+
+The Joyfill platform supports documents and templates. Documents and templates both share a similar data structure (the [JoyDoc](/joyfill/joydoc-usage)). Documents and templates provide a way to organize and utilize the data based on its intended use case within your product or service. By sharing a similar data structure it makes it really easy to work with documents and templates together/interchangeably.
+
+### Template
+
+The template type is used to power template based workflows within Joyfill.
+
+A template is a saved set of fields, layouts, styles, etc. that will be populated via api request or filled out by a user repeatedly.
+
+When you fill out a template it generates a document from the original template structure and schema.
+
+### Document
+
+The document type is the default and general purpose type for managing the Joyfill document data.
+
+The document type can represent a single instance document, an instance of a filled out template and much more.
+
+***
+
