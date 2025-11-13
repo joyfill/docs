@@ -169,7 +169,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["api/introduction", "api/authentication", "api/identifiers"]
+            "pages": ["api/introduction", "api/authentication", "api/identifiers", "api/platform-api-search"]
           },
           {
             "group": "Documents",
