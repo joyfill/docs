@@ -236,7 +236,7 @@
           "groups": [
               {
                   "group": "Getting Started",
-                  "pages": ["joyfill-dev-sandbox/platform-joyfill-manager", "joyfill-dev-sandbox/setup", "joyfill-dev-sandbox/webhooks", "joyfill-dev-sandbox/pdf-generator-joyfill", "joyfill-dev-sandbox/key-terminology"]
+                  "pages": ["joyfill-dev-sandbox/platform-joyfill-manager", "joyfill-dev-sandbox/setup", "joyfill-dev-sandbox/webhooks", "joyfill-dev-sandbox/pdf-generator-joyfill", "joyfill-dev-sandbox/key-terminology", "joyfill-dev-sandbox/how-to-create-templates"]
               }
           ]
       }
