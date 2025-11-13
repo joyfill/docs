@@ -1,0 +1,165 @@
+---
+title: "Angular"
+description: "Learn how to render your first form using the Joyfill JS SDK."
+---
+
+# Requirements
+
+* Angular v17+
+* [Review SDK README](https://www.npmjs.com/package/@joyfill/components)
+
+# 1. Install
+
+<CodeGroup>
+  ```bash bash
+  npm install --save @joyfill/components
+  ```
+
+  ```bash bash
+  yarn add @joyfill/components
+  ```
+</CodeGroup>
+
+# 2. Usage
+
+* Add the Template identifier from the previous setup step to the `app.component.ts` file.
+* Add the User Access Token from the preview setup step to the `joyfill.service.ts` file.
+* **❗️Important Note:** ensure you use the full import path `import { JoyDoc } from '@joyfill/components/dist/joyfill.min.js'`. This will ensure proper angular support.
+
+<CodeGroup>
+  ```bash bash
+  import { Component, OnInit, inject } from '@angular/core';
+  import { CommonModule } from '@angular/common';
+  import { JoyDoc } from '@joyfill/components/dist/joyfill.min.js';
+
+  import { JoyfillService } from './joyfill.service';
+
+  @Component({
+    selector: 'app-root',
+    standalone: true,
+    imports: [CommonModule],
+    template: `
+      <main>
+        <header>
+          <button (click)="handleSave()">Save</button>
+        </header> 
+        <div id="joyfill-target"></div>
+      </main>
+    `,
+    styleUrl: './app.component.css'
+  })
+
+  export class AppComponent implements OnInit {
+
+    joyfillService: JoyfillService = inject(JoyfillService);
+    
+    identifer = '<REPLACE WITH YOUR TEMPLATE IDENTIFIER>';
+    pendingTemplate = {};
+
+    ngOnInit() {
+      this.initJoyfill();
+    }
+
+    async initJoyfill() { 
+
+      const template = await this.joyfillService.getTemplate(this.identifer);
+
+      JoyDoc(
+        document.getElementById('joyfill-target'),
+        {
+          doc: template,
+          onChange: (changelogs, data) => {
+            /**
+             * changelogs - the individual changes
+             * data - the entire new template with all changes applied
+             */
+            console.log(changelogs, data)
+            this.pendingTemplate = data;
+          }
+        }
+      );
+
+    }
+
+    async handleSave() {
+      const updatedTemplate = await this.joyfillService.updateTemplate(this.identifer, this.pendingTemplate);
+      console.log('>>>>>>>>>>> updatedTemplate: ', updatedTemplate);
+    }
+
+  }
+  ```
+
+  ```bash bash
+  import { Injectable } from '@angular/core';
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class JoyfillService {
+
+    url = 'https://api-joy.joyfill.io/v1';
+
+    headers = { 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer <REPLACE WITH YOUR USER ACCESS TOKEN>'
+    }
+
+    constructor() { }
+
+    async getTemplate(identifier: string): Promise<object> {
+
+      const data = await fetch(`${this.url}/templates/${identifier}`, {
+        method: 'GET',
+        headers: this.headers
+      });
+      
+      return await data.json();
+
+    }
+
+    async updateTemplate(identifier: string, data: object): Promise<object> {
+      
+      const response = await fetch(`${this.url}/templates/${identifier}`, {
+        method: 'POST',
+        headers: this.headers,
+        body: JSON.stringify(data)
+      });
+
+      return await response.json();
+
+    }
+
+  }
+  ```
+</CodeGroup>
+
+## Typescript
+
+We have added the properties below to the "compilerOptions" in the tsconfig.json file in order to support the Joyfill JS SDK.
+
+```
+"allowJs": true,  
+"noImplicitAny": false
+```
+
+# 3. Try it yourself
+
+If you’re looking for a full example project that shows many more of the Joyfill SDK capabilities and workflows then head over to our full example project and try it for yourself.
+
+* [Joyfill Angular Example](https://github.com/joyfill/examples/tree/main/angular)
+* [SDK NPM Package](https://www.npmjs.com/package/@joyfill/components)
+
+***
+
+[React Native](/docs/react-native)
+
+[Swift](/docs/swift)
+
+* [Table of Contents](#)
+
+* * [Prerequisites](#prerequisites)
+  * [Requirements](#requirements)
+  * [1. Install](#1-install)
+  * [2. Usage](#2-usage)
+  * * [Typescript](#typescript)
+  * [3. Try it yourself](#3-try-it-yourself)

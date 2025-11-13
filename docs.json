@@ -141,7 +141,8 @@
             "pages": [
               "web/guides/sample-projects-js-cdn",
               "web/guides/sample-projects-js-module",
-              "web/guides/sample-projects-react"
+              "web/guides/sample-projects-react",
+              "web/guides/angular"
             ]
           },
           {
