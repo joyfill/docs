@@ -1,0 +1,273 @@
+---
+title: "Customize Draggable Fields"
+description: "Customize the draggable field options for field creation in the left panel"
+icon: "grip"
+---
+
+# Overview
+
+You can define custom draggable field options for your users. This allows you to preconfigure fields with styles, settings, and any other property supported by the JoyDoc Spec. When your user drags and drops on of your pre-configured fields onto the page, that field will have the properties pre-set when the field is created.
+
+You can use any of the JoyDoc JSON supported properties on your list of custom fieldOptions.
+
+## Examples
+
+<CodeGroup>
+  ```bash bash
+  const fieldOptions = [...]
+
+  return (
+    <JoyDoc
+      mode="edit"
+      fieldOptions={fieldOptions}
+    />
+  )
+  ```
+
+  ```bash bash
+    const fieldOptions = [...];
+    
+    Joyfill.JoyDoc(
+      document.getElementById("joyfill"),
+      {
+        mode: "edit",
+        fieldOptions: fieldOptions
+      }
+    )
+  ```
+</CodeGroup>
+
+# Customize
+
+You can customize the list of available draggable options within the Joyfill Builder by providing your own JS Objects in the list. For instance, in the example below we define some pre-configured styles (`fontColor`, `fontWeight`, and `fontSize`) and an `identifier` to be used when the field is created. When a user drags and drops your custom pre-configured fields onto the page it will have these properties set by default.
+
+<CodeGroup>
+  ```bash bash
+  const fieldOptions = [
+      {
+        title: 'Customer Name',
+        type: 'text',
+        displayType: 'original',
+        identifier: 'custom_customer_name',
+        fontColor: '#0096FF',
+        fontWeight: 'bold',
+      },
+      {
+        title: 'Customer Signature',
+        type: 'signature',
+        displayType: 'original',
+        identifier: 'custom_customer_signature',
+        fontSize: 22
+      },
+      ...
+  ]
+  ```
+</CodeGroup>
+
+# Group Fields
+
+You can group field options into a collapsable accordion by using the `fieldGroup` type in the field option list and nesting your field objects under the `fields` property of the field group. This is a great tool for organizing the field options list, especially if you have a lot of custom fields.
+
+<CodeGroup>
+  ```bash bash
+  const fieldOptions = [
+    {
+      type: 'fieldGroup',
+      title: 'Custom Fields',
+      open: false,
+      fields: [
+        {
+          title: 'Grouped Text',
+          type: 'text',
+          displayType: 'original',
+        },
+        {
+          title: 'Grouped Multiline Text',
+          type: 'textarea',
+          displayType: 'original',
+        },
+        ...
+      ],
+     },
+     ...
+   ]
+  ```
+</CodeGroup>
+
+# Joyfill Default Draggable Fields
+
+Below is the default list of JS Objects used by Joyfill internally to define our standard list of draggable field options. You can add to this list, customize it, and do whatever you need to provide the proper experience to your customers.
+
+*In the example below, the`generateObjectId` method is provided by the Joyfill Components Module as an export. You can use it to generate a valid `_id` . See guide Generating Object Ids.*
+
+You can also pass custom icons to field options. The custom icons can either be an *image url or svg*. The iconType property must be specified as **url** incase of an imageUrl whereas it should be specified as **custom** incase of a custom svg
+
+<CodeGroup>
+  ```bash bash
+    const fieldOptions = [
+      {
+        title: 'Image',
+        type: 'image',
+        displayType: 'original',
+      },
+      {
+        title: 'File',
+        type: 'file',
+        displayType: 'original',
+      },
+      {
+        title: 'Heading Text',
+        type: 'block',
+        displayType: 'original',
+        value: 'Heading',
+        fontSize: 28,
+        fontWeight: 'bold',
+      },
+      {
+        title: 'Display Text',
+        type: 'block',
+        displayType: 'original',
+        value: 'Display text',
+      },
+      {
+        title: 'Empty Space',
+        type: 'block',
+        displayType: 'original',
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
+      },
+      {
+        title: 'Text',
+        type: 'text',
+        displayType: 'original',
+      },
+      {
+        title: 'Multiline Text',
+        type: 'textarea',
+        displayType: 'original',
+      },
+      {
+        title: 'Number',
+        type: 'number',
+        displayType: 'original',
+      },
+      {
+        title: 'Date Time',
+        type: 'date',
+        displayType: 'original',
+        format: 'MM/DD/YYYY hh:mma'
+      },
+      {
+        title: 'Dropdown',
+        type: 'dropdown',
+        displayType: 'original',
+        options: [
+          { _id: generateObjectId(), value: 'Yes' },
+          { _id: generateObjectId(), value: 'No' },
+          { _id: generateObjectId(), value: 'N/A' },
+        ],
+
+      },
+      {
+        title: 'Multiple Choice',
+        type: 'multiSelect',
+        multi: true,
+        displayType: 'original',
+        options: [
+          { _id: generateObjectId(), value: 'Yes' },
+          { _id: generateObjectId(), value: 'No' },
+          { _id: generateObjectId(), value: 'N/A' },
+        ],
+      },
+      {
+        title: 'Single Choice',
+        type: 'multiSelect',
+        multi: false,
+        displayType: 'original',
+        options: [
+          { _id: generateObjectId(), value: 'Yes' },
+          { _id: generateObjectId(), value: 'No' },
+          { _id: generateObjectId(), value: 'N/A' },
+        ],
+      },
+      {
+        title: 'Signature',
+        type: 'signature',
+        displayType: 'original',
+      },
+      {
+        title: 'Table',
+        type: 'table',
+        displayType: 'original',
+        tableColumns: [
+          {
+            _id: generateObjectId(),
+            type: 'text',
+            title: 'Text Column',
+          },
+          {
+            _id: generateObjectId(),
+            type: 'dropdown',
+            title: 'Dropdown Column',
+            options: [
+              { _id: generateObjectId(), value: 'Yes' },
+              { _id: generateObjectId(), value: 'No' },
+              { _id: generateObjectId(), value: 'N/A' },
+            ],
+          },
+          {
+            _id: generateObjectId(),
+            type: 'image',
+            title: 'Image Column',
+            maxImageWidth: 190,
+            maxImageHeight: 120,
+          },
+        ],
+        value: [
+          { _id: generateObjectId(), cells: {} },
+          { _id: generateObjectId(), cells: {} },
+          { _id: generateObjectId(), cells: {} },
+        ],
+      },
+      {
+        title: 'Chart',
+        type: 'chart',
+        displayType: 'original',
+        primaryDisplayOnly: true,
+        yTitle: 'Vertical',
+        yMax: 100,
+        yMin: 0,
+        xTitle: 'Horizontal',
+        xMax: 100,
+        xMin: 0,
+      },
+      {
+        title: 'Custom Icon SVG ',
+        type: FieldTypes.text,
+        iconType:"custom",
+        icon: (
+          <svg
+            xmlns="http://www.w3.org/2000/svgsasa"
+            viewBox="0 0 100 100"
+            width={25}
+            height={25}
+            fill={'green'}
+          >
+
+          </svg>
+        ),
+        displayType: original,
+    },
+    {
+      title: 'Custom Icon Url',
+      type: FieldTypes.text,
+      iconType:"url",
+      icon:'',
+      displayType: original,
+    }
+    ]; 
+  ```
+</CodeGroup>
+
+***
+

@@ -133,7 +133,10 @@
               "web/guides/fieldsettings-configuration",
               "web/guides/conditional-logic",
               "web/guides/formulas",
-              "web/guides/custom-data-population-via-identifiers"
+              "web/guides/custom-data-population-via-identifiers",
+              "web/guides/pdf-generator-self-hosted",
+              "web/guides/pdf-file-uploads-js",
+              "web/guides/customize-field-options"
             ]
           },
           {
@@ -141,7 +144,8 @@
             "pages": [
               "web/guides/sample-projects-js-cdn",
               "web/guides/sample-projects-js-module",
-              "web/guides/sample-projects-react"
+              "web/guides/sample-projects-react",
+              "web/guides/angular"
             ]
           },
           {
@@ -165,7 +169,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["api/introduction", "api/authentication", "api/identifiers"]
+            "pages": ["api/introduction", "api/authentication", "api/identifiers", "api/platform-api-search"]
           },
           {
             "group": "Documents",
@@ -225,6 +229,16 @@
             "pages": ["api/utilities/convert-pdf-to-pngs-data-uri"]
           }
         ]
+      },
+      {
+          "dropdown": "Joyfill Dev Sandbox",
+          "icon": "cube",
+          "groups": [
+              {
+                  "group": "Getting Started",
+                  "pages": ["joyfill-dev-sandbox/platform-joyfill-manager", "joyfill-dev-sandbox/setup", "joyfill-dev-sandbox/webhooks", "joyfill-dev-sandbox/pdf-generator-joyfill", "joyfill-dev-sandbox/key-terminology"]
+              }
+          ]
       }
     ],
     "global": {
