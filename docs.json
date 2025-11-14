@@ -162,7 +162,8 @@
               "web/guides/fieldsettings-configuration",
               "web/guides/conditional-logic",
               "web/guides/formulas",
-              "web/guides/customize-draggable-fields"
+              "web/guides/customize-draggable-fields",
+              "web/guides/pdf-file-uploads"
             ]
           },
           {

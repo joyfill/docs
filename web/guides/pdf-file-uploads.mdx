@@ -1,0 +1,123 @@
+---
+title: "PDF File Uploads"
+description: "How to create fillable PDF forms from your user's local PDF files"
+---
+
+# PDF File Uploads (JS SDK)
+
+How to create fillable PDF forms from your user's local PDF files.
+
+## Overview
+
+The Joyfill SDK is built on the JSON standard (see JoyDoc) instead of the PDF binary file standard. This enables better data storage, parsing, querying and overall developer experience. But in order to achieve this transition from PDF to JSON, we must transform the PDF.
+
+In this guide we will show you how to:
+
+- Convert PDFs to images that can be utilized within JSON.
+- Generate a Joyfill Fillable PDF JSON Template from the original PDF images.
+- Handle underlying PDF update scenarios within existing Joyfill Fillable PDFs.
+
+## Step 1: PDF Conversion
+
+You can implement your own PDF to Image conversion functionality internally. See recommend functionality below:
+
+- Add PDF to Image Conversion functionality. We recommend using [Convert API](https://www.convertapi.com/). We are not affiliated with them but we are big fans. Convert API provide a wonderful API, enterprise compliance, and affordable pricing.
+- Store those converted images in your own asset service, ie. S3 or something similar.
+- Generate an array of objects that contain the public urls or signing information from the stored images. This information will be utilized to create the Joyfill JSON object.
+
+## Step 2: JSON Creation
+
+In this step we are going to show you how to utilizes the PDF conversion from Step 1 to create a fillable PDF form that can be used within the Joyfill SDK.
+
+## Option 1: Joyfill SDK Workflow
+
+This example uses the Joyfill SDK as the starting point for uploading user PDFs. Users can drag and drop or upload PDFs directly inside the of Joyfill SDK using the right panel upload setting.
+
+![](/images/docs/pdf-upload-panel.png)
+
+### Step 1: Load Joyfill SDK
+
+In this step you will send the user directly to the application page that renders the Joyfill SDK. User can then upload their PDF file using upload area in the right side panel settings.
+
+
+
+### Step 2: Handle upload in onUploadAsync
+
+You will be notified via the [`onUploadAsync`](/web/guides/image-upload-handling#onuploadasync) SDK handler when a user uploads a file. You will need to convert that PDF file into images using the conversion functionality from Step 1: PDF Conversion.
+
+The `onUploadAsync` should return a resolved promise of url objects inside an array. Learn more about handling uploads and returning properly formatted data in our [PDF, Files, and Image Uploads Guide](/web/guides/image-upload-handling).
+
+Once the SDK receives the properly formatted array of image objects from `onUploadAsync`, the SDK will automatically update/create the associated pages.
+
+See example usage of [`onUploadAsync`](/web/guides/image-upload-handling#onuploadasync)
+
+<Info>
+**Important Note:** The Joyfill SDK upload allows for PDF and image file types. Ensure you check the file type uploaded by a user inside the `onUploadAsync` in order to handle it properly.
+</Info>
+
+## Option 2: Custom Creation Workflow
+
+This example uses a custom creation flow to generate the JoyDoc JSON structure. This approach allows you to utilize a modal, button, or any other custom workflow to create the JoyDoc JSON before sending the user to the Joyfill SDK screen. See example video below
+
+### Step 1: Handle File Upload and Conversion
+
+After the user has uploaded a PDF file to your application, you will then need to convert that PDF file into background images using the conversion functionality from Step 1: PDF Conversion.
+
+### Step 2: Generate JoyDoc JSON Template
+
+In this step we will utilize the Joyfill helper methods and the images from Step 1: PDF conversion, to generate the JoyDoc JSON that can be used within the Joyfill SDK.
+
+```js
+import { getDefaultTemplate, getDefaultPage } from '@joyfill/components';
+
+const generateTemplateFromPDF = async (file) => {
+	//1. Generate default template 
+	const template = getDefaultTemplate(); //Template is a Joyfill JSON Object
+	
+	//2. Convert PDF to images
+	const imageUrls = await convertPDFFromStepOne(file); //imgUrls example: [ { url: String }, {url: String }, ... ];
+	
+	//3. Generate a JoyDoc Page for each PDF Page
+	const templatePages = [];
+	const templatePageOrder = [];
+	
+	imageUrls.forEach(({ url }) => {
+		const page = getDefaultPage({ 
+			displayType: 'pdf', //Important!
+			backgroundImage: url,
+		});
+		
+		templatePages.push(page);
+		templatePageOrder.push(page._id);
+	})
+	
+	//4. Assign template pages and page order
+	template.files[x].pages = templatePages;
+	template.files[x].pageOrder = templatePageOrder;
+	
+	//5. Return formatted template for use in the Joyfill SDK
+	return template;
+};
+```
+
+### Step 3: Joyfill SDK
+
+Now that you have the properly formatted JoyDoc JSON you can pass that directly to the Joyfill SDK to render your form and capture data from your users.
+
+<Info>
+**Important Note:**
+
+When using a custom creation experience we recommend reviewing the update workflows below. 
+You will need to evaluate enabling/disabling update PDF workflows after the the initial creation experience. 
+The update workflows are usually due to users updating the underlying PDF (text, style, images, etc). 
+The update workflows allow your users to swap out the background PDF for the existing form instead of requiring your users to create an entirely new form. 
+Review the below examples for handling the different PDF scenarios after initial creation.
+</Info>
+
+## Summary
+
+Hopefully from the examples above you have a better idea of how to handle PDFs with Joyfill. You can mix and match these strategies to create your ideal workflow based on your application and user workflows.
+
+## Support for signed urls
+
+If you are planning on using signed urls, we recommend this approach, then you will want to review our Working With Signed URLs Guide (Coming soon). You can utilize all the above workflows with the signed url approach.
