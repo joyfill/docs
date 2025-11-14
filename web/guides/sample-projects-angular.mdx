@@ -1,0 +1,507 @@
+---
+title: "Angular"
+---
+
+## Overview
+
+This guide shows you how to integrate Joyfill Components into your Angular v17+ application.
+
+
+## Setup
+
+Welcome to Joyfill! It's easy to get started with a Joyfill Developer account and add powerful form and digital PDF capabilities to your product or service. Just follow the steps below and you'll be up and running shortly.
+
+### Setup Steps
+
+The steps below are the prerequisites you will need to accomplish before moving on to the rest of this guide.A couple of the steps below will be done in our [Joyfill Manager](https://app-joy.joyfill.io).
+
+**Step 1: Create Joyfill Account**
+
+- To begin working with Joyfill, go to [Joyfill's Platform](https://app-joy.joyfill.io) and create an account (jump to step 2 if you already have an account). 
+- By creating an account you will add yourself as the first user to your newly created Joyfill Organization and be placed inside the Joyfill Manager.
+
+**Step 2: Generate Your userAccessToken**
+
+- Once you're inside the Joyfill Manager you will want to select from the top navigation bar Settings & Users -> Manager Users -> and click "Access Tokens" button next to your user. 
+- Once the modal appears select "Add Access Token". Copy and securely store your access token for later use.
+
+**Step 3: Create Your First Template**
+
+Create your first template within the Joyfill Manager by going to the Template Library tab in the top navigation and click the "Add Template".
+
+We recommended following this guide Create Your First Template when creating your first template. This makes it easy to experiment with the different parts of the Joyfill Platform easily.
+
+**Step 4: Get your template identifier**
+
+Inside the Joyfill Manager you will want to select from the top navigation bar Template Library and under your Templates table list within the column ID copy that for pasting into our example Angular guides.
+
+
+
+
+## Requirements
+
+* Angular v17+
+* Review SDK README
+
+## 🚀 Quick Start
+
+### 1. Install
+
+Install the Joyfill Components package:
+
+```bash
+npm install --save @joyfill/components
+```
+
+or
+
+```bash
+yarn add @joyfill/components
+```
+
+### 2. Usage
+
+#### Create Joyfill Service
+
+Create `src/app/joyfill.service.ts`:
+
+```typescript
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class JoyfillService {
+
+  url = 'https://api-joy.joyfill.io/v1';
+
+  headers = { 
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer <REPLACE WITH YOUR USER ACCESS TOKEN>'
+  }
+
+  constructor() { }
+
+  async getTemplate(identifier: string): Promise<object> {
+
+    const data = await fetch(`${this.url}/templates/${identifier}`, {
+      method: 'GET',
+      headers: this.headers
+    });
+    
+    return await data.json();
+
+  }
+
+  async updateTemplate(identifier: string, data: object): Promise<object> {
+    
+    const response = await fetch(`${this.url}/templates/${identifier}`, {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify(data)
+    });
+
+    return await response.json();
+
+  }
+
+}
+```
+
+#### Update App Component
+
+Update `src/app/app.component.ts`:
+
+**❗️Important Note:** ensure you use the full import path `import { JoyDoc } from '@joyfill/components/dist/joyfill.min.js'`. This will ensure proper angular support.
+
+```typescript
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { JoyDoc } from '@joyfill/components/dist/joyfill.min.js';
+
+import { JoyfillService } from './joyfill.service';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <main>
+      <header>
+        <button (click)="handleSave()">Save</button>
+      </header> 
+      <div id="joyfill-target"></div>
+    </main>
+  `,
+  styleUrl: './app.component.css'
+})
+
+export class AppComponent implements OnInit {
+
+  joyfillService: JoyfillService = inject(JoyfillService);
+  
+  identifer = '<REPLACE WITH YOUR TEMPLATE IDENTIFIER>';
+  pendingTemplate = {};
+
+  ngOnInit() {
+    this.initJoyfill();
+  }
+
+  async initJoyfill() { 
+
+    const template = await this.joyfillService.getTemplate(this.identifer);
+
+    JoyDoc(
+      document.getElementById('joyfill-target'),
+      {
+        doc: template,
+        onChange: (changelogs, data) => {
+          /**
+           * changelogs - the individual changes
+           * data - the entire new template with all changes applied
+           */
+          console.log(changelogs, data)
+          this.pendingTemplate = data;
+        }
+      }
+    );
+
+  }
+
+  async handleSave() {
+    const updatedTemplate = await this.joyfillService.updateTemplate(this.identifer, this.pendingTemplate);
+    console.log('>>>>>>>>>>> updatedTemplate: ', updatedTemplate);
+  }
+
+}
+```
+
+### Typescript Configuration
+
+We have added the properties below to the "compilerOptions" in the `tsconfig.json` file in order to support the Joyfill JS SDK.
+
+```json
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "noImplicitAny": false
+  }
+}
+```
+
+## Complete Project Structure
+
+```
+my-joyfill-app/
+├── src/
+│   ├── app/
+│   │   ├── joyfill.service.ts    # Joyfill API service
+│   │   ├── app.component.ts      # Main app component
+│   │   └── app.component.css     # App styles
+│   └── main.ts                    # Entry point
+├── tsconfig.json                  # TypeScript configuration
+└── package.json                   # Dependencies
+```
+
+## Complete Angular Example
+
+### app.component.ts
+
+```typescript
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { JoyDoc } from '@joyfill/components/dist/joyfill.min.js';
+
+import { JoyfillService } from './joyfill.service';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <main>
+      <header>
+        <h1>🎉 Joyfill Components</h1>
+        <p>Angular v17+ Integration Example</p>
+        <button (click)="handleSave()" [disabled]="isSaving">
+          {{ isSaving ? 'Saving...' : 'Save' }}
+        </button>
+      </header> 
+      <div id="joyfill-target"></div>
+    </main>
+  `,
+  styleUrl: './app.component.css'
+})
+export class AppComponent implements OnInit {
+
+  joyfillService: JoyfillService = inject(JoyfillService);
+  
+  identifer = '<REPLACE WITH YOUR TEMPLATE IDENTIFIER>';
+  pendingTemplate = {};
+  isSaving = false;
+
+  ngOnInit() {
+    this.initJoyfill();
+  }
+
+  async initJoyfill() { 
+    try {
+      const template = await this.joyfillService.getTemplate(this.identifer);
+
+      JoyDoc(
+        document.getElementById('joyfill-target'),
+        {
+          doc: template,
+          onChange: (changelogs, data) => {
+            /**
+             * changelogs - the individual changes
+             * data - the entire new template with all changes applied
+             */
+            console.log(changelogs, data);
+            this.pendingTemplate = data;
+          },
+          onError: (error) => {
+            console.error('Joyfill error:', error);
+          }
+        }
+      );
+    } catch (error) {
+      console.error('Error initializing Joyfill:', error);
+    }
+  }
+
+  async handleSave() {
+    if (this.isSaving) return;
+    
+    this.isSaving = true;
+    try {
+      const updatedTemplate = await this.joyfillService.updateTemplate(
+        this.identifer, 
+        this.pendingTemplate
+      );
+      console.log('Updated template:', updatedTemplate);
+      alert('Template saved successfully!');
+    } catch (error) {
+      console.error('Error saving template:', error);
+      alert('Error saving template');
+    } finally {
+      this.isSaving = false;
+    }
+  }
+
+}
+```
+
+### app.component.css
+
+```css
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  color: white;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+header p {
+  margin: 10px 0 0 0;
+  opacity: 0.9;
+}
+
+button {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+#joyfill-target {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+```
+
+### joyfill.service.ts
+
+```typescript
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class JoyfillService {
+
+  private url = 'https://api-joy.joyfill.io/v1';
+
+  private headers = { 
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer <REPLACE WITH YOUR USER ACCESS TOKEN>'
+  }
+
+  constructor() { }
+
+  async getTemplate(identifier: string): Promise<object> {
+    try {
+      const response = await fetch(`${this.url}/templates/${identifier}`, {
+        method: 'GET',
+        headers: this.headers
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch template: ${response.statusText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching template:', error);
+      throw error;
+    }
+  }
+
+  async updateTemplate(identifier: string, data: object): Promise<object> {
+    try {
+      const response = await fetch(`${this.url}/templates/${identifier}`, {
+        method: 'POST',
+        headers: this.headers,
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update template: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating template:', error);
+      throw error;
+    }
+  }
+
+}
+```
+
+### tsconfig.json
+
+```json
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowJs": true,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": [
+      "ES2022",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}
+```
+
+## Common Configuration Options
+
+The `JoyDoc` function accepts the following configuration options:
+
+```typescript
+JoyDoc(
+  document.getElementById('joyfill-target'),
+  {
+    doc: template,                    // Your template JSON
+    mode: 'edit',                     // 'edit' | 'fill' | 'readonly'
+    view: 'desktop',                  // 'desktop' | 'mobile' | 'tablet'
+    width: 800,                       // Component width
+    height: 600,                      // Component height
+    theme: {                          // Custom theme
+      primaryColor: '#007bff',
+      secondaryColor: '#6c757d'
+    },
+    features: {                       // Feature flags
+      formulas: true,
+      readableIds: false,
+      validateSchema: false
+    },
+    onChange: (changelogs, data) => {
+      // Handle form changes
+      // changelogs - the individual changes
+      // data - the entire new template with all changes applied
+    },
+    onError: (error) => {
+      // Handle errors
+    },
+    onFocus: (fieldId, fieldData) => {
+      // Handle field focus
+    },
+    onBlur: (fieldId, fieldData) => {
+      // Handle field blur
+    },
+    onCaptureAsync: async (fieldId, data) => {
+      // Handle field capture
+      return data;
+    },
+    onUploadAsync: async (file) => {
+      // Handle file upload
+      return { url: 'uploaded-file-url' };
+    }
+  }
+);
+```
+
+## Try it yourself
+
+If you're looking for a full example project that shows many more of the Joyfill SDK capabilities and workflows then head over to our full example project and try it for yourself.
+
+* [Joyfill Angular Example](https://github.com/joyfill/examples/tree/main/angular)
+* [SDK NPM Package](https://www.npmjs.com/package/@joyfill/components)
+
+## That's it! 🎉
+
+Your Angular v17+ application with Joyfill Components is now ready. The form will render with proper Angular dependency injection and lifecycle management.
+

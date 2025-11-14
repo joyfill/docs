@@ -133,10 +133,8 @@
               "web/guides/fieldsettings-configuration",
               "web/guides/conditional-logic",
               "web/guides/formulas",
-              "web/guides/custom-data-population-via-identifiers",
-              "web/guides/pdf-generator-self-hosted",
-              "web/guides/pdf-file-uploads-js",
-              "web/guides/customize-field-options"
+              "web/guides/customize-draggable-fields",
+              "web/guides/pdf-file-uploads"
             ]
           },
           {
@@ -145,17 +143,12 @@
               "web/guides/sample-projects-js-cdn",
               "web/guides/sample-projects-js-module",
               "web/guides/sample-projects-react",
-              "web/guides/angular"
+              "web/guides/sample-projects-angular"
             ]
           },
           {
             "group": "API Reference",
-            "pages": [
-              "web/api-reference/overview",
-              "web/api-reference/classes",
-              "web/api-reference/functions",
-              "web/api-reference/complete-reference"
-            ]
+            "pages": ["web/api-reference/overview"]
           },
           {
             "group": "Resources",
