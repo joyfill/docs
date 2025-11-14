@@ -22,20 +22,88 @@ icon: "code"
 
 The main form builder component for creating and editing JoyDoc forms.
 
-```jsx
-import { JoyDoc } from '@joyfill/components';
+<CodeGroup>
 
-<JoyDoc
-  doc={myDocument}
-  mode="edit"
-  view="desktop"
-  onChange={(updatedDoc) => console.log('Document updated:', updatedDoc)}
-  features={{
-    validateSchema: true,
-    readableIds: true
-  }}
-/>
+```jsx React
+import { JoyDoc, getDefaultDocument } from '@joyfill/components';
+
+function App() {
+  return (
+    <JoyDoc
+      doc={getDefaultDocument()}
+      mode="edit"
+      view="desktop"
+      onChange={(changelogs, doc) => console.log('Document updated:', doc)}
+      features={{
+        validateSchema: true,
+        readableIds: true
+      }}
+    />
+  );
+}
 ```
+
+```html JS (CDN)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joyfill JoyDoc Example</title>
+</head>
+<body>
+  <div id="joydoc-container"></div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@joyfill/components@latest/dist/joyfill.min.js"></script>
+  <script>
+    // Wait for the page to load
+    document.addEventListener('DOMContentLoaded', function() {
+      const container = document.getElementById('joydoc-container');
+      const myDocument = Joyfill.getDefaultDocument();
+      
+      Joyfill.JoyDoc(
+        container,
+        {
+          doc: myDocument,
+          mode: 'edit',
+          view: 'desktop',
+          onChange: (changelogs, doc) => {
+            console.log('Document updated:', doc);
+          },
+          features: {
+            validateSchema: true,
+            readableIds: true
+          }
+        }
+      );
+    });
+  </script>
+</body>
+</html>
+```
+ 
+```js JS (Module)
+import Joyfill from "@joyfill/components/dist/joyfill.min.js";
+
+const container = document.getElementById('joydoc-container');
+const myDocument = Joyfill.getDefaultDocument();
+
+Joyfill.JoyDoc(
+  container,
+  {
+    doc: myDocument,
+    mode: 'edit',
+    view: 'desktop',
+    onChange: (changelogs, doc) => console.log('Document updated:', doc),
+    features: {
+      validateSchema: true,
+      readableIds: true
+    }
+  }
+);
+```
+
+</CodeGroup>
 
 **Key Props:**
 - `doc` - The JoyDoc document object containing form structure and data
@@ -47,41 +115,113 @@ import { JoyDoc } from '@joyfill/components';
 
 PDF export component for rendering JoyDoc forms as PDF-ready layouts.
 
-```jsx
-import { JoyDocExporter } from '@joyfill/components';
+<CodeGroup>
 
-<JoyDocExporter
-  doc={myDocument}
-  config={{
-    page: {
-      height: 1056,
-      width: 816,
-      padding: 20
+```jsx React
+import { JoyDocExporter, getDefaultDocument } from '@joyfill/components';
+
+function App() {
+  const myDocument = getDefaultDocument();
+  return (
+    <JoyDocExporter
+      doc={myDocument}
+      config={{
+        page: {
+          height: 1056,
+          width: 816,
+          padding: 20
+        }
+      }}
+      theme={{
+        fontFamily: 'sans-serif',
+        field: {
+          margin: 4
+        }
+      }}
+    />
+  );
+}
+```
+
+```html JS (CDN)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joyfill JoyDocExporter Example</title>
+</head>
+<body>
+  <div id="exporter-container"></div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@joyfill/components@latest/dist/joyfill.min.js"></script>
+  <script>
+    // Wait for the page to load
+    document.addEventListener('DOMContentLoaded', function() {
+      const container = document.getElementById('exporter-container');
+      const myDocument = Joyfill.getDefaultDocument();
+      
+      Joyfill.JoyDocExporter(
+        container,
+        {
+          doc: myDocument,
+          config: {
+            page: {
+              height: 1056,
+              width: 816,
+              padding: 20
+            }
+          },
+          theme: {
+            fontFamily: 'sans-serif',
+            field: {
+              margin: 4
+            }
+          }
+        }
+      );
+    });
+  </script>
+</body>
+</html>
+```
+
+```js JS (Module)
+import Joyfill from "@joyfill/components/dist/joyfill.min.js";
+
+const container = document.getElementById('exporter-container');
+const myDocument = Joyfill.getDefaultDocument();
+
+Joyfill.JoyDocExporter(
+  container,
+  {
+    doc: myDocument,
+    config: {
+      page: {
+        height: 1056,
+        width: 816,
+        padding: 20
+      }
+    },
+    theme: {
+      fontFamily: 'sans-serif',
+      field: {
+        margin: 4
+      }
     }
-  }}
-/>
+  }
+);
 ```
 
+</CodeGroup>
+
+<Info>
+**Note:** For JavaScript usage, you must import from `dist/joyfill.min.js` because it's a UMD bundle that includes React and provides browser-friendly wrapper functions. The main package exports (`@joyfill/components`) are React components that require React as a peer dependency.
+</Info>
 
 
-**Example:**
 
-```javascript
-import {
-  JoyDoc,
-  JoyDocExporter,
-  getDefaultDocument,
-  validator
-} from '@joyfill/components';
 
-// Use components
-<JoyDoc doc={doc} />
-<JoyDocExporter doc={doc} />
-
-// Use utility functions
-const newDoc = getDefaultDocument();
-const validationResult = validator(doc);
-```
 
 ## Common Patterns
 
@@ -102,14 +242,6 @@ import { duplicate } from '@joyfill/components';
 const copy = duplicate(template, { name: "Template Copy" });
 ```
 
-### Applying Conditional Logic
-
-```javascript
-import { applyLogic } from '@joyfill/components';
-
-const result = applyLogic(items, fields);
-console.log(result.items); // Updated items with hidden states
-```
 
 ### Validating a Document
 
@@ -125,7 +257,6 @@ if (schemaError) {
   console.error('Schema validation failed:', schemaError.message);
 }
 ```
-
 ## Next Steps
 
 <CardGroup cols={2}>
@@ -136,4 +267,5 @@ if (schemaError) {
     Detailed function documentation
   </Card>
 </CardGroup>
+
 

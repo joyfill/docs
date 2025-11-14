@@ -177,12 +177,7 @@
           },
           {
             "group": "API Reference",
-            "pages": [
-              "web/api-reference/overview",
-              "web/api-reference/classes",
-              "web/api-reference/functions",
-              "web/api-reference/complete-reference"
-            ]
+            "pages": ["web/api-reference/overview"]
           },
           {
             "group": "Resources",
