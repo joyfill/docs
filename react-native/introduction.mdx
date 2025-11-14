@@ -1,70 +1,111 @@
 ---
-title: "React Native SDK Introduction"
-description: "Build powerful form experiences in your iOS applications"
-icon: "apple"
+title: "React Native"
+description: "Learn how to render your first form using the Joyfill React Native SDK."
+icon: "react"
 ---
 
-# React Native SDK Overview
+Joyfill's React Native SDK supports raw react native and expo projects. The SDK is NOT a wrapped web-view. The SDK uses all pure react native components in order to provide the best possible performance and support across your react native and expo apps.
 
-Welcome to the Joyfill React Native SDK documentation. Our SDK enables you to integrate powerful, customizable form experiences directly into your iOS applications.
 
-## Key Features
 
-<CardGroup cols={2}>
-  <Card title="Easy Integration" icon="puzzle-piece">
-    Simple SDK setup with JavaScript/TypeScript Package Manager or CocoaPods
-  </Card>
-  <Card title="Customizable UI" icon="palette">
-    Fully customizable components to match your brand
-  </Card>
-  <Card title="Multiple Modes" icon="toggle-on">
-    Support for readonly, fill, and edit modes
-  </Card>
-  <Card title="Event Handling" icon="bolt">
-    Comprehensive event system for tracking user interactions
-  </Card>
-</CardGroup>
+# Requirements
 
-## Quick Links
+* [Review SDK README](https://www.npmjs.com/package/@joyfill/components-react-native#project-requirements)
 
-<CardGroup cols={2}>
-  <Card 
-    title="Installation" 
-    icon="download"
-    href="/react-native/getting-started/installation"
-  >
-    Get started by installing the React Native SDK
-  </Card>
-  <Card 
-    title="Quickstart Guide" 
-    icon="rocket"
-    href="/react-native/getting-started/quickstart"
-  >
-    Build your first form in minutes
-  </Card>
-  <Card 
-    title="API Reference" 
-    icon="code"
-    href="/react-native/api-reference/overview"
-  >
-    Explore the complete API documentation
-  </Card>
-  <Card 
-    title="Guides" 
-    icon="book-open"
-    href="/react-native/guides/modes"
-  >
-    Learn advanced integration techniques
-  </Card>
-</CardGroup>
+# 1. Install
 
-## System Requirements
+* [Review SDK Installation](https://www.npmjs.com/package/@joyfill/components-react-native#install-dependency)
 
-- iOS 13.0 or later
-- JavaScript/TypeScript 5.5 or later
-- Xcode 13.0 or later
+# 2. Usage
 
-## Support
+* Add the Template identifier from the previous setup step to the `App.js` file.
+* Add the User Access Token from the preview setup step to the `api.js` file.
 
-Need help? Check out our [Security & Support](/react-native/about/security) page or visit [joyfill.io/support](https://joyfill.io/support).
+<CodeGroup>
+  ```bash bash
+  import React, { useState, useEffect } from 'react';
+  import { Dimensions } from 'react-native';
+  import { retrieveTemplate } from '../api.js';
+
+  import { JoyDoc } from '@joyfill/components-react-native';
+
+  const screenWidth = Dimensions.get('window').width;
+
+  function App() {
+
+    const [ template, setTemplate ] = useState(null);
+
+    /**
+     * Add your template identifier
+     */
+    const identifier = '<REPLACE_WITH_TEMPLATE_IDENIFIER>';
+
+    /**
+     * Retrieve template via the Joyfill API 
+     */
+    useEffect(() => {
+
+      const handleRetrieveTemplate = async () => {
+        const response = await retrieveTemplate(identifier);
+        setTemplate(response);
+      };
+
+      handleRetrieveTemplate();
+
+    }, []);
+
+    return (
+      <JoyDoc
+        mode="fill"
+        doc={template}
+        width={screenWidth}
+        onChange={(changelogs, doc) => {
+
+          /**
+           * Changelogs represent the individual change that was made
+           * Data represents the entire data structure with all new changes applied.
+           */
+          console.log('>>>>>>>>: ', changelogs, doc);
+
+        }}
+      />
+    );
+
+  }
+  ```
+
+  ```bash bash
+  const userAccessToken = "<REPLACE_USER_ACCESS_TOKEN>";
+  const apiBaseUrl = "https://api-joy.joyfill.io";
+
+  export const retrieveTemplate = async (identifier) => {
+
+    //See API Doc Here: https://docs.joyfill.io/reference/retrieve-a-template
+    const response = await fetch(`${apiBaseUrl}/v1/templates/${identifier}`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'Content-Type': 'application/json'
+      },
+    });
+
+    const data = await response.json();
+    return data;
+  }
+  ```
+</CodeGroup>
+
+<Warning>
+  ### Do not wrap JoyDoc component inside of a ScrollView. JoyDoc rendering optimizations will not work properly inside of ScrollView and will introduce unintended bugs.
+</Warning>
+
+# 3. Try it yourself
+
+If you’re looking for a full example project that shows many more of the Joyfill SDK capabilities and workflows then head over to our full example project and try it for yourself.
+
+* [Joyfill React Native Example](https://github.com/joyfill/examples/tree/main/react-native)
+* [SDK NPM Package](https://www.npmjs.com/package/@joyfill/components-react-native)
+
+***
 

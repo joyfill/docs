@@ -29,6 +29,23 @@ Joyfill provides you with ready-to-use embeddable UI SDKs, APIs, and Services th
 
 Build powerful, customizable form experiences with Joyfill. Integrate forms into your applications across iOS, Android, React Native, Web, or use our REST API for custom integrations.
 
+## Get Started in Minutes
+
+<Steps>
+  <Step title="Choose Your Platform">
+    Select the SDK that matches your technology stack - iOS, Kotlin, React Native, or Web.
+  </Step>
+  <Step title="Install the SDK">
+    Quick installation via your preferred package manager (SPM, Gradle, npm).
+  </Step>
+  <Step title="Initialize & Configure">
+    Add your access token and configure the SDK to match your needs.
+  </Step>
+  <Step title="Load Your First Form">
+    Display a form in your app with just a few lines of code.
+  </Step>
+</Steps>
+
 ## Choose Your Platform
 
 <CardGroup cols={3}>
@@ -74,196 +91,3 @@ Build powerful, customizable form experiences with Joyfill. Integrate forms into
   </Card>
 </CardGroup>
 
-## Why Joyfill?
-
-<AccordionGroup>
-  <Accordion title="🚀 Quick Integration" icon="rocket">
-    Get started in minutes with our straightforward SDKs. Add forms to your app with just a few lines of code.
-  </Accordion>
-  
-  <Accordion title="🎨 Fully Customizable" icon="palette">
-    Match your brand perfectly with comprehensive styling options. Every element is customizable to fit your design system.
-  </Accordion>
-  
-  <Accordion title="📱 Cross-Platform" icon="mobile">
-    Build once, deploy everywhere. Consistent API across iOS, Android, React Native, Web, and REST API.
-  </Accordion>
-  
-  <Accordion title="🔒 Enterprise-Ready" icon="shield-check">
-    Built for scale with enterprise-grade security, compliance, and reliability. Trusted by 1000+ companies.
-  </Accordion>
-</AccordionGroup>
-
-## Key Features
-
-<CardGroup cols={3}>
-  <Card title="Multiple Modes" icon="toggle-on">
-    Readonly, fill, and edit modes for different use cases
-  </Card>
-  <Card title="Field Validation" icon="check-circle">
-    Built-in and custom validation rules
-  </Card>
-  <Card title="Image Uploads" icon="image">
-    Handle file and image uploads seamlessly
-  </Card>
-  <Card title="Event System" icon="bolt">
-    Comprehensive event handling for user interactions
-  </Card>
-  <Card title="Data Management" icon="database">
-    Easy data population and extraction
-  </Card>
-  <Card title="Schema Validation" icon="shield-check">
-    JSON Schema support for data integrity
-  </Card>
-</CardGroup>
-
-## Get Started in Minutes
-
-<Steps>
-  <Step title="Choose Your Platform">
-    Select the SDK that matches your technology stack - iOS, Kotlin, React Native, or Web.
-  </Step>
-  <Step title="Install the SDK">
-    Quick installation via your preferred package manager (SPM, Gradle, npm).
-  </Step>
-  <Step title="Initialize & Configure">
-    Add your access token and configure the SDK to match your needs.
-  </Step>
-  <Step title="Load Your First Form">
-    Display a form in your app with just a few lines of code.
-  </Step>
-</Steps>
-
-## Quick Example
-
-Here's how easy it is to get started with Joyfill:
-
-<CodeGroup>
-
-```swift iOS
-import Joyfill
-import JoyfillModel
-
-struct SimpleFormExampleView: View {
-    let documentEditor: DocumentEditor
-    let document = loadDoc(named: "first-form")
-    
-    init() {
-        self.documentEditor = DocumentEditor(document: document)
-    }
-
-    var body: some View {
-        Form(documentEditor: documentEditor)
-    }
-}
-
-private extension SimpleFormExampleView {
-    static func loadDoc(named name: String) -> JoyDoc {
-        let url = Bundle.main.url(forResource: name, withExtension: "json")!
-        let data = try! Data(contentsOf: url)
-        let dict = try! JSONSerialization.jsonObject(with: data) as! [String: Any]
-        return JoyDoc(dictionary: dict)
-    }
-}
-```
-
-```kotlin Android
-import androidx.compose.runtime.Composable
-import joyfill.Form
-import joyfill.rememberDocumentEditor
-
-@Composable
-fun SimpleFormExample() {
-    val editor = rememberDocumentEditor(json = "") // paste ur json here
-
-    Form(editor = editor)
-}
-```
-
-```javascript React Native
-import { JoyfillForm } from '@joyfill/react-native';
-
-// Initialize
-Joyfill.configure('your_token');
-
-// Load form
-<JoyfillForm
-  mode="fill"
-  templateId="your_template_id"
-  onSubmit={(data) => console.log(data)}
-/>
-```
-
-```javascript Web
-import { Joyfill } from '@joyfill/web';
-
-// Initialize
-Joyfill.configure('your_token');
-
-// Load form
-const form = new Joyfill.Form({
-  mode: 'fill',
-  templateId: 'your_template_id',
-  container: '#form-container'
-});
-form.load();
-```
-
-```bash REST API
-# Create a document from template
-curl --request POST \
-  --url https://api-joy.joyfill.io/v1/documents \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "identifier": "<string>",
-  "name": "<string>",
-  "files": [
-    "<any>"
-  ],
-  "fields": [
-    "<any>"
-  ],
-  "template": "<string>",
-  "group": "<string>",
-  "stage": "published"
-}'
-```
-
-</CodeGroup>
-
-## Need Help?
-
-<CardGroup cols={3}>
-  <Card
-    title="Documentation"
-    icon="book-open"
-    href="/ios/getting-started"
-  >
-    Explore comprehensive guides
-  </Card>
-  <Card
-    title="GitHub"
-    icon="github"
-    href="https://github.com/joyfill"
-  >
-    View source code and examples
-  </Card>
-  <Card
-    title="Support"
-    icon="life-ring"
-    href="https://joyfill.io/contact-us"
-  >
-    Get help from our team
-  </Card>
-</CardGroup>
-
----
-
-<Card
-  title="Ready to build?"
-  icon="rocket"
-  href="/ios/getting-started"
-  horizontal
->
-  Start with our quickstart guide and build your first form in minutes
-</Card>

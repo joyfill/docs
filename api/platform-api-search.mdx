@@ -1,0 +1,169 @@
+---
+title: "Search"
+description: "Query, filter, and sort data in Joyfill"
+---
+
+Some top level API resources support retrieval with search API methods. You can use the search APIs to retrieve your Joyfill data in a flexible manner. Using search is a faster alternative to paginating through all resources. To create a search query, review the Search query language and reference the query fields of the resource.
+
+<Info>
+  ### Important Note: Only documents created after May 30th 2023 are available for query and sort.
+</Info>
+
+# Examples
+
+Here are some examples of what you can do with the Search Documents API.
+
+**IMPORTANT: Query Template Documents** - If you're trying to query documents for a specific template can still follow the same guide below. Instead of retrieving a document in the Getting Started step, you simply need to use the Templates API route to retrieve the template. Retrieving the `File ID` and `FieldID` for internal field queries work the same for both templates and documents because they both follow the same object structure.
+
+### Getting Started
+
+Before we get started with querying documents data we are going to retrieve a document and grab our target `FileID` and `FieldID`. These IDs will be used to query documents based on their internal field data.
+
+<CodeGroup>
+  ```bash bash
+  //Step 1: Retrieve A Document
+  const response = await fetch("https://api-joy.joyfill.io/v1/documents/doc_identifier", {
+    method: 'GET',
+    mode:'cors',
+    headers: {
+      Authorization: `Bearer ${userAccessToken}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  //Step 2: There are two methods to retrieving the FileID and FieldID
+  const joyDoc = await response.json();
+
+  //Method 1: Using files object
+  joyDoc.files[0]._id //File ID. 
+  joyDoc.files[0].pages[0].fields[0].field //FieldID. IMPORTANT: Ensure you use `.field` property.
+
+  //Method 2: Using top level fields
+  joyDoc.fields[0].fileId;
+  joyDoc.fields[0].fieldId;
+  ```
+</CodeGroup>
+
+### Return exact match and sort results
+
+Lookup documents that match the exact internal field value of `"joy"` and sort by `createdOn`.
+
+<CodeGroup>
+  ```bash bash
+  const fileId = '638ca7c8880dfc1bca968be0';
+  const fieldId = '638ca7c8674374a0508b232a';
+
+  const response = await fetch("https://api-joy.joyfill.io/v1/documents/search", {
+    method: 'POST',
+    mode:'cors',
+    headers: {
+      Authorization: `Bearer ${userAccessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: {
+       	"fields.638ca7c8880dfc1bca968be0.638ca7c8674374a0508b232a.value": "joy"
+      },
+      sort: {
+       	createdOn: -1 
+      }
+    })
+  });
+  ```
+</CodeGroup>
+
+### Return substring match and sort results
+
+Lookup documents that contain the internal field value of `"joy"` (case insensitive) and sort by internal field value.
+
+<CodeGroup>
+  ```bash bash
+
+  const fileId = '638ca7c8880dfc1bca968be0';
+  const fieldId = '638ca7c8674374a0508b232a';
+
+  const response = await fetch("https://api-joy.joyfill.io/v1/documents/search", {
+    method: 'POST',
+    mode:'cors',
+    headers: {
+      Authorization: `Bearer ${userAccessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: {
+       	"fields.638ca7c8880dfc1bca968be0.638ca7c8674374a0508b232a.value": {$regex: "joy", $options: "i"}
+      },
+      sort: {
+       	"fields.638ca7c8880dfc1bca968be0.638ca7c8674374a0508b232a.value": -1 
+      }
+    })
+  });
+  ```
+</CodeGroup>
+
+### Combine Multiple Filters
+
+Lookup documents matching a combination of internal field data and date range. The documents below will contain the value `joy` and have a `createdOn` timestamp within the specified 6 day period.
+
+<CodeGroup>
+  ```bash bash
+
+  const fileId = '638ca7c8880dfc1bca968be0';
+  const fieldId = '638ca7c8674374a0508b232a';
+
+  const response = await fetch("https://api-joy.joyfill.io/v1/documents/search", {
+    method: 'POST',
+    mode:'cors',
+    headers: {
+      Authorization: `Bearer ${userAccessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: {
+        "$and": [
+          {"fields.638ca7c8880dfc1bca968be0.638ca7c8674374a0508b232a.value": {$regex: "joy", $options: "i"}},
+          {"createdOn": {$gt: 1672981200000, $lt: 1685133261338}} //Created over a 6 day period
+      	]
+      }
+    })
+  });
+  ```
+</CodeGroup>
+
+# Search query language
+
+### Search Syntax
+
+| Type                           | Usage                                                                                        | Description                                                | Examples                                                                                                                                                                                                                                         |
+| ------------------------------ | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Exact Match                    | `field:"value"`                                                                              | Exact match operator.                                      | `name:"joy"` returns records where the name is exactly “joy” in a case-sensitive comparison.                                                                                                                                                     |
+| Regular Expression Match       | `field:{$regex:"value", $options: "i"}`                                                      | Substring and Case Insensitive match operator              | `name:{$regex: "joy", $options: "i"}` returns records where the name contains "joy" in a case-insensitive comparison. Example matches are: "JOY", "joY", "joy@email.com", etc. |
+| Not Equal Match                | `field:{$ne:"value"}`                                                                        | Returns records that don’t match the clause                | `name:{$ne: "joy"}` returns records that aren’t equal to "joy"                                                                                                                                                                                   |
+| Greater Than / Less Than Match | `field:{$gt:"value"}`, `field:{$gte:"value"}`, `field:{$lt:"value"}`, `field:{$lte:"value"}` | Greater than/less than operators                           | `createdOn:{$gt: 10}` returns records that have a createdOn greater than 10. `$gt` specifies greater than. `$gte` specifies greater than or equal to. `$lt` specifies less than. `$lte` specifies less than or equal to.                         |
+| AND                            | `$and:[{field:"value1"}, {field:"value2"}]`                                                  | The query returns only records that match both clauses.    | `$and:[{name: "joy"}, {template: "template_000"}]`                                                                                                                                                                                               |
+| OR                             | `$or:[{field:"value1"}, {field:"value2"}]`                                                   | The query returns records that match either of the clauses | `$or:[{name: "joy"}, {template: "template_000"}]`                                                                                                                                                                                                |
+
+# Sort query language
+
+### Sort Syntax
+
+| Type            | Usage      | Description                                 |
+| --------------- | ---------- | ------------------------------------------- |
+| Ascending Sort  | `field:1`  | Returns records sorted in ascending order.  |
+| Descending Sort | `field:-1` | Returns records sorted in descending order. |
+
+# Supported Query and Sort Fields
+
+### Query fields for documents
+
+| Field                         | Description                                                                                                                                                           | Value Type                             |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| `template`                    | Returns records that match a specified template identifier.                                                                                                           | String                                 |
+| `group`                       | Returns records that match a specified group identifier.                                                                                                              | String                                 |
+| `stage`                       | Returns records that match a specified stage.                                                                                                                         | String('draft', 'published')           |
+| `name`                        | Returns records that match a specified name                                                                                                                           | String                                 |
+| `createdOn`                   | Returns records that match a specified createdOn date.                                                                                                                | Number (millisecond timestamp)         |
+| `fields.FileID.FieldID.value` | Returns records that match a specified field value. You will need to replace the `FileID` and `FieldID` with intended targets from your Joyfill Document or Template. | Mixed (String, Int, Float, or Boolean) |
+
+***
+

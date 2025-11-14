@@ -1,4 +1,120 @@
 ---
 title: "API Overview"
-url: "https://joyfill.github.io/ios-api-reference/"
+description: "Complete API reference for the Joyfill iOS SDK modules"
+icon: "code"
 ---
+
+# iOS API Reference
+
+Comprehensive documentation for Joyfill iOS SDK with cross-module references.
+
+## iOS SDK Modules
+
+<CardGroup cols={2}>
+  <Card 
+    title="📱 Joyfill" 
+    icon="mobile"
+    href="https://joyfill.github.io/ios-api-reference/Joyfill/documentation/joyfill"
+  >
+    Main Joyfill SDK with UI components, views, and core functionality for building form-based applications.
+  </Card>
+  
+  <Card 
+    title="🌐 JoyfillAPIService" 
+    icon="globe"
+    href="https://joyfill.github.io/ios-api-reference/JoyfillAPIService/documentation/joyfillapiservice"
+  >
+    API service layer for communicating with Joyfill backend services and managing network requests.
+  </Card>
+  
+  <Card 
+    title="🧮 JoyfillFormulas" 
+    icon="calculator"
+    href="https://joyfill.github.io/ios-api-reference/JoyfillFormulas/documentation/joyfillformulas"
+  >
+    Formula engine and calculation utilities for dynamic form field computations and expressions.
+  </Card>
+  
+  <Card 
+    title="📦 JoyfillModel" 
+    icon="box"
+    href="https://joyfill.github.io/ios-api-reference/JoyfillModel/documentation/joyfillmodel"
+  >
+    Data models, schemas, and structures representing forms, fields, and document definitions.
+  </Card>
+</CardGroup>
+
+## Quick Links
+
+- [**Full iOS API Reference**](https://joyfill.github.io/ios-api-reference/) - Complete SwiftDoc documentation with all modules
+- [**Getting Started Guide**](/ios/getting-started) - Setup and installation instructions
+- [**iOS Guides**](/ios/guides/modes) - Integration guides and tutorials
+
+## Module Overview
+
+### 📱 Joyfill Module
+
+The main SDK module containing:
+- **JoyfillFormView** - Primary form rendering component
+- **JoyfillFormConfig** - Configuration objects for form initialization
+- **Form Delegates** - Event handling protocols
+- **UI Components** - Built-in form field components
+
+[View Joyfill Module Documentation →](https://joyfill.github.io/ios-api-reference/Joyfill/documentation/joyfill)
+
+### 🌐 JoyfillAPIService Module
+
+The API service module providing:
+- **Network Layer** - HTTP client for Joyfill API
+- **Authentication** - Token management and authentication flows
+- **API Endpoints** - Methods for documents, templates, and users
+- **Request/Response Models** - Type-safe API models
+
+[View JoyfillAPIService Documentation →](https://joyfill.github.io/ios-api-reference/JoyfillAPIService/documentation/joyfillapiservice)
+
+### 🧮 JoyfillFormulas Module
+
+The formula engine module featuring:
+- **Formula Parser** - Parse and evaluate form formulas
+- **Calculation Engine** - Dynamic field calculations
+- **Expression Evaluator** - Support for complex expressions
+- **Built-in Functions** - Math, string, and date functions
+
+[View JoyfillFormulas Documentation →](https://joyfill.github.io/ios-api-reference/JoyfillFormulas/documentation/joyfillformulas)
+
+### 📦 JoyfillModel Module
+
+The data models module including:
+- **JoyDoc Schema** - Document and template structures
+- **Field Models** - All form field type definitions
+- **Validation Models** - Validation rules and constraints
+- **Type Definitions** - Shared types and enums
+
+[View JoyfillModel Documentation →](https://joyfill.github.io/ios-api-reference/JoyfillModel/documentation/joyfillmodel)
+
+## Documentation Format
+
+The iOS SDK documentation is generated using **Swift-DocC** (Swift Documentation Compiler), providing:
+
+- ✅ Type-safe API documentation
+- ✅ Interactive code examples
+- ✅ Cross-module references
+- ✅ Search functionality
+- ✅ Dark/light mode support
+
+## Additional Resources
+
+<CardGroup cols={2}>
+  <Card title="Getting Started" icon="rocket" href="/ios/getting-started">
+    Installation and setup guide
+  </Card>
+  <Card title="Event Handling" icon="bolt" href="/ios/guides/event-handling">
+    Handle form events and callbacks
+  </Card>
+  <Card title="Release Notes" icon="note" href="/ios/changelogs/RELEASE_NOTES">
+    Latest updates and changes
+  </Card>
+  <Card title="Security" icon="shield" href="/ios/about/security">
+    Security best practices
+  </Card>
+</CardGroup>

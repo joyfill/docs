@@ -1,0 +1,244 @@
+---
+title: "Migration guide"
+icon: "file-export"
+---
+
+# Migration guide for v1.x.x to v2.x.x
+
+This guide explains how to migrate your apps after the v2 release’s package and artifact restructure. It covers three paths: staying on v1 via legacy modules, migrating from v1 to v2, and moving from v2-beta to the final v2.
+
+For feature-level differences and what’s new, see: [What’s new in 2.0.0](./v2-changes.md)
+
+---
+
+## What changed at a glance
+
+- Dependencies: use standard `io.joyfill:*` artifacts for v2, or `io.joyfill:legacy-*` to remain on v1 ([details](#1-migration-v1--v2), [stay on v1](#0-option-stay-on-v1-legacy-modules))
+- Package names: v2-beta code under `joyfill2` moved to `joyfill` in v2 — rename imports from `joyfill2` → `joyfill` ([details](#2-migration-v2-beta--v2))
+- Event API: legacy `FieldEvent` has been replaced by `ComponentEvent.*` — use `ComponentEvent.FieldEvent` (standalone fields) and `ComponentEvent.CellEvent` (table cells) ([details](#3-migration-fieldevent--componentevent-events))
+- Behavior notes: most imports remain identical for v1→v2 because the package is still `joyfill`; some v1 UI components may not exist in v2 — check v2 docs for alternatives ([details](#1-migration-v1--v2))
+
+---
+
+### Dependencies changes
+- Replace legacy artifacts with the standard ones:
+  - io.joyfill:legacy-compose → io.joyfill:compose
+  - io.joyfill:legacy-models → io.joyfill:models
+  - io.joyfill:legacy-builder → io.joyfill:builder
+  - io.joyfill:legacy-api → io.joyfill:api
+
+Gradle example (Kotlin DSL)
+```kotlin
+// BEFORE (v1)
+dependencies {
+    implementation("io.joyfill:legacy-compose:<version>")
+    implementation("io.joyfill:legacy-models:<version>")
+    implementation("io.joyfill:legacy-builder:<version>")
+    implementation("io.joyfill:legacy-api:<version>")
+}
+
+// AFTER (v2)
+dependencies {
+    implementation("io.joyfill:compose:<version>")
+    implementation("io.joyfill:models:<version>")
+    implementation("io.joyfill:builder:<version>")
+    implementation("io.joyfill:api:<version>")
+}
+```
+
+Imports and usage
+- Keep using `joyfill.*` imports.
+- Example usage:
+```kotlin
+Form(
+    editor = rememberEditor(document = doc),
+    mode = Mode.fill,
+)
+```
+
+---
+
+### FieldEvent → ComponentEvent.* (events)
+
+Summary
+- v1 used a single `FieldEvent` for all field callbacks.
+- v2 unifies events under `ComponentEvent.*` with two concrete types:
+  - `ComponentEvent.FieldEvent<E>` for standalone fields (text, number, image, signature, etc.)
+  - `ComponentEvent.CellEvent<E>` for table cells (row-aware events)
+- Handler parameter types changed accordingly in `Form`/components.
+
+Why this changed
+- The v2 architecture standardizes how components emit and consume events and makes table events first-class by including row/column context.
+
+API mapping
+- v1 (legacy): `joyfill.FieldEvent`
+- v2: `joyfill.ComponentEvent.FieldEvent` and `joyfill.ComponentEvent.CellEvent`
+
+Key properties mapping
+- Common in both versions:
+  - `fieldId`, `fieldIdentifier`, `pageId`, `id` (document id), `identifier` (document identifier), `fileId`, `fieldPositionId`
+- v2 additions/notes:
+  - `source`: the typed editor instance (e.g., `ImageEditor`, `TextEditor`)
+  - `multi`: available when the underlying component is a file component (e.g., image with multi-upload)
+  - Cell-only: `rowIds`, `columnId`, `schemaId`, `parentPath`
+
+Before → After examples
+
+1) General field handlers (change/focus/blur)
+- v1 (legacy Form):
+```kotlin
+Form(
+    // ...
+    onFieldChange = { e: FieldEvent -> /* use e.fieldId, e.pageId, ... */ },
+    onFocus = { e: FieldEvent -> /* ... */ },
+    onBlur = { e: FieldEvent -> /* ... */ },
+)
+```
+- v2 (Form/components):
+```kotlin
+Form(
+    // ...
+    onFieldChange = { e: ComponentEvent<*> ->
+        when (e) {
+            is ComponentEvent.FieldEvent<*> -> { /* standalone field */ }
+            is ComponentEvent.CellEvent<*>  -> { /* table cell */ }
+        }
+    },
+    onFocus = { e: ComponentEvent<*> -> /* same pattern as above */ },
+    onBlur  = { e: ComponentEvent<*> -> /* same pattern as above */ },
+)
+```
+
+2) File upload/capture handlers (image/signature/barcode)
+- v1:
+```kotlin
+Form(
+    onUpload = { e: FieldEvent -> listOf("https://.../file1") },
+    onCapture = { e: FieldEvent -> "barcode-or-text" },
+)
+```
+- v2:
+```kotlin
+Form(
+    onUpload = { e: ComponentEvent<joyfill.editors.file.AbstractFileEditor> ->
+        // Optional: narrow by editor type
+        when (val src = e.source) {
+            is joyfill.editors.image.ImageEditor -> listOf("https://.../img1")
+            is joyfill.editors.signature.SignatureEditor -> listOf("https://.../sig1")
+            else -> emptyList()
+        }
+    },
+    onCapture = { e: ComponentEvent<joyfill.editors.components.AbstractCompStringEditor> ->
+        // Example for barcode/text-capable components
+        when (e.source) {
+            is joyfill.editors.barcode.BarcodeEditor -> "scanned-barcode"
+            else -> null
+        }
+    },
+)
+```
+
+3) Table cell events
+- v2 introduces `CellEvent` for row-aware callbacks used by table components and their editors:
+```kotlin
+val handler: (ComponentEvent.CellEvent<*>) -> Unit = { e ->
+    val rowIds = e.rowIds  // one or more row ids affected
+    val columnId = e.columnId
+    val fieldId = e.fieldId
+    // handle per-row updates, analytics, etc.
+}
+```
+
+Minimal refactor recipe
+- Replace callback parameter types:
+  - `FieldEvent` → `ComponentEvent<*>` when used at the Form level
+  - For table-specific handlers: prefer `ComponentEvent.CellEvent<*>`
+  - For single-field components: prefer `ComponentEvent.FieldEvent<*>`
+- Update `when` branches to handle both `FieldEvent` and `CellEvent` where applicable.
+- If you previously relied on `attachments` in events: v2 surfaces file uploads through file editors and returns should come from your handler; `attachments` on events is not required in typical flows.
+
+Runtime checks and generics
+- `ComponentEvent` is generic on the editor type (`E : ComponentEditor`). When you need editor-specific behavior, check `e.source` with `is ImageEditor` etc.
+
+References
+- v2 event system overview: [architecture/v2/event-system.md](./architecture/v2/event-system.md)
+
+---
+
+## FAQ
+
+Q: Why do both v1 and v2 have `joyfill.Form`?
+A: v1 code was moved into `legacy-*` modules but retained the exact same package names for easier migration. Which `Form` you get depends on whether your dependency is from `legacy-*` or from the standard modules.
+
+Q: How do I verify I’m on v2?
+- Ensure you’re using the standard artifacts (no `legacy-` prefix).
+- Confirm your imports are `joyfill.*` and that you do NOT have `joyfill2.*` anywhere.
+
+Q: Any behavioral differences?
+- Some components may be missing in v2 compared to v1, but v2 offers many new features and improved architecture. See the v2 docs for details.
+
+## Related Documentation
+- Architecture Overview: [architecture/README.md](./architecture/README.md)
+- V2 Overview: [architecture/v2/README.md](./architecture/v2/README.md)
+- V2 UI Components: [architecture/v2/ui-components.md](./architecture/v2/ui-components.md)
+- V2 Editor Pattern: [architecture/v2/editor-pattern.md](./architecture/v2/editor-pattern.md)
+- V2 API Integration: [architecture/v2/api-integration.md](./architecture/v2/api-integration.md)
+
+---
+
+## Important context
+- Prior to v2 release, we had:
+    - v1 under the `joyfill` package
+    - v2-beta under the `joyfill2` package
+- With the v2 release:
+    - v2 now lives under the `joyfill` package
+    - Legacy v1 classes were moved into separate legacy modules, but kept the same `joyfill` package names for source compatibility
+    - Practically, both legacy and v2 expose symbols like `joyfill.Form`. Which one you use depends on the dependency you add.
+
+What this means for you
+- V1 → V2: swap your dependencies from legacy modules to v2 modules. Most imports remain identical because the package is still `joyfill`.
+- V2-beta → V2: rename your imports from `joyfill2` to `joyfill`. No other code changes should be required.
+
+---
+
+## Stay on v1 (Legacy Modules)
+
+> [!CAUTION]
+> This is not RECOMMENDED. This is a temporary path for those who want to continue using v1 for a short period of time.
+
+Summary
+- If you want to continue using the legacy v1 implementation for a period, switch your dependencies to the `legacy-*` artifacts.
+- Imports remain `joyfill.*` because legacy modules preserve the same package names.
+
+Dependencies
+- Replace standard artifacts with legacy ones if you were previously on the standard artifacts but wish to remain on v1:
+    - `io.joyfill:compose` → `io.joyfill:legacy-compose`
+    - `io.joyfill:models` → `io.joyfill:legacy-models`
+    - `io.joyfill:builder` → `io.joyfill:legacy-builder`
+    - `io.joyfill:api` → `io.joyfill:legacy-api`
+
+Gradle example (Kotlin DSL)
+```kotlin
+// BEFORE (standard artifacts)
+dependencies {
+    implementation("io.joyfill:compose:<version>")
+    implementation("io.joyfill:models:<version>")
+    implementation("io.joyfill:builder:<version>")
+    implementation("io.joyfill:api:<version>")
+}
+
+// AFTER (stay on v1 legacy)
+dependencies {
+    implementation("io.joyfill:legacy-compose:<version>")
+    implementation("io.joyfill:legacy-models:<version>")
+    implementation("io.joyfill:legacy-builder:<version>")
+    implementation("io.joyfill:legacy-api:<version>")
+}
+```
+
+Verification
+- Ensure your imports remain `joyfill.*` and not `joyfill2.*`.
+- Confirm you’re pulling `legacy-*` artifacts in your dependency tree.
+
+Notes
+- This path is intended for temporary continuity. Plan to migrate to v2 soon.

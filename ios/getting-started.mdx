@@ -1,4 +1,8 @@
-# Add Form on iOS
+---
+title: Getting started
+icon: "rocket"
+---
+## Add Form on iOS
 
 This guide explains how to integrate Joyfill iOS SDK into a new or existing iOS project using [SwiftUI](https://developer.apple.com/documentation/SwiftUI) By the end, you’ll be able to display a Form.
 
@@ -48,9 +52,7 @@ Joyfill will now appear under **Swift Package Dependencies**.
 1. Add your JSON file to the project by dragging it into the Xcode project navigator. Click **Finish** when prompted.
 1.1  Here is an example json you can use [first-form.json](https://github.com/joyfill/components-swift/blob/update-readme-file/JoyfillSwiftUIExample/JoyfillExample/Simple%20Form%20Example/first-form.json)
 2. In your SwiftUI view, import the Joyfill SDK:
-    
-    ### Swift
-    
+        
     ```swift
     import Joyfill
     import JoyfillModel
@@ -58,7 +60,6 @@ Joyfill will now appear under **Swift Package Dependencies**.
     
 3. Display the Form using the following code:
     
-    ### Swift
     
     ```swift
     import Joyfill
@@ -132,8 +133,6 @@ final class ChangeHandler: FormChangeEvent {
     }
 }
 ```
-
-**Connect to DocumentEditor**
 
 Pass your event handler to the DocumentEditor:
 

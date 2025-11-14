@@ -23,20 +23,9 @@
             "pages": [
               "joyfill/joydoc-usage",
               "joyfill/schema-json",
-              "joyfill/usage-guide",
               "joyfill/metadata",
-              "joyfill/field-identifiers"
-            ]
-          },
-          {
-            "group": "API reference",
-            "openapi": "OpenApi.json"
-          },
-          {
-            "group": "Extra",
-            "pages": [
-              "joyfill/identifiers",
-              "joyfill/custom-data-population-via-identifiers"
+              "joyfill/field-identifiers",
+              "joyfill/self-hosted"
             ]
           }
         ]
@@ -62,7 +51,13 @@
           },
           {
             "group": "API Reference",
-            "pages": ["ios/api-reference/overview"]
+            "pages": [
+              "ios/api-reference/overview",
+              "ios/api-reference/joyfill-module",
+              "ios/api-reference/api-service-module",
+              "ios/api-reference/formulas-module",
+              "ios/api-reference/model-module"
+            ]
           },
           {
             "group": "Resources",
@@ -91,11 +86,15 @@
           },
           {
             "group": "API Reference",
-            "pages": ["kotlin/api-reference/overview"]
+            "pages": ["kotlin/api-reference/kotlin-docs"]
           },
           {
             "group": "Resources",
-            "pages": ["kotlin/changelogs/releases", "kotlin/about/security"]
+            "pages": [
+                "kotlin/changelogs/releases",
+                "kotlin/changelogs/migration-guide",
+                "kotlin/about/security"
+            ]
           }
         ]
       },
@@ -106,35 +105,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "react-native/introduction",
-              "react-native/getting-started/installation",
-              "react-native/getting-started/quickstart"
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": [
-              "react-native/guides/modes",
-              "react-native/guides/image-upload-handling",
-              "react-native/guides/required-field-validation",
-              "react-native/guides/populating-and-extracting-data",
-              "react-native/guides/schema-validation",
-              "react-native/guides/event-handling"
-            ]
-          },
-          {
-            "group": "API Reference",
-            "pages": [
-              "react-native/api-reference/overview",
-              "react-native/api-reference/functions",
-              "react-native/api-reference/classes"
-            ]
-          },
-          {
-            "group": "Resources",
-            "pages": [
-              "react-native/changelogs/releases",
-              "react-native/about/security"
+              "react-native/introduction"
             ]
           }
         ]
@@ -191,7 +162,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["api/introduction", "api/authentication"]
+            "pages": ["api/introduction", "api/authentication", "api/identifiers", "api/platform-api-search"]
           },
           {
             "group": "Documents",
@@ -251,6 +222,16 @@
             "pages": ["api/utilities/convert-pdf-to-pngs-data-uri"]
           }
         ]
+      },
+      {
+          "dropdown": "Joyfill Dev Sandbox",
+          "icon": "cube",
+          "groups": [
+              {
+                  "group": "Getting Started",
+                  "pages": ["joyfill-dev-sandbox/platform-joyfill-manager", "joyfill-dev-sandbox/setup", "joyfill-dev-sandbox/webhooks", "joyfill-dev-sandbox/pdf-generator-joyfill", "joyfill-dev-sandbox/key-terminology", "joyfill-dev-sandbox/how-to-create-templates"]
+              }
+          ]
       }
     ],
     "global": {
@@ -262,16 +243,10 @@
     "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "API Docs",
-        "href": "https://docs.joyfill.io/api"
-      }
-    ],
     "primary": {
       "type": "button",
       "label": "Get Started",
-      "href": "https://joyfill.io/signup"
+      "href": "https://joyfill.io/contact-us"
     }
   },
   "contextual": {

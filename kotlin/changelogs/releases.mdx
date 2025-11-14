@@ -4,235 +4,354 @@ description: "Complete changelog of Joyfill Kotlin Multiplatform SDK releases"
 icon: "android"
 ---
 
-## 2.0.0-Beta10
+## 2.0.0-RC8
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- Row highlighting for selected rows in Table and Collection fields to improve visibility for users.
+- Row navigation now keeps the target row in view when closing the row form in Collection and Table fields.
+
+## 2.0.0-RC7
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Row highlighting for selected rows in Table and Collection fields to improve visibility for users
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
-- Support for additional custom time formats.
-- Required field validation — added page ID to the validation status object for more accurate field tracking.
+- Support for additional custom time formats
+- Required field validation — added page ID to the validation status object for more accurate field tracking
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Crash when adding rows in Table fields caused by invalid default values in columns such as Text, Signature, Date, or Block.
-- Edge case involving Collection fields and formula calculations.
-- Multiselect fields not working when a deleted option shared the same value as a non-deleted option.
-- Formula fields failing to process decimal numbers without a leading zero.
+- Crash when adding rows in Table fields caused by invalid default values in columns such as Text, Signature, Date, or Block
+- Edge case involving Collection fields and formula calculations
+- Multiselect fields not working when a deleted option shared the same value as a non-deleted option
+- Formula fields failing to process decimal numbers without a leading zero
 
----
+## 2.0.0-RC6
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Collection field not showing even when the License key has been provided
+
+## 2.0.0-RC5
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- onFocus event when table field is opened
+- onBlur event when table field is closed
+- onFocus event when collection field is opened
+- onBlur event when collection field is closed
+- onBlur event for multi select field
+- onFocus event for multi select field
+- Removal of date value from fields
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Performance improvement on table when bulk selecting
+- Performance improvement on table when scrolling
+- Signature field undo button to always show
+- Tables without rows should not be selectable
+- Submit button when signature field has not be entered or updated
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Hidden rows being selected
+- Table without rows not being selectable or clickable
+- Image Scaling issue
+- Move down should be disabled if the selected row is last
+- Move up should be disabled if the selected row is first
+- Crash if empty Json is passed into the Form
+- Table Column ordering
+
+## 2.0.0-RC4
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- OnFieldChange get triggered even when no image has been captured in onUpload
+- Other misc bug fixes not reported by ST
+
+## 2.0.0-RC3
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Crashing when a multi select field has been selected
+- Crashing with a class cast exception when dealing with dates
+
+## 2.0.0-RC2
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Images uploaded on Android are now visible on all other platforms
+- Images uploaded on all other platforms are now visible on Android
+
+## 2.0.0-RC1
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- (JF-195) Additional params added for upload
+- (JF-199) License Key Support for collections
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- (JF-193) Schema validation error after image upload
+
+## 2.0.0-Beta20
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Scroll performance on TableField
+- Scroll performance on Collection Field
+- Filtering performance
+- Validation performance
+- Template loading performance
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Conditional Logic fixes in collection field
+- (JF-136) Performance support for 1000 rows
+- (JF-148) Drawing signature out of bounds fixed
+- (JF-109) Fix for different ordering of items
+
+## 2.0.0-Beta19
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- (JF-158) Implemented search and filter on table field
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Table field performance enhancements for 1000 total rows
+- (JF-161) Collection field performance enhancements for 1000 total rows
+- Data validation and error reporting enhancements
+- UI enhancement for fields with really long titles
+- Enhanced performance for bulk edit
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- (JF-109) Field ordering consistency
+- (JF-152) Hidden fields are being displayed
+- (JF-154) Making subsequent sort choices causes sort to reset
+
+## 2.0.0-Beta17
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- (JF-20) Data validation error handling and validateSchema helper
+- (JF-22) OnChange handler with live UI refresh
+- (JF-94) Detailed changelogs for collection and table fields
+- (JF-39) Calculated Fields
+- (JF-151) onCapture parameter is missing from RawBarcodeField
+
+### Known Issues
+- Uploading large images (~30Mb) causes an Out of Memory Error on Android 14
+- Validation Schema treats a Joydoc without the files property as valid (it shouldn't)
+
+## 2.0.0-Beta15
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- (JF-20) Data validation error handling and validateSchema helper
+- (JF-22) OnChange handler with live UI refresh
+- (JF-94) Detailed changelogs for onChange handler
+- (JF-39) Calculated Fields Beta
+- (JF-151) onCapture parameter for RawBarcodeField
+
+## 2.0.0-Beta13
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Collection Field Search And Filter (ST:M1.2)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Performance improvements in the collection field
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Crash when adding row to the table in 'NFPA 10 -2022' form (JF-103)
 
 ## 2.0.0-Beta09
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- Support for single image fields (JF-90).
-- Changelog emissions for collection fields.
-- Descriptive error message when image fields fail to load URLs.
-- `ImageReplacementSample` composable to demonstrate how to replace an image in the ImageField.
+- JF-90: Added support for single image fields
+- Changelog emissions for collection fields
+- Descriptive error message when image fields fails to load the url
+- ImageReplacementSample composable to demonstrate how to replace an image in the ImageField
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
-- Improved size of required asterisk on required fields.
-- Updated Compose Multiplatform 1.7.3 → 1.8.1.
+- Improved the size of the required asterisk on required fields (it was too small)
+- Compose Multiplatform: 1.7.3 -> 1.8.1
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- UI not updating when image URL changes (JF-35).
-- Field validation failing when adding a new table row without fields (JF-84).
-- Editable table fields in read-only mode (JF-87).
-- Changelog emissions for non-collection fields.
-
----
+- JF-35: UI now updates when the underlying image url changes
+- JF-84: Field validation was still failing when a new table row was added without fields
+- JF-87: Some table fields are still editable when the form is in read-only mode
+- Changelog emission for non collection fields
 
 ## 2.0.0-Beta08
 
-**Tested On:**
-- Great Wall of QA
-- NFPA 10 2022 Edition
-- NFPA 25 Water-Based Fire Protection Systems 2020 Edition
-
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
-
-- Ability to check if image or multiselect fields allow multiple uploads or selections.
-- Mobile Barcode Scanning (M04).
-- Collection Fields Mobile Table Bulk Answer (M05).
-- URL update mechanism for attachment field (iOS & Android) (M14).
-- Validation sorting fields by position (N06).
-
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Block Field with negative padding crashing the app.
-- Validation always returning `FieldsInvalid`.
-- Validation results always returning `FieldsInvalid`.
-- Single image fields allowing multiple uploads.
-- Conditional logic fields always returning Invalid.
-- Crash caused by negative padding on Block Field (NFPA 10 2022 Edition).
-- Android crashing issues (M6 & M10).
-- Android beta release (M15).
-
-**Known Issues:**
-- Clicking *Next* on Table Row Form doesn't clear previous values.
-- Collection Field still shows expand/collapse icon for hidden nested tables.
-
-**Notes:**
-- Font colors on Block Fields are not adaptable to dark mode (NFPA 10 & NFPA 25).
-
----
+- Block Field with negative padding crashing the app
+- Validation always returning FieldsInvalid (again)
 
 ## 1.1.14
 
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Hidden fields leaving empty space (8dpi each).
-- `TextArea` and `NumberField` not persisting last updated values.
-
----
+- Empty spaces when there are soo many hidden fields (apparently every single hidden field took 8dpi height)
+- Last updated TextArea not persisting
+- Last updated NumberField not persisting
 
 ## 1.1.13
 
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
-- Bumped Kotlin → 2.1.10.
-- Bumped Compose Multiplatform → 1.7.3.
+- Kotlin from 2.0.20 to 2.1.10
+- Compose Multiplatform from 1.7.0 to 1.7.3
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Conditional logic not resolving correctly on single input.
-- Date Field capturing incorrect time.
-- Last text field entry not updating.
-
----
+- Conditional Logic not resolving on a single input
+- Date Field Capturing wrong time
+- Last text field entry not updating accordingly
 
 ## 1.1.12
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- Sorting and filtering capabilities to Table Field.
-- Bulk row duplication and editing support.
+- Table field: Sort a specific column by either ascending or descending order
+- Table field: Filter text columns by a certain search phrase
+- Table field: Filter multiple cell values from different columns at once
+- Table field: Duplicate multiple selected rows
+- Table field: Edit multiple selected rows at once
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
-- Bumped Kotlin 2.0.10 → 2.0.21.
-- Bumped Compose Multiplatform 1.6.11 → 1.7.0.
-
----
+- Kotlin version from 2.0.10 to 2.0.21
+- Compose multiplatform version from 1.6.11 to 1.7.0
 
 ## 1.1.11
 
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Conditional logic issues with multiselect and dropdown fields.
-- Logical comparisons and empty/null value checks.
-
----
+- Conditional logic: multiselect fields would occasionally select deleted values
+- Conditional logic: Dropdown fields would not trigger for fields with multiple values
+- Conditional logic: Less than operation not triggering same time as greater operation
+- Conditional logic: is (and in turn is not) check was performing only case sensitive matches
+- Conditional logic: empty check was not triggering on null values
+- Conditional logic: wrong is filled notation was been used
 
 ## 1.1.7
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- Chart preview, full view, coordinate editing, and color customization.
-
----
+- Chart preview
+- Chart full view
+- Chart coordinate editing
+- Chart Line colors
 
 ## 1.1.6
 
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Number field crashing on invalid values.
-
----
+- Number field crashing on invalid values
 
 ## 1.1.5
 
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Conditional logic for choice fields not firing properly.
-- Mobile View regression.
-- Validation only triggers for visible fields.
-
----
+- Conditional logic for choice fields (multiselect and dropdown) now fires correctly when conditions are not met
+- Mobile View regression
+- Validation now only validates fields in the required view
 
 ## 1.1.4
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- Field tooltips, Table row duplication, and Validation Plugin (field, form, and document level).
+- Field tooltips are now supported
+- Table row duplication
+- Validation Plugin with field validation support
+- Validation Plugin with form validation support
+- Validation Plugin with document validation support
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Conditional logic for choice fields and multiselect fields.
-
----
+- Conditional logic for choice fields now works as expected
+- Fixed multiselect field showing deleted options
 
 ## 1.1.2
 
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Default values on conditional logic now work as expected.
-
----
+- Default values on conditional logic are now working as expected
 
 ## 1.1.1
 
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Conditional Logic now works as expected.
-
----
+- Conditional Logic now works as expected
 
 ## 1.1.0
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- Conditional Logic Support.
+- Conditional Logic Support
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Image field crash when opened with invalid value.
-
----
+- Fixed crashing issues with the image field when it is open with an invalid value
 
 ## 1.0.6
 
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
-
-- Date format customization based on builder settings.
-
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
-- Improved keyboard and required field visuals.
+- Capitalise button on the keyboard is not set by default when setting the cursor in text fields and text columns
+- Made the asterisk (stars) on required fields red
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- UI inconsistencies and readonly table behaviors.
-
----
+- Required text fields would not display the asterisk
+- Add Row button is no longer display on readonly forms
+- Add Row button is no longer displayed on readonly tables (even when the form is in fill mode)
+- Tables with long names now have a visible close button
+- Radio buttons are now de-selectable
+- Undo-Redo on signature fields is hidden when the user types their signature out
+- Dropdown field now saves on choice (instead of saving after onBlur event)
+- Tables now preview uniformly even when there are few rows to preview
+- Number input fields no longer adds an extra zero while deleting
 
 ## 1.0.5
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- RGB color and text alignment support for Rich Text fields.
-- Calendar icon for DateField.
+- rgb color support on rich text field
+- text alignment support for rich text field
+- calendar icon on DateField
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Enhanced all field labels to be semibold
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Font size and crash issues.
-
----
+- Fixed font size issue on block field
+- Fixed crashing when pageOrder is null
+- Fixed crashing when default date has decimal values
 
 ## 0.1.0-RC1
 
-🎉 **Initial Release — Joyfill Kotlin Multiplatform SDK**
-
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- Full field and callback support (Text, Number, Dropdown, Multiselect, Signature, DateTime, Image, Table, etc.).
-- External & internal navigation, readonly fields, and field deletions.
-
-**Supported Targets:**
-- Android, Linux, Windows, MacOS (JVM).
-- (Coming soon: Browser, iOS, Native MacOS.)
+- Initial release of Joyfill Kotlin Multiplatform SDK
+- Supported Fields: Text, TextArea, Number, DropDown, MultiSelect, Signature, DateTime, Image, Table
+- Supported Callbacks: onFocus, onBlur, onChange, onFieldChange, onUpload
+- External page Navigation
+- Internal page Navigation
+- Deleted fields support
+- Readonly fields support
+- Platform support: Android, Linux (through JVM), Windows (through JVM), MacOs (through JVM)
