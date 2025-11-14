@@ -1,12 +1,9 @@
 ---
 title: "API Overview"
-description: "Complete API reference for the Joyfill Web SDK (@joyfill/components)"
+description: "Default export object containing all public APIs of `@joyfill/components`."
 icon: "code"
 ---
 
-# API Reference
-
-Comprehensive documentation for all components, functions, and utilities in the Joyfill Web SDK.
 
 ## Core Components
 
@@ -65,23 +62,25 @@ import { JoyDocExporter } from '@joyfill/components';
 />
 ```
 
-### PublicAPI Functions
 
-Default export object containing all public APIs:
+
+**Example:**
 
 ```javascript
 import {
+  JoyDoc,
+  JoyDocExporter,
   getDefaultDocument,
-  getDefaultTemplate,
-  validator,
-  applyLogic
+  validator
 } from '@joyfill/components';
 
-// Create a new document
-const newDoc = getDefaultDocument();
+// Use components
+<JoyDoc doc={doc} />
+<JoyDocExporter doc={doc} />
 
-// Validate a document
-const result = validator(doc, { view: 'desktop' });
+// Use utility functions
+const newDoc = getDefaultDocument();
+const validationResult = validator(doc);
 ```
 
 ## Common Patterns
