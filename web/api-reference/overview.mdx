@@ -43,48 +43,14 @@ function App() {
 }
 ```
 
-```html JS (CDN)
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Joyfill JoyDoc Example</title>
-</head>
-<body>
-  <div id="joydoc-container"></div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/@joyfill/components@latest/dist/joyfill.min.js"></script>
-  <script>
-    // Wait for the page to load
-    document.addEventListener('DOMContentLoaded', function() {
-      const container = document.getElementById('joydoc-container');
-      const myDocument = Joyfill.getDefaultDocument();
-      
-      Joyfill.JoyDoc(
-        container,
-        {
-          doc: myDocument,
-          mode: 'edit',
-          view: 'desktop',
-          onChange: (changelogs, doc) => {
-            console.log('Document updated:', doc);
-          },
-          features: {
-            validateSchema: true,
-            readableIds: true
-          }
-        }
-      );
-    });
-  </script>
-</body>
-</html>
-```
- 
-```js JS (Module)
-import Joyfill from "@joyfill/components/dist/joyfill.min.js";
+```js JavaScript
+// Option 1: Using CDN (include this script tag in your HTML)
+// <script src="https://cdn.jsdelivr.net/npm/@joyfill/components@latest/dist/joyfill.min.js"></script>
 
+// Option 2: Using ES Modules
+// import Joyfill from "@joyfill/components/dist/joyfill.min.js";
+
+// Initialize JoyDoc
 const container = document.getElementById('joydoc-container');
 const myDocument = Joyfill.getDefaultDocument();
 
@@ -143,52 +109,14 @@ function App() {
 }
 ```
 
-```html JS (CDN)
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Joyfill JoyDocExporter Example</title>
-</head>
-<body>
-  <div id="exporter-container"></div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/@joyfill/components@latest/dist/joyfill.min.js"></script>
-  <script>
-    // Wait for the page to load
-    document.addEventListener('DOMContentLoaded', function() {
-      const container = document.getElementById('exporter-container');
-      const myDocument = Joyfill.getDefaultDocument();
-      
-      Joyfill.JoyDocExporter(
-        container,
-        {
-          doc: myDocument,
-          config: {
-            page: {
-              height: 1056,
-              width: 816,
-              padding: 20
-            }
-          },
-          theme: {
-            fontFamily: 'sans-serif',
-            field: {
-              margin: 4
-            }
-          }
-        }
-      );
-    });
-  </script>
-</body>
-</html>
-```
+```js JavaScript
+// Option 1: Using CDN (include this script tag in your HTML)
+// <script src="https://cdn.jsdelivr.net/npm/@joyfill/components@latest/dist/joyfill.min.js"></script>
 
-```js JS (Module)
-import Joyfill from "@joyfill/components/dist/joyfill.min.js";
+// Option 2: Using ES Modules
+// import Joyfill from "@joyfill/components/dist/joyfill.min.js";
 
+// Initialize JoyDocExporter
 const container = document.getElementById('exporter-container');
 const myDocument = Joyfill.getDefaultDocument();
 

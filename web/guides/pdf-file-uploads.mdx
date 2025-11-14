@@ -41,23 +41,54 @@ In this step you will send the user directly to the application page that render
 
 
 
+
 ### Step 2: Handle upload in onUploadAsync
 
-You will be notified via the [`onUploadAsync`](/web/guides/image-upload-handling#onuploadasync) SDK handler when a user uploads a file. You will need to convert that PDF file into images using the conversion functionality from Step 1: PDF Conversion.
+When a user uploads a PDF file through the Joyfill SDK, the [`onUploadAsync`](/web/guides/image-upload-handling#onuploadasync) handler is triggered. Your implementation should:
 
-The `onUploadAsync` should return a resolved promise of url objects inside an array. Learn more about handling uploads and returning properly formatted data in our [PDF, Files, and Image Uploads Guide](/web/guides/image-upload-handling).
+1. **Detect the file type** - Check if the uploaded file is a PDF or image
+2. **Convert PDF to images** - If it's a PDF, convert each page to an image using the conversion functionality from Step 1: PDF Conversion
+3. **Return formatted data** - Return a resolved promise containing an array of image URL objects
 
-Once the SDK receives the properly formatted array of image objects from `onUploadAsync`, the SDK will automatically update/create the associated pages.
+The `onUploadAsync` handler must return a resolved promise with an array of objects, where each object contains the image URL. Learn more about handling uploads and returning properly formatted data in our [PDF, Files, and Image Uploads Guide](/web/guides/image-upload-handling).
+
+**Example:**
+
+When a user uploads a PDF file like this:
+
+![](/images/docs/pdfUploadExample.png)
+
+Your `onUploadAsync` handler will convert it to images and return the array. Once the SDK receives the properly formatted array of image objects, it will automatically create or update the associated pages in the document:
+
+![](/images/docs/PdfUploadResult.png)
 
 See example usage of [`onUploadAsync`](/web/guides/image-upload-handling#onuploadasync)
 
 <Info>
-**Important Note:** The Joyfill SDK upload allows for PDF and image file types. Ensure you check the file type uploaded by a user inside the `onUploadAsync` in order to handle it properly.
+**Important Note:** The Joyfill SDK upload allows for both PDF and image file types. Always check the file type inside your `onUploadAsync` handler to ensure proper handling - PDFs need conversion to images, while image files can be used directly.
 </Info>
 
 ## Option 2: Custom Creation Workflow
 
-This example uses a custom creation flow to generate the JoyDoc JSON structure. This approach allows you to utilize a modal, button, or any other custom workflow to create the JoyDoc JSON before sending the user to the Joyfill SDK screen. See example video below
+This approach uses a custom creation flow to generate the JoyDoc JSON structure before sending users to the Joyfill SDK screen. You can implement this using a modal, button, or any other custom workflow in your application.
+
+**Using Joyfill Business Solution:**
+
+You can generate the JoyDoc JSON structure using the Joyfill Business Solution by following these steps:
+
+1. Navigate to the [Joyfill Business Solution](https://app.joyfill.io) and open the form library section.
+   ![](/images/docs/joyfillBusinessSolution.png)
+
+2. Click the "Upload PDF" button to open the upload modal.
+   ![Upload PDF Modal](/images/docs/uploadPDFModal.png)
+
+3. Select and upload your PDF file from your local file system.
+   ![](/images/docs/pdfUploadExample.png)
+
+4. Once uploaded, the system automatically converts the PDF to images and builds the JoyDoc JSON structure. Click the "Create" button to proceed.
+	![](/images/docs/createPDF.png)
+
+5. You'll be redirected to the Joyfill SDK screen with the JoyDoc JSON already populated. The PDF pages will appear as background images, ready for you to add form fields and customize.
 
 ### Step 1: Handle File Upload and Conversion
 
