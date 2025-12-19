@@ -4,6 +4,35 @@ description: "Complete changelog of Joyfill Kotlin Multiplatform SDK releases"
 icon: "android"
 ---
 
+## 2.0.0-RC10
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- (JF-243) Support for Page Deletion
+- Enhanced Page Duplication UI
+- Single Click Option to Open Row Form — when enabled, users can open the row form with a single click instead of multiple clicks
+- Loaders while filtering for better UX feedback
+- Bulk row actions while filtering — users can now select all rows, bulk edit, or delete all filtered rows
+- Additional tests for formulas and various components to ensure stability
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Exposed `ErrorFormState` composable as public API (was internal)
+- Refactored hidden state — hidden state will no longer be updated in the JSON when a field changes visibility or a page is modified
+- Filter optimization for improved performance
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- (JF-230) Duplicated pages not appearing in the correct position and not being saved — duplicated page now inserts directly below the source page
+- Formulas not working after duplicating a page
+- Conditional logic not working after duplicating a page
+- Duplicating Table and Collection fields caused row IDs to be shared across pages, leading to unintended row deletions
+- Page duplication for Chart field not working due to duplicated point IDs
+- Chart data not being saved after modifications
+- Crash when duplicating a page
+- Multi-select validation incorrectly showing as valid when all visible options are unselected but a deleted option remains selected
+- Multi-select column colors not being acknowledged in Table and Collection fields
+
 ## 2.0.0-RC9
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
