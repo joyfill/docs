@@ -4,6 +4,35 @@ description: "Complete changelog of Joyfill iOS SDK releases"
 icon: "notes"
 ---
 
+## 3.0.0-rc4
+
+**Release Date:** October 10, 2024
+
+Learn more in the [release notes](https://github.com/joyfill/components-swift/releases/tag/3.0.0-rc4).
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Scrolling support in table column titles to ensure visibility when titles are very large.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Disabled editing of text and barcode column cells in Table/Collection when in read-only mode.
+- Disabled duplicate page functionality in read-only mode.
+- Disabled all event handlers while in read-only mode to prevent unintended interactions.
+- Adjusted Table/Collection colors for proper appearance in dark mode.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Table/Collection image cell triggering `onChange` twice.
+- Date field calling `onFocus` before the `onChange` event.
+- Memory leak and retain cycle between `DocumentEditor` and `JoyfillDocContext`.
+- Block field appearance when color value is empty.
+- Filtering number columns with `0` returned empty rows.
+- Include timezone (`tz`) property in changelog when updating date columns in tables to ensure accurate time handling.
+
+---
+
+
 > Source: https://github.com/joyfill/components-swift/releases  
 
 ---
@@ -663,4 +692,3 @@ Learn more in the [release notes](https://github.com/joyfill/components-swift/re
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
 - Handle TableView onFocus.
-
