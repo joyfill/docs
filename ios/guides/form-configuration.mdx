@@ -1,0 +1,99 @@
+---
+title: Form Configuration
+icon: "gear"
+---
+This document describes the configuration options available when initializing a `DocumentEditor` for customizing form behavior, including page management, field interactions, and UI settings.
+
+## Page Management
+
+### Page Navigation
+
+Control the visibility of the page navigation UI.
+
+```swift
+let editor = DocumentEditor(
+    document: myDocument,
+    navigation: true  // Show page navigation UI
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `navigation` | `Bool` | `true` | When `true`, displays the page navigation dropdown button that allows users to switch between pages. |
+
+**Behavior:**
+
+- When enabled, a dropdown button with the current page name appears at the top of the form
+- Clicking the button opens a modal sheet showing all available pages
+- The page selector respects conditional logic - hidden pages are not shown in the list
+
+
+### Page Duplication
+
+Control whether users can duplicate existing pages.
+
+```swift
+import Joyfill
+import JoyfillModel
+
+let editor = DocumentEditor(
+    document: myDocument,
+    mode: .fill,  // Page duplication only works in .fill mode
+    isPageDuplicateEnabled: true
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isPageDuplicateEnabled` | `Bool` | `false` | When `true`, users can duplicate pages via the page navigation UI. The duplicated page includes all field values from the original. |
+
+**Behavior:**
+
+- When enabled, a duplicate icon appears next to each page in the page selector
+- Duplicated pages retain all field values from the source page, including conditional logic
+- The new page is inserted immediately after the source page in the page order
+- Field IDs are regenerated for all fields on the duplicated page to ensure uniqueness
+
+### Page Deletion
+
+Control whether users can delete pages from multi-page forms.
+
+```swift
+let editor = DocumentEditor(
+    document: myDocument,
+    mode: .fill,  // Page deletion only works in .fill mode
+    isPageDeleteEnabled: true
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isPageDeleteEnabled` | `Bool` | `false` | When `true`, users can delete pages via the page navigation UI. A confirmation dialog appears before deletion to prevent accidental data loss. |
+
+**Behavior:**
+
+- When enabled, a delete icon appears next to each page in the page selector
+- Delete is only available when there is more than one page (you cannot delete the last remaining page)
+- A confirmation dialog appears to user before deletion
+- Page deletion is permanent and cannot be undone
+- If the current page is deleted, the form automatically navigates to the next available page
+
+
+## Programmatic Page Operations
+
+You can also perform page operations programmatically using the `DocumentEditor` API.
+
+### Duplicate a Page
+
+```swift
+// Duplicate a page programmatically
+editor.duplicatePage(pageID: "page_123")
+```
+
+### Navigate to a Page
+
+```swift
+// Switch to a different page
+editor.currentPageID = "page_456"
+```
+

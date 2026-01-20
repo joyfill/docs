@@ -46,7 +46,8 @@
               "ios/guides/required-field-validation",
               "ios/guides/populating-and-extracting-data",
               "ios/guides/schema-validation",
-              "ios/guides/event-handling"
+              "ios/guides/event-handling",
+              "ios/guides/form-configuration"
             ]
           },
           {
