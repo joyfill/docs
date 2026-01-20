@@ -1,0 +1,144 @@
+---
+title: Form Configuration
+icon: "gear"
+---
+This document describes the configuration options available when initializing a `DocumentEditor` for customizing form behavior, including page management, field interactions.
+
+## Page Management
+
+### Page Navigation
+
+Control the visibility of the page navigation UI.
+
+```swift
+let editor = DocumentEditor(
+    document: myDocument,
+    navigation: true  // Show page navigation UI
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `navigation` | `Bool` | `true` | When `true`, displays the page navigation dropdown button that allows users to switch between pages. |
+
+**Behavior:**
+
+- Clicking the button opens a modal sheet showing all available pages
+- The page selector respects conditional logic - hidden pages are not shown in the list
+
+
+### Page Duplication
+
+Control whether users can duplicate existing pages.
+
+```swift
+import Joyfill
+import JoyfillModel
+
+let editor = DocumentEditor(
+    document: myDocument,
+    mode: .fill,  // Page duplication only works in .fill mode
+    isPageDuplicateEnabled: true
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isPageDuplicateEnabled` | `Bool` | `false` | When `true`, users can duplicate pages via the page navigation UI. The duplicated page includes all field values from the original. |
+
+**Behavior:**
+
+- Duplicated pages retain all field values from the source page, including conditional logic
+- The new page is inserted immediately after the source page in the page order
+- Field IDs are regenerated for all fields on the duplicated page to ensure uniqueness
+
+### Page Deletion
+
+Control whether users can delete pages from multi-page forms.
+
+```swift
+let editor = DocumentEditor(
+    document: myDocument,
+    mode: .fill,  // Page deletion only works in .fill mode
+    isPageDeleteEnabled: true
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isPageDeleteEnabled` | `Bool` | `false` | When `true`, users can delete pages via the page navigation UI. A confirmation dialog appears before deletion to prevent accidental data loss. |
+
+**Behavior:**
+
+- Delete is only available when there is more than one page (you cannot delete the last remaining page)
+- A confirmation dialog appears to user before deletion
+- Page deletion is permanent and cannot be undone
+- If the current page is deleted, the form automatically navigates to the next available page
+
+## Field Interactions
+
+### Single Click Row Edit
+
+Simplify the process for opening table and collection rows for editing.
+
+```swift
+let editor = DocumentEditor(
+    document: myDocument,
+    singleClickRowEdit: true
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `singleClickRowEdit` | `Bool` | `false` | When `true`, users can open a row for editing with a single tap. When `false`, users must go through multiple steps to edit a row. |
+
+**Behavior:**
+
+- **Default (`false`)**: Users must follow multiple steps to open a row form
+  
+- **Enabled (`true`)**: Users can open the row form for editing with a single tap, providing a faster and easier editing experience
+
+- This setting applies to both Table fields and Collection fields
+- The edit behavior respects the form's mode - in `.readonly` mode, rows cannot be edited regardless of this setting
+
+## Schema Validation
+
+Control whether the document schema is validated during initialization.
+
+```swift
+let editor = DocumentEditor(
+    document: myDocument,
+    validateSchema: true  // Validate schema on init
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `validateSchema` | `Bool` | `true` | When `true`, validates the document schema version and structure during initialization. Validation errors are reported via the `onError` event handler. |
+
+**Behavior:**
+
+- If validation fails, `editor.schemaError` will contain error details
+- The form will display an error screen instead of the document
+- Validation errors are also sent to the `events.onError()` handler if configured
+- Set to `false` to skip validation (useful for testing or when you're certain the document is valid)
+
+
+## Programmatic Page Operations
+
+You can also perform page operations programmatically using the `DocumentEditor` API.
+
+### Duplicate a Page
+
+```swift
+// Duplicate a page programmatically
+editor.duplicatePage(pageID: "page_123")
+```
+
+### Navigate to a Page
+
+```swift
+// Switch to a different page
+editor.currentPageID = "page_456"
+```
+
