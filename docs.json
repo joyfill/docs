@@ -82,7 +82,8 @@
               "kotlin/guides/required-field-validation",
               "kotlin/guides/populating-and-extracting-data",
               "kotlin/guides/schema-validation",
-              "kotlin/guides/event-handling"
+              "kotlin/guides/event-handling",
+              "kotlin/guides/form-configuration"
             ]
           },
           {
