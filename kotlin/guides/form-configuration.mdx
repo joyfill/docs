@@ -1,0 +1,151 @@
+---
+title: Form Configuration
+icon: "gear"
+---
+
+This document describes the configuration options available when initializing a `DocumentEditor` for customizing form behavior, including page management and field interactions.
+
+## Page Management
+
+### Page Navigation
+
+Control the visibility of the page navigation UI.
+
+```kotlin
+Form(
+    editor = editor,
+    // Use the default page navigation (recommended)
+    // navigation parameter can be omitted to use the default
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `navigation` | `@Composable ((PageCollection, PageCollectionState) -> Unit)?` | Default page selector | Composable slot for the page navigation UI. Set to `null` to hide navigation entirely. |
+
+**Behavior:**
+
+- The default navigation displays a page selector dropdown that allows users to switch between pages
+- The page selector respects conditional logic - hidden pages are not shown in the list
+- Pass `null` to completely hide the page navigation UI:
+
+```kotlin
+Form(
+    editor = editor,
+    navigation = null  // Hide page navigation UI
+)
+```
+
+### Page Deletion
+
+Control whether users can delete pages from multi-page forms.
+
+```kotlin
+Form(
+    editor = editor,
+    isPageDeleteEnabled = true,
+    mode = Mode.fill,
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isPageDeleteEnabled` | `Boolean` | `false` | When `true`, users can delete pages via the page navigation UI. A confirmation dialog appears before deletion to prevent accidental data loss. |
+
+**Behavior:**
+
+- When enabled, a delete icon appears next to each page in the page selector
+- Delete is only available when there is more than one page (you cannot delete the last remaining page)
+- A confirmation dialog prompts the user before deletion
+- Page deletion is permanent and cannot be undone
+- Page deletion only works in `Mode.fill`
+
+### Page Duplication
+
+Control whether users can duplicate existing pages.
+
+```kotlin
+Form(
+    editor = editor,
+    isPageDuplicateEnabled = true,
+    mode = Mode.fill,
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isPageDuplicateEnabled` | `Boolean` | `false` | When `true`, users can duplicate pages via the page navigation UI. The duplicated page includes all field values from the original. |
+
+**Behavior:**
+
+- When enabled, a duplicate icon appears next to each page in the page selector
+- Duplicated pages retain all field values from the source page, including conditional logic and formulas
+- The new page is inserted immediately after the source page
+- Page duplication only works in `Mode.fill`
+
+## Field Interactions
+
+### Single Click Row Edit
+
+Simplify the process for opening table and collection rows for editing.
+
+```kotlin
+Form(
+    editor = editor,
+    singleClickRowEdit = true,
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `singleClickRowEdit` | `Boolean` | `false` | When `true`, users can open a row for editing with a single tap. When `false`, users must go through multiple steps to edit a row. |
+
+**Behavior:**
+
+- **Default (`false`)**: Users must follow multiple steps to open a row form
+- **Enabled (`true`)**: Users can open the row form for editing with a single tap
+- This setting applies to both Table fields and Collection fields
+- The edit behavior respects the form's mode - in `Mode.readonly`, rows cannot be edited regardless of this setting
+
+## Schema Validation
+
+Control whether the document schema is validated during initialization.
+
+```kotlin
+val editor = rememberDocumentEditor(
+    document = myDocument,
+    validateSchema = true,
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `validateSchema` | `Boolean` | `true` | When `true`, validates the document schema version and structure during initialization. Validation errors are exposed via `editor.error`. |
+
+**Behavior:**
+
+- If validation fails, `editor.error` will contain a non-null error value
+- The form will display an error screen instead of the document content
+- Set to `false` to skip validation (useful for testing or when you're certain the document is valid)
+
+## Programmatic Page Operations
+
+You can perform page operations programmatically using the `PageCollection` API available via `editor.pages`.
+
+### Navigate to a Page
+
+```kotlin
+editor.pages.navigate("page_456")
+```
+
+### Duplicate a Page
+
+```kotlin
+editor.pages.duplicate("page_123", "Copy of Page")
+```
+
+### Delete a Page
+
+```kotlin
+editor.pages.delete("page_123")
+```
