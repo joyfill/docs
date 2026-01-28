@@ -14,17 +14,18 @@ icon: "globe"
 
 🚀 **Platform Update: Auto Resize Fields & React v19**
 
-This release introduces a new auto-resize feature that allows form fields to automatically adjust their height based on content, eliminating manual field sizing and improving the form filling experience. Additionally, we have upgraded the core SDK to React v19.
+This release introduces a new auto-resize feature that allows form fields to automatically adjust their height based on content, eliminating manual field sizing and improving the form-filling experience. Additionally, we have upgraded the core SDK to React v19.
 
 ✨ **Key Improvements**
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-**Auto Resize Fields**
+**Auto Resize Fields (Beta)**
 
-- Form fields now automatically resize to fit their content, ensuring all information is visible without manual height adjustments.
+- Enable this beta feature via **`features={{ autoResizeFields: true }}`**.
+- Form fields can now automatically resize to fit their content, ensuring all information is visible without manual height adjustments.
 - Fields intelligently measure their content and adjust height on initialization and whenever content changes such as value updates, row creation, or row deletion.
-- Enable this feature via `features={{ autoResizeFields: true }}`.
+- **Important Note:** This feature should not be used with very complex or large forms containing large tables of data. This feature reduces the SDKs ability to optimize performance. Be aware that utilization of this feature could cause performance degrade.
 
 **Supported Field Types**
 
@@ -37,16 +38,11 @@ This release introduces a new auto-resize feature that allows form fields to aut
 **Internal Upgrades**
 
 - We have officially moved the SDK core to React v19 to take advantage of the latest performance and stability improvements.
-
-⚠️ **Important Notes**
-
-- **Grid Mode:** Auto-resize is only available for pages in grid mode.
-- **Limitations:** Text and Dropdown fields do not support auto-resizing due to browser element limitations.
-- **Compatibility:** Support for React v17 has been removed. The last version to support React v17 is v3.12.0.
+- This means, we will be dropping support for React v17 with this version and the last version that supports React v17 is 3.12.0.
 
 📥 **Recommendation**
 
-To benefit from auto-resizing fields and the latest performance improvements, we recommend updating to the latest version and adding `autoResizeFields: true` to your features prop.
+- To benefit from auto-resizing fields and the latest performance improvements, we recommend updating to the latest version and adding `autoResizeFields: true` to your features prop.
 
 ---
 
