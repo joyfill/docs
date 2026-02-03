@@ -47,7 +47,8 @@
               "ios/guides/populating-and-extracting-data",
               "ios/guides/schema-validation",
               "ios/guides/event-handling",
-              "ios/guides/form-configuration"
+              "ios/guides/form-configuration",
+              "ios/guides/external-navigation"
             ]
           },
           {
