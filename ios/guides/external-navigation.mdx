@@ -1,0 +1,64 @@
+---
+title: External Navigation
+icon: "compass"
+---
+
+This document describes how to programmatically navigate to pages and fields within a form using the `goto` API on `DocumentEditor`.
+
+## Overview
+
+The `goto` method enables programmatic navigation to specific locations within a form. This is useful for:
+- Guiding users to required fields after validation
+- Implementing custom navigation flows
+- Deep linking to specific form sections
+- Auto-scrolling to specific fields
+
+## Path-Based Navigation
+
+Navigate using a slash-separated path string.
+
+```swift
+// Navigate to a page
+let status = editor.goto("page_123")
+
+// Navigate to a field on a page (with auto-scroll)
+let status = editor.goto("page_123/fieldPosition_456")
+```
+
+| Path Format | Description |
+| --- | --- |
+| `"pageId"` | Navigate to the top of the specified page |
+| `"pageId/fieldPositionId"` | Navigate to the page and automatically scroll to the field |
+
+<Warning>
+**Important:** Use `fieldPositionId` from `page.fieldPositions[]._id`, not `fieldId` from `document.fields[]._id`. Using the wrong ID will cause navigation to fail.
+</Warning>
+
+## NavigationStatus
+
+The `goto` method returns a `NavigationStatus` indicating success or failure.
+
+```swift
+let status = editor.goto("page_123/fieldPosition_456")
+
+switch status {
+case .success:
+    // Navigation succeeded - target exists and is visible
+    print("Successfully navigated to the field")
+case .failure:
+    // Navigation failed - target doesn't exist, is hidden, or unsupported
+    print("Navigation failed")
+}
+```
+
+| Response | Description |
+| --- | --- |
+| `.success` | The target exists, is supported, and is visible |
+| `.failure` | The target does not exist, is hidden, or has an unsupported field type |
+
+**Failure reasons include:**
+- Page does not exist
+- Page is hidden (due to conditional logic)
+- Field position does not exist
+- Field is hidden (due to conditional logic)
+
