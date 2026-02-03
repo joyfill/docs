@@ -125,9 +125,9 @@ let editor = DocumentEditor(
 
 ## Programmatic Navigation
 
-Navigate to specific pages, fields, or rows programmatically using the `goto` function.
+Navigate to specific pages or fields programmatically using the `goto` function.
 
-### Navigate to Page, Field, or Row
+### Navigate to Page or Field
 
 ```swift
 // Navigate to a page
@@ -135,30 +135,20 @@ let status = editor.goto("page_123")
 
 // Navigate to a specific field on a page
 let status = editor.goto("page_123/fieldPosition_456")
-
-// Navigate to a specific row in a table/collection field
-let status = editor.goto("page_123/fieldPosition_456/row_789")
-
-// Navigate to a row and open the edit form
-let status = editor.goto("page_123/fieldPosition_456/row_789", open: true)
 ```
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| `path` | `String` | required | Navigation path in format `"pageId"`, `"pageId/fieldPositionId"`, or `"pageId/fieldPositionId/rowId"` |
-| `open` | `Bool` | `false` | When `true`, opens the row edit form for table/collection fields. Only applicable when navigating to a specific row. |
+| `path` | `String` | required | Navigation path in format `"pageId"` or `"pageId/fieldPositionId"` |
 
 **Returns:** `NavigationStatus` - `.success` if navigation was successful, `.failure` if the target doesn't exist or is hidden by conditional logic.
 
 **Behavior:**
 
 - **Page-only navigation**: Navigates to the top of the specified page
-- **Page + Field navigation**: Navigates to the page and scrolls to the specified field
-- **Page + Field + Row navigation**: Navigates to the page, scrolls to the field, and optionally opens the row edit form
+- **Page + Field navigation**: Navigates to the page and automatically scrolls to bring the target field into view
 - If the target page is hidden by conditional logic, navigation fails and returns `.failure`
 - If the target field is hidden by conditional logic, the form navigates to the top of the page and returns `.failure`
-- For row navigation, the field must be a table or collection field type, otherwise navigation falls back to the field level
-- Row edit forms only open when `open: true` is specified for table/collection fields
 
 ## Programmatic Page Operations
 
