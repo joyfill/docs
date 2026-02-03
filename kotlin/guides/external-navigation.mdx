@@ -1,0 +1,97 @@
+---
+title: External Navigation
+icon: "compass"
+---
+
+This document describes how to programmatically navigate to pages, and fields within a form using the `goto` API on `DocumentEditor`.
+
+## Overview
+
+The `goto` method enables programmatic navigation to specific locations within a form. This is useful for:
+- Guiding users to required fields after validation
+- Implementing custom navigation flows
+- Deep linking to specific form sections
+
+## Path-Based Navigation
+
+Navigate using a slash-separated path string.
+
+```kotlin
+// Navigate to a page
+editor.goto("page_123")
+
+// Navigate to a field on a page
+editor.goto("page_123/fieldPos_456")
+```
+
+| Path Format | Description |
+| --- | --- |
+| `"pageId"` | Navigate to the top of the specified page |
+| `"pageId/fieldPositionId"` | Navigate to the page and scroll to the field |
+
+<Warning>
+**Important:** Use `fieldPositionId` from `page.fieldPositions[]._id`, not `fieldId` from `document.fields[]._id`. Using the wrong ID will cause navigation to fail.
+</Warning>
+
+## NavResponse
+
+The `goto` method returns a `NavResponse` indicating success or failure.
+
+```kotlin
+val response = editor.goto("page_123/fieldPos_456")
+
+when (response) {
+    is NavResponse.Success -> {
+        // Navigation succeeded - target exists and is visible
+    }
+    is NavResponse.Failure -> {
+        // Navigation failed - target doesn't exist, is hidden, or unsupported
+    }
+}
+```
+
+| Response | Description |
+| --- | --- |
+| `Success` | The target exists, is supported, and is visible |
+| `Failure` | The target does not exist, is hidden, or has an unsupported field type |
+
+**Failure reasons include:**
+- Page does not exist
+- Page is hidden (due to conditional logic)
+- Field position does not exist
+- Field is hidden (due to conditional logic)
+- Field type is unsupported (`file`, `unknown`)
+
+## Page Change Events
+
+Page changes triggered by `goto()` are emitted through the `onBlur` and `onFocus` callbacks. When the user navigates from one page to another (either via `goto()` or manual navigation), the callbacks receive a `ComponentEvent.PageEvent`:
+
+```kotlin
+Form(
+    editor = editor,
+    onBlur = { event ->
+        if (event is ComponentEvent.PageEvent) {
+            // User left this page
+            println("Left page: ${event.pageId}")
+        }
+    },
+    onFocus = { event ->
+        if (event is ComponentEvent.PageEvent) {
+            // User arrived at this page
+            println("Arrived at page: ${event.pageId}")
+        }
+    }
+)
+```
+
+| Event | Trigger |
+| --- | --- |
+| `onBlur` with `PageEvent` | Emitted when navigating away from a page |
+| `onFocus` with `PageEvent` | Emitted when navigating to a page |
+
+**`PageEvent` Properties:**
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `page` | `Page` | The page object that gained or lost focus |
+| `pageId` | `String` | The page ID |

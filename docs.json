@@ -83,7 +83,8 @@
               "kotlin/guides/populating-and-extracting-data",
               "kotlin/guides/schema-validation",
               "kotlin/guides/event-handling",
-              "kotlin/guides/form-configuration"
+              "kotlin/guides/form-configuration",
+              "kotlin/guides/external-navigation"
             ]
           },
           {
