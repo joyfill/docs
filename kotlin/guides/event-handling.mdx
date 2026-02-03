@@ -39,10 +39,11 @@ Form(
 
 ### **onFocus**
 
-Triggered when a field gains focus:
+Triggered when a field or a page gains focus:
 
 ```kotlin
 onFocus = { event ->
+    println("Page focused: ${event.pageId}")
     println("Field focused: ${event.fieldId}")
     // Your focus handling logic here
 }
@@ -50,10 +51,11 @@ onFocus = { event ->
 
 ### **onBlur**
 
-Triggered when a field loses focus:
+Triggered when a field or a page loses focus:
 
 ```kotlin
 onBlur = { event ->
+    println("Page lost focus: ${event.pageId}")
     println("Field lost focus: ${event.fieldId}")
     // Your blur handling logic here
 }
