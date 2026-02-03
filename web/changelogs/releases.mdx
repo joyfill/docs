@@ -8,6 +8,44 @@ icon: "globe"
 
 ---
 
+## 4.0.0-RC10
+
+**Release Date:** January 27, 2026
+
+🚀 **Platform Update: Auto Resize Fields & React v19**
+
+This release introduces a new auto-resize feature that allows form fields to automatically adjust their height based on content, eliminating manual field sizing and improving the form-filling experience. Additionally, we have upgraded the core SDK to React v19.
+
+✨ **Key Improvements**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+**Auto Resize Fields (Beta)**
+
+- Enable this beta feature via **`features={{ autoResizeFields: true }}`**.
+- Form fields can now automatically resize to fit their content, ensuring all information is visible without manual height adjustments.
+- Fields intelligently measure their content and adjust height on initialization and whenever content changes such as value updates, row creation, or row deletion.
+- **Important Note:** This feature should not be used with very complex or large forms containing large tables of data. This feature reduces the SDKs ability to optimize performance. Be aware that utilization of this feature could cause performance degrade.
+
+**Supported Field Types**
+
+- **Full Support:** Block, MultiSelect, Table, InputGroup, Image, File, and Chart fields fully support auto-resizing in all modes (edit, fill, readonly).
+- **PDF Generation:** Textarea fields support auto-resizing during PDF generation only.
+- **Enhanced Export:** PDF export fully supports auto-resizing, ensuring tables, input groups, and multi-select fields expand to display complete content without truncation.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+**Internal Upgrades**
+
+- We have officially migrated the SDK core to React v19 to leverage the latest performance and stability improvements.
+- As a result, support for React v17 has been discontinued. The last stable SDK version compatible with React v17 is v3.16.3.
+
+📥 **Recommendation**
+
+- To benefit from auto-resizing fields and the latest performance improvements, we recommend updating to the latest version and adding `autoResizeFields: true` to your features prop.
+
+---
+
 ## 4.0.0-RC9
 
 **Release Date:** January 15, 2026

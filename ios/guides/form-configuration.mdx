@@ -123,6 +123,32 @@ let editor = DocumentEditor(
 - Validation errors are also sent to the `events.onError()` handler if configured
 - Set to `false` to skip validation (useful for testing or when you're certain the document is valid)
 
+## Programmatic Navigation
+
+Navigate to specific pages or fields programmatically using the `goto` function.
+
+### Navigate to Page or Field
+
+```swift
+// Navigate to a page
+let status = editor.goto("page_123")
+
+// Navigate to a specific field on a page
+let status = editor.goto("page_123/fieldPosition_456")
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `path` | `String` | required | Navigation path in format `"pageId"` or `"pageId/fieldPositionId"` |
+
+**Returns:** `NavigationStatus` - `.success` if navigation was successful, `.failure` if the target doesn't exist or is hidden by conditional logic.
+
+**Behavior:**
+
+- **Page-only navigation**: Navigates to the top of the specified page
+- **Page + Field navigation**: Navigates to the page and automatically scrolls to bring the target field into view
+- If the target page is hidden by conditional logic, navigation fails and returns `.failure`
+- If the target field is hidden by conditional logic, the form navigates to the top of the page and returns `.failure`
 
 ## Programmatic Page Operations
 
