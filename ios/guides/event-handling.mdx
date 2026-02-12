@@ -49,7 +49,7 @@ Triggered when a field receives focus, or when a page becomes the current page (
 func onFocus(event: Joyfill.Event) {
     if let field = event.fieldEvent {
         print("Field focused: \(field.fieldID)")
-    } else if let pageEvent = event.pageEvent, pageEvent.type == "page.focus" {
+    } else if let pageEvent = event.pageEvent {
         print("Page focused: \(pageEvent.page.id ?? "")")
     }
 }
@@ -72,51 +72,11 @@ Triggered when a field loses focus, or when the user leaves a page (page blur).
 func onBlur(event: Joyfill.Event) {
     if let field = event.fieldEvent {
         print("Field blurred: \(field.fieldID)")
-    } else if let pageEvent = event.pageEvent, pageEvent.type == "page.blur" {
+    } else if let pageEvent = event.pageEvent {
         print("Page blurred: \(pageEvent.page.id ?? "")")
     }
 }
 ```
-
-## **Page focus and blur (navigation listeners)**
-
-In addition to field focus and blur, the same `onFocus` and `onBlur` callbacks are used for **page-level** events when the current page changes. Use them to react to navigation (e.g. analytics, saving draft per page, or syncing UI).
-
-**When they fire:**
-
-- **page.focus** — When a page becomes the current page. This includes the initial page when the form loads, and whenever the user (or your code via `goto`) switches to another page.
-- **page.blur** — When the user (or your code) leaves a page; the page that is no longer visible receives `page.blur` before the new page receives `page.focus`.
-
-**How to handle page events:**
-
-Check `event.pageEvent`. If it is non-nil, the event is a page event. Use `pageEvent.type` to distinguish `"page.focus"` from `"page.blur"`, and `pageEvent.page` to get the `Page` (e.g. `id`, `name`).
-
-```swift
-func onFocus(event: Joyfill.Event) {
-    guard let pageEvent = event.pageEvent else { return }
-    if pageEvent.type == "page.focus" {
-        print("Entered page: \(pageEvent.page.name ?? pageEvent.page.id ?? "")")
-        // e.g. track analytics, load page-specific data
-    }
-}
-
-func onBlur(event: Joyfill.Event) {
-    guard let pageEvent = event.pageEvent else { return }
-    if pageEvent.type == "page.blur" {
-        print("Left page: \(pageEvent.page.name ?? pageEvent.page.id ?? "")")
-        // e.g. save draft for this page
-    }
-}
-```
-
-**PageEvent:**
-
-| Property | Type | Description |
-| --- | --- | --- |
-| type | String | `"page.focus"` or `"page.blur"` |
-| page | Page | The page that gained or lost focus (e.g. `id`, `name`) |
-
-Programmatic navigation via `DocumentEditor.goto(_:gotoConfig:)` also triggers these events. See [External Navigation](/ios/guides/external-navigation) for the goto API.
 
 ## **onUpload Event**
 
