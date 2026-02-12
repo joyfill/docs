@@ -1,9 +1,9 @@
 ---
-title: External Navigation
+title: Navigation
 icon: "compass"
 ---
 
-This document describes how to programmatically navigate to pages and fields within a form using the `goto` API on `DocumentEditor`.
+This document describes how to programmatically navigate to pages, fields, and table/collection rows within a form using the `goto` API on `DocumentEditor`.
 
 ## Overview
 
@@ -12,10 +12,11 @@ The `goto` method enables programmatic navigation to specific locations within a
 - Implementing custom navigation flows
 - Deep linking to specific form sections
 - Auto-scrolling to specific fields
+- Opening a specific table or collection row in its row form (modal)
 
 ## Path-Based Navigation
 
-Navigate using a slash-separated path string.
+Navigate using a slash-separated path string. Up to three segments are supported.
 
 ```swift
 // Navigate to a page
@@ -23,23 +24,54 @@ let status = editor.goto("page_123")
 
 // Navigate to a field on a page (with auto-scroll)
 let status = editor.goto("page_123/fieldPosition_456")
+
+// Navigate to a table or collection row (optionally open row form)
+let status = editor.goto("page_123/fieldPosition_456/row_789", gotoConfig: GotoConfig(open: true))
 ```
 
 | Path Format | Description |
 | --- | --- |
 | `"pageId"` | Navigate to the top of the specified page |
 | `"pageId/fieldPositionId"` | Navigate to the page and automatically scroll to the field |
+| `"pageId/fieldPositionId/rowId"` | Navigate to the page, scroll to the table/collection field, and select the row. Use `GotoConfig(open: true)` to also open the row form modal. |
 
 <Warning>
 **Important:** Use `fieldPositionId` from `page.fieldPositions[]._id`, not `fieldId` from `document.fields[]._id`. Using the wrong ID will cause navigation to fail.
 </Warning>
+
+For row-level paths, the field must be a **table** or **collection** type. The `rowId` must match an existing row’s ID in that field’s value; otherwise `goto` returns `.failure`.
+
+## GotoConfig
+
+Navigation behavior is configured via `GotoConfig`. Pass it as the second argument to `goto`.
+
+```swift
+public struct GotoConfig {
+    /// When true, automatically opens the row form modal for table/collection rows.
+    public let open: Bool
+
+    public init(open: Bool = false)
+}
+```
+
+| Property | Default | Description |
+| --- | --- | --- |
+| `open` | `false` | If the path targets a table/collection row (`pageId/fieldPositionId/rowId`), set to `true` to open that row’s form in a modal after navigation. |
+
+Example: navigate to a row and open its form for editing.
+
+```swift
+let status = editor.goto("page_123/fieldPosition_456/row_789", gotoConfig: GotoConfig(open: true))
+```
+
+If you omit `gotoConfig`, the default `GotoConfig()` is used (same as `open: false`).
 
 ## NavigationStatus
 
 The `goto` method returns a `NavigationStatus` indicating success or failure.
 
 ```swift
-let status = editor.goto("page_123/fieldPosition_456")
+let status = editor.goto("page_123/fieldPosition_456", gotoConfig: GotoConfig())
 
 switch status {
 case .success:
@@ -53,12 +85,14 @@ case .failure:
 
 | Response | Description |
 | --- | --- |
-| `.success` | The target exists, is supported, and is visible |
-| `.failure` | The target does not exist, is hidden, or has an unsupported field type |
+| `.success` | The target exists, is supported, and is visible (and for row paths, the row exists in the field). |
+| `.failure` | The target does not exist, is hidden, or has an unsupported field type. |
 
 **Failure reasons include:**
 - Page does not exist
 - Page is hidden (due to conditional logic)
 - Field position does not exist
 - Field is hidden (due to conditional logic)
+- For row-level paths: field is not a table/collection, or the row ID is not found in the field’s value
 
+When the page changes, the SDK emits page focus and page blur events. See [Event Handling](/ios/guides/event-handling#onfocus-event) for details.

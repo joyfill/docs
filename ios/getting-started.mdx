@@ -112,12 +112,20 @@ final class ChangeHandler: FormChangeEvent {
         }
     }
 
-    func onFocus(event: Joyfill.FieldIdentifier) {
-        // Field focused
+    func onFocus(event: Joyfill.Event) {
+        if let field = event.fieldEvent {
+            // Field focused (e.g. field.fieldID)
+        } else if event.pageEvent != nil {
+            // Page focused (event.pageEvent?.type == "page.focus")
+        }
     }
 
-    func onBlur(event: Joyfill.FieldIdentifier) {
-        // Field blurred
+    func onBlur(event: Joyfill.Event) {
+        if let field = event.fieldEvent {
+            // Field blurred
+        } else if event.pageEvent != nil {
+            // Page blurred
+        }
     }
 
     func onUpload(event: Joyfill.UploadEvent) {
