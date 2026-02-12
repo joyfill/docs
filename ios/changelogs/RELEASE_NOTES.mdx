@@ -6,6 +6,39 @@ icon: "notes"
 
 > Source: https://github.com/joyfill/components-swift/releases  
 
+## 3.0.0-rc10
+
+**Release Date:** February 12, 2026
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Page focus and blur events** — When the current page changes (e.g. on load or after `goto`), `onFocus` and `onBlur` receive page events via `event.pageEvent` (e.g. `"page.focus"`, `"page.blur"`).
+
+  **Breaking:** `onFocus` and `onBlur` now take `Event` instead of `FieldIdentifier`. Use `event.fieldEvent` for field focus/blur and `event.pageEvent` for page focus/blur.
+
+  ```swift
+  func onFocus(event: Joyfill.Event) {
+      if let pageEvent = event.pageEvent {
+          print("Page focused: \(pageEvent.type)")
+      }
+  }
+
+  func onBlur(event: Joyfill.Event) {
+      if let pageEvent = event.pageEvent {
+          print("Page blurred: \(pageEvent.type)")
+      }
+  }
+  ```
+
+- **Metadata** — Support for reading and updating field-level metadata and row-level metadata for table and collection rows. You can react to changes in `onChange` and update metadata via the editor's Change API.
+- **Row-level navigation** — The `goto` method now accepts a `GotoConfig` parameter. Use path `pageId/fieldPositionId/rowId` to navigate to a table or collection row, and `GotoConfig(open: true)` to open the row form modal.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Duplicate page fixes for mobile and desktop; formulas handled correctly when duplicating pages.
+
+---
+
 ## 3.0.0-rc9
 
 **Release Date:** January 30, 2026

@@ -4,13 +4,13 @@ icon: "bolt"
 ---
 This guide covers the event callbacks available in Joyfill forms and when they're triggered.
 
-### **Available Events**
+### **Available Events**
 
 | Event | When Triggered | Purpose |
 | --- | --- | --- |
-| onFieldChange | Field value changes | Track form changes |
-| onFocus | Field gains focus | Handle field focus |
-| onBlur | Field loses focus | Handle field blur |
+| onChange | Field value changes | Track form changes |
+| onFocus | Field gains focus, or page gains focus | Handle field or page focus |
+| onBlur | Field loses focus, or page loses focus | Handle field or page blur |
 | onUpload | File upload requested | Handle file uploads |
 | onCapture | Barcode scan requested | Handle barcode scanning |
 
@@ -20,8 +20,8 @@ Triggered when any field value changes in the form.
 
 **Parameters:**
 
-- changes: [Change] - Array of change objects describing what was modified
-- document: JoyDoc - The fully updated document with all changes applied
+- changes: [Change] - Array of change objects describing what was modified
+- document: JoyDoc - The fully updated document with all changes applied
 
 ```swift
 func onChange(changes: [Change], document: JoyDoc) {        
@@ -32,49 +32,65 @@ func onChange(changes: [Change], document: JoyDoc) {
 }
 ```
 
-![output.gif](Event%20handling/output.gif)
-
 ## **onFocus Event**
 
-Triggered when a field receives focus.
+Triggered when a field receives focus, or when a page becomes the current page (page focus).
 
 **Parameters:**
 
-- event: FieldIdentifier - Information about the current focused field
+- event: **Event** — Either a field focus or a page focus. Use `event.fieldEvent` for field focus, or `event.pageEvent` for page focus.
+
+**Event properties:**
+
+- `event.fieldEvent` — Set for field focus; contains `FieldIdentifier` (e.g. `fieldID`, `pageID`, `fieldPositionId`).
+- `event.pageEvent` — Set for page focus; contains `PageEvent` with `type: "page.focus"` and `page: Page`.
 
 ```swift
-func onFocus(event: Joyfill.FieldIdentifier) {
-     print("Field focused: \(event.fieldID)")
+func onFocus(event: Joyfill.Event) {
+    if let field = event.fieldEvent {
+        print("Field focused: \(field.fieldID)")
+    } else if let pageEvent = event.pageEvent {
+        print("Page focused: \(pageEvent.page.id ?? "")")
+    }
 }
 ```
 
 ## **onBlur Event**
 
-Triggered when a field loses focus.
+Triggered when a field loses focus, or when the user leaves a page (page blur).
 
 **Parameters:**
 
-- event: FieldIdentifier - Information about the field that lost focus
+- event: **Event** — Either a field blur or a page blur. Use `event.fieldEvent` for field blur, or `event.pageEvent` for page blur.
+
+**Event properties:**
+
+- `event.fieldEvent` — Set for field blur.
+- `event.pageEvent` — Set for page blur; contains `PageEvent` with `type: "page.blur"` and `page: Page`.
 
 ```swift
-func onBlur(event: Joyfill.FieldIdentifier) {
-     print("Field blurred: \(event.fieldID)")
+func onBlur(event: Joyfill.Event) {
+    if let field = event.fieldEvent {
+        print("Field blurred: \(field.fieldID)")
+    } else if let pageEvent = event.pageEvent {
+        print("Page blurred: \(pageEvent.page.id ?? "")")
+    }
 }
 ```
 
 ## **onUpload Event**
 
-Triggered when a file upload is requested for image or file fields.
+Triggered when a file upload is requested for image or file fields.
 
 **Parameters:**
 
-- event: UploadEvent - Upload event details
+- event: UploadEvent - Upload event details
 
 **Properties Available:**
 
-- fieldEvent: FieldIdentifier - The field requesting upload
-- multi: Bool - Whether multiple files are allowed
-- uploadHandler: ([String]) -> Void - Callback to provide file URLs
+- fieldEvent: FieldIdentifier - The field requesting upload
+- multi: Bool - Whether multiple files are allowed
+- uploadHandler: ([String]) -> Void - Callback to provide file URLs
 
 ```swift
 func onUpload(event: UploadEvent) {
@@ -92,16 +108,16 @@ func onUpload(event: UploadEvent) {
 
 ## **onCapture Event**
 
-Triggered when camera capture is requested for Barcode cell.
+Triggered when camera capture is requested for Barcode cell.
 
 **Parameters:**
 
-- event: CaptureEvent - Capture event details
+- event: CaptureEvent - Capture event details
 
 **Properties Available:**
 
-- fieldEvent: FieldIdentifier - The field requesting capture
-- captureHandler: (ValueUnion) -> Void - Callback to provide captured content
+- fieldEvent: FieldIdentifier - The field requesting capture
+- captureHandler: (ValueUnion) -> Void - Callback to provide captured content
 
 ```swift
     func onCapture(event: Joyfill.CaptureEvent) {
