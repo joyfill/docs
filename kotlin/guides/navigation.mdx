@@ -25,17 +25,49 @@ editor.goto("page_123/fieldPos_456")
 
 // Navigate to a row on a table/collection field on a page
 editor.goto("page_123/fieldPos_456/row_1")
+
+// Navigate to a row and open the row form modal
+editor.goto("page_123/fieldPos_456/row_1", GotoConfig(open = true))
 ```
 
 | Path Format | Description |
 | --- | --- |
 | `"pageId"` | Navigate to the top of the specified page |
 | `"pageId/fieldPositionId"` | Navigate to the page and scroll to the field |
-| `"pageId/fieldPositionId/rowId"` | Navigate to the page, open the field and scroll to the row |
+| `"pageId/fieldPositionId/rowId"` | Navigate to the page, scroll to the table/collection field, and select the row. Use `GotoConfig(open = true)` to also open the row form modal. |
 
 <Warning>
 **Important:** Use `fieldPositionId` from `page.fieldPositions[]._id`, not `fieldId` from `document.fields[]._id`. Using the wrong ID will cause navigation to fail.
 </Warning>
+
+For row-level paths, the field must be a **table** or **collection** type. The `rowId` must match an existing row's ID in that field's value; otherwise `goto` returns `NavResponse.Failure`.
+
+## GotoConfig
+
+Navigation behavior is configured via `GotoConfig`. Pass it as the second argument to `goto`.
+
+```kotlin
+/**
+ * Configuration for [DocumentEditor.goto] navigation.
+ *
+ * @param open If true, automatically open row form when navigating to a row.
+ *             Only applies to table/collection row navigation; ignored otherwise.
+ * @param animate Whether to animate the scroll. Defaults to true.
+ */
+class GotoConfig(
+    val open: Boolean = false,
+    val animate: Boolean = true
+) {
+    companion object {
+        val default = GotoConfig()
+    }
+}
+```
+
+| Property | Default | Description |
+| --- | --- | --- |
+| `open` | `false` | When `true`, automatically opens the row form modal for table/collection rows |
+| `animate` | `true` | Whether to animate the scroll |
 
 ## NavResponse
 
