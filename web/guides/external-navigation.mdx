@@ -1,5 +1,5 @@
 ---
-title: External Navigation
+title: Navigator
 icon: "compass"
 ---
 
@@ -52,11 +52,8 @@ navigator.goto("page_123/fieldPosition_456")
 **Web SDK scope:** Row-level paths (`pageId/fieldPositionId/rowId`) and opening row forms are not supported in the Web SDK. Use `pageId` or `pageId/fieldPositionId` only.
 </Info>
 
-## GotoConfig
 
-The Web SDK does not support a config parameter. Call `navigator.goto(path)` with a single path string only. Options such as opening a row form or animating scroll are not available in the Web SDK.
-
-## NavResponse
+## NavResponse 
 
 The `goto` method returns an object indicating success or failure.
 
