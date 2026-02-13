@@ -8,9 +8,9 @@ This document provides comprehensive information about all available events in J
 
 | Event Name | Event Triggers | Purpose |
 | --- | --- | --- |
-| `onFocus` | When a field receives focus | Track field focus events for analytics, validation, or UI updates |
+| `onFocus` | When a field receives focus, or when a page becomes active (see [Navigation Listener](/web/guides/navigation-listener)) | Track field focus events for analytics, validation, or UI updates; listen for page navigation |
 | `onChange` | When document data changes (field changes, field position changes, page changes, style changes, theme changes) | Handle document updates, save changes, or sync with external systems |
-| `onBlur` | When a field loses focus | Track field blur events for validation or cleanup operations |
+| `onBlur` | When a field loses focus, or when a page stops being active (see [Navigation Listener](/web/guides/navigation-listener)) | Track field blur events for validation or cleanup operations; listen for page navigation |
 | `onUploadAsync` | When images or files are uploaded | Handle file uploads to external storage or processing services |
 | `onCaptureAsync` | When barcode is captured for table barcode cells | Handle camera capture functionality for barcode fields |
 | `onFileUploadAsync` | When images or files are uploaded | Handle field-specific file uploads with custom logic |
@@ -22,8 +22,10 @@ This document provides comprehensive information about all available events in J
 
 ### onFocus
 
-- **Triggered when**: A field receives focus
-- **Purpose**: Track field focus events for analytics, validation, or UI updates
+- **Triggered when**: A field receives focus, or when a page becomes active (Navigation Listener)
+- **Purpose**: Track field focus events for analytics, validation, or UI updates; listen for page navigation
+
+**Navigation Listener:** When the active page changes, `onFocus` is also called with `type: 'page.focus'` and a full `page` object. See [Navigation Listener](/web/guides/navigation-listener) for details and payload shape.
 
 **Event signature:**
 
@@ -116,8 +118,10 @@ onChange(changelog, doc) => {
 
 ### onBlur
 
-- **Triggered when**: A field loses focus
-- **Purpose**: Track field blur events for validation or cleanup operations
+- **Triggered when**: A field loses focus, or when a page stops being active (Navigation Listener)
+- **Purpose**: Track field blur events for validation or cleanup operations; listen for page navigation
+
+**Navigation Listener:** When the active page changes, `onBlur` is also called with `type: 'page.blur'` and the page that is leaving. See [Navigation Listener](/web/guides/navigation-listener) for details and payload shape.
 
 **Event signature:**
 

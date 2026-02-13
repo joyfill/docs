@@ -1,0 +1,184 @@
+---
+title: External Navigation
+icon: "compass"
+---
+
+This document describes how to programmatically navigate to pages and fields within a form using the `Navigator` class.
+
+## Overview
+
+The `Navigator` class enables programmatic navigation to specific locations within a form. This is useful for:
+- Guiding users to required fields after validation
+- Implementing custom navigation flows
+- Deep linking to specific form sections
+- Auto-scrolling to specific fields
+
+## Setup
+
+Create a `Navigator` instance and pass it to the `JoyDoc` component.
+
+```jsx
+import { JoyDoc, Navigator } from '@joyfill/components';
+import { useMemo } from 'react';
+
+function MyForm({ doc, onChange }) {
+  // Create a stable Navigator instance
+  const navigator = useMemo(() => new Navigator(), []);
+
+  return (
+    <JoyDoc
+      doc={doc}
+      mode="fill"
+      navigator={navigator}
+      onChange={onChange}
+    />
+  );
+}
+```
+
+## Path-Based Navigation
+
+Navigate using a slash-separated path string.
+
+```javascript
+// Navigate to a page
+navigator.goto("page_123");
+
+// Navigate to a field on a page (with auto-scroll)
+navigator.goto("page_123/fieldPosition_456");
+```
+
+| Path Format | Description |
+| --- | --- |
+| `"pageId"` | Navigate to the top of the specified page |
+| `"pageId/fieldPositionId"` | Navigate to the page and automatically scroll to the field |
+
+<Warning>
+**Important:** Use `fieldPositionId` from `page.fieldPositions[]._id`, not `fieldId` from `document.fields[]._id`. Using the wrong ID will cause navigation to fail.
+</Warning>
+
+## Navigation Response
+
+The `goto` method returns an object indicating success or failure.
+
+```javascript
+const result = navigator.goto("page_123/fieldPosition_456");
+
+if (result.status === 'success') {
+  // Navigation succeeded - target exists and is visible
+  console.log('Navigation successful');
+} else {
+  // Navigation failed - target doesn't exist or is hidden
+  console.log('Navigation failed');
+}
+```
+
+| Response | Description |
+| --- | --- |
+| `{ status: 'success' }` | The target exists, is supported, and is visible |
+| `{ status: 'failure' }` | The target does not exist or is hidden |
+
+**Failure reasons include:**
+- Page does not exist
+- Page is hidden (due to conditional logic)
+- Field position does not exist
+- Field is hidden (due to conditional logic)
+- Navigator not connected to a JoyDoc component
+
+## Complete Example
+
+```jsx
+import React, { useState, useMemo } from 'react';
+import { JoyDoc, Navigator, validator } from '@joyfill/components';
+
+function FormWithNavigation({ initialDoc }) {
+  const [doc, setDoc] = useState(initialDoc);
+  const navigator = useMemo(() => new Navigator(), []);
+
+  // Navigate to first validation error
+  const handleValidateAndNavigate = () => {
+    const validationResult = validator(doc);
+    
+    if (validationResult.status !== 'valid') {
+      const firstError = validationResult.fieldValidations.find(v => !v.valid);
+      
+      if (firstError) {
+        const path = `${firstError.pageId}/${firstError.fieldPositionId}`;
+        const result = navigator.goto(path);
+        
+        if (result.status === 'success') {
+          console.log('Navigated to invalid field');
+        }
+      }
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleValidateAndNavigate}>
+        Go to First Error
+      </button>
+      
+      <JoyDoc
+        doc={doc}
+        mode="fill"
+        navigator={navigator}
+        onChange={(updatedDoc) => setDoc(updatedDoc)}
+      />
+    </div>
+  );
+}
+```
+
+## Finding Page and Field IDs
+
+Page IDs and Field Position IDs can be found in your JoyDoc document structure:
+
+```javascript
+// Document structure
+{
+  files: [{
+    pages: [{
+      _id: "page_123",           // ← Page ID
+      fieldPositions: [{
+        _id: "fieldPosition_456", // ← Field Position ID
+        type: "text",
+        title: "Customer Name"
+      }]
+    }]
+  }]
+}
+
+// Navigation path: "page_123/fieldPosition_456"
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use useMemo for Navigator instance">
+    Always create the Navigator with `useMemo` to maintain a stable reference:
+    
+    ```javascript
+    // ✅ Good
+    const navigator = useMemo(() => new Navigator(), []);
+    
+    // ❌ Bad - creates new instance every render
+    const navigator = new Navigator();
+    ```
+  </Accordion>
+  
+  <Accordion title="Handle navigation failures">
+    Always check the result status:
+    
+    ```javascript
+    const result = navigator.goto(path);
+    if (result.status === 'failure') {
+      // Handle failure - show message or fallback
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="One Navigator per JoyDoc">
+    Create one Navigator instance per JoyDoc component. Don't share navigators between multiple forms.
+  </Accordion>
+</AccordionGroup>

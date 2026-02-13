@@ -95,9 +95,9 @@
           {
             "group": "Resources",
             "pages": [
-                "kotlin/changelogs/releases",
-                "kotlin/changelogs/migration-guide",
-                "kotlin/about/security"
+              "kotlin/changelogs/releases",
+              "kotlin/changelogs/migration-guide",
+              "kotlin/about/security"
             ]
           }
         ]
@@ -108,9 +108,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": [
-              "react-native/introduction"
-            ]
+            "pages": ["react-native/introduction"]
           }
         ]
       },
@@ -129,6 +127,7 @@
             "group": "Guides",
             "pages": [
               "web/guides/modes",
+              "web/guides/navigator",
               "web/guides/image-upload-handling",
               "web/guides/required-field-validation",
               "web/guides/populating-and-extracting-data",
@@ -166,7 +165,12 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["api/introduction", "api/authentication", "api/identifiers", "api/platform-api-search"]
+            "pages": [
+              "api/introduction",
+              "api/authentication",
+              "api/identifiers",
+              "api/platform-api-search"
+            ]
           },
           {
             "group": "Documents",
@@ -228,14 +232,21 @@
         ]
       },
       {
-          "dropdown": "Joyfill Dev Sandbox",
-          "icon": "cube",
-          "groups": [
-              {
-                  "group": "Getting Started",
-                  "pages": ["joyfill-dev-sandbox/platform-joyfill-manager", "joyfill-dev-sandbox/setup", "joyfill-dev-sandbox/webhooks", "joyfill-dev-sandbox/pdf-generator-joyfill", "joyfill-dev-sandbox/key-terminology", "joyfill-dev-sandbox/how-to-create-templates"]
-              }
-          ]
+        "dropdown": "Joyfill Dev Sandbox",
+        "icon": "cube",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "joyfill-dev-sandbox/platform-joyfill-manager",
+              "joyfill-dev-sandbox/setup",
+              "joyfill-dev-sandbox/webhooks",
+              "joyfill-dev-sandbox/pdf-generator-joyfill",
+              "joyfill-dev-sandbox/key-terminology",
+              "joyfill-dev-sandbox/how-to-create-templates"
+            ]
+          }
+        ]
       }
     ],
     "global": {

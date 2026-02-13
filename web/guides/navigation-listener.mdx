@@ -1,0 +1,131 @@
+---
+title: Navigation Listener
+icon: "ear"
+---
+
+The **Navigation Listener** lets you react when the user changes the active page in a form. JoyDoc fires `page.focus` and `page.blur` through the same `onFocus` and `onBlur` props used for field events, so you can track which page is active for analytics, deep-linking, or custom UI.
+
+## Overview
+
+When the active page changes, JoyDoc emits:
+
+1. **page.blur** — the page that is leaving (losing “focus”)
+2. **page.focus** — the page that is becoming active
+
+Page changes can happen when the user:
+
+- Clicks a different page in the page navigation UI
+- Uses programmatic navigation (e.g. `navigator.goto("pageId")`)
+- Has the page changed via the `initialPageId` prop
+- Deletes the current page (blur on deleted page, then focus on the newly selected page)
+
+You handle these by implementing `onFocus` and `onBlur` and checking the event `type`.
+
+## Event Payloads
+
+Both events use the same callback signature as field focus/blur. The first argument is an object that includes a `type` field so you can tell page events from field events.
+
+### page.focus
+
+Emitted when a page becomes the active page.
+
+```javascript
+onFocus({
+  sdk: 'js',
+  v: 1,
+  type: 'page.focus',
+  _id: 'doc_xxx',           // document ID
+  identifier: 'doc_xxx',    // document identifier
+  fileId: 'file_xxx',
+  page: { _id, name, width, height, fieldPositions, ... }  // full page object
+})
+```
+
+### page.blur
+
+Emitted when a page stops being the active page.
+
+```javascript
+onBlur({
+  sdk: 'js',
+  v: 1,
+  type: 'page.blur',
+  _id: 'doc_xxx',
+  identifier: 'doc_xxx',
+  fileId: 'file_xxx',
+  page: { _id, name, width, height, fieldPositions, ... }
+})
+```
+
+## Distinguishing Page vs Field Events
+
+Use the `type` property to branch between navigation (page) and field events:
+
+```jsx
+<JoyDoc
+  doc={doc}
+  onFocus={(params) => {
+    if (params.type === 'page.focus') {
+      console.log('Page became active:', params.page._id, params.page.name);
+      analytics.track('page_view', { pageId: params.page._id });
+    } else {
+      console.log('Field focused:', params.fieldId);
+    }
+  }}
+  onBlur={(params) => {
+    if (params.type === 'page.blur') {
+      console.log('Page left:', params.page._id);
+    } else {
+      console.log('Field blurred:', params.fieldId);
+    }
+  }}
+/>
+```
+
+## When Events Fire
+
+| Scenario | page.blur | page.focus |
+| --- | --- | --- |
+| Initial load | No (no previous page) | Yes (initial page) |
+| User clicks another page | Yes (old page) | Yes (new page) |
+| `navigator.goto("pageId")` to different page | Yes (old page) | Yes (new page) |
+| `navigator.goto()` or click to same page | No | No |
+| Current page is deleted | Yes (deleted page) | Yes (auto-selected page) |
+| Page duplicated | No | No (active page unchanged) |
+
+## Complete Example
+
+```jsx
+import React, { useState } from 'react';
+import { JoyDoc } from '@joyfill/components';
+
+function FormWithNavigationListener({ initialDoc }) {
+  const [doc, setDoc] = useState(initialDoc);
+  const [activePageId, setActivePageId] = useState(null);
+
+  return (
+    <JoyDoc
+      doc={doc}
+      mode="fill"
+      onChange={(changelog, updatedDoc) => setDoc(updatedDoc)}
+      onFocus={(params) => {
+        if (params.type === 'page.focus') {
+          setActivePageId(params.page._id);
+          console.log('Navigation listener: page focused', params.page.name);
+        }
+      }}
+      onBlur={(params) => {
+        if (params.type === 'page.blur') {
+          console.log('Navigation listener: page blurred', params.page.name);
+        }
+      }}
+    />
+  );
+}
+```
+
+## Best Practices
+
+- **Check `type`** — Always use `params.type === 'page.focus'` or `params.type === 'page.blur'` before treating the event as a page navigation; otherwise you may handle field focus/blur as if it were a page change.
+- **Use with Navigator** — The Navigation Listener works with [External Navigation](/web/guides/external-navigation): `navigator.goto()` will trigger page.blur (old page) and page.focus (new page) when the target is a different page.
+- **Analytics** — Use page.focus to record which page the user is viewing for funnels or progress tracking.
