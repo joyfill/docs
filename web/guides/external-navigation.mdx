@@ -48,11 +48,6 @@ navigator.goto("page_123/fieldPosition_456")
 **Important:** Use `fieldPositionId` from `page.fieldPositions[]._id`, not `fieldId` from `document.fields[]._id`. Using the wrong ID will cause navigation to fail.
 </Warning>
 
-<Info>
-**Web SDK scope:** Row-level paths (`pageId/fieldPositionId/rowId`) and opening row forms are not supported in the Web SDK. Use `pageId` or `pageId/fieldPositionId` only.
-</Info>
-
-
 ## NavResponse 
 
 The `goto` method returns an object indicating success or failure.
