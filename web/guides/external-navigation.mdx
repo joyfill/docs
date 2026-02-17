@@ -1,0 +1,122 @@
+---
+title: Navigator
+icon: "compass"
+---
+
+This document describes how to programmatically navigate to pages and fields within a form using the `goto` API on `Navigator`.
+
+## Overview
+
+The `goto` method enables programmatic navigation to specific locations within a form. This is useful for:
+- Guiding users to required fields after validation
+- Implementing custom navigation flows
+- Deep linking to specific form sections
+- Auto-scrolling to specific fields
+
+Instantiate `Navigator` and pass it to the `JoyDoc` component via the `navigator` prop. Then call `navigator.goto(path)` with a path string whenever you want to navigate.
+
+```jsx
+import { JoyDoc, Navigator } from '@joyfill/components';
+
+const navigator = new Navigator();
+
+<JoyDoc navigator={navigator} doc={doc} mode="fill" />
+
+// Later, from your code:
+navigator.goto('page_123');
+navigator.goto('page_123/fieldPosition_456');
+```
+
+## Path-Based Navigation
+
+Navigate using a slash-separated path string.
+
+```javascript
+// Navigate to a page
+navigator.goto("page_123")
+
+// Navigate to a field on a page (with auto-scroll)
+navigator.goto("page_123/fieldPosition_456")
+```
+
+| Path Format | Description |
+| --- | --- |
+| `"pageId"` | Navigate to the top of the specified page |
+| `"pageId/fieldPositionId"` | Navigate to the page and scroll to the field |
+
+<Warning>
+**Important:** Use `fieldPositionId` from `page.fieldPositions[]._id`, not `fieldId` from `document.fields[]._id`. Using the wrong ID will cause navigation to fail.
+</Warning>
+
+<Info>
+**Web SDK scope:** Row-level paths (`pageId/fieldPositionId/rowId`) and opening row forms are not supported in the Web SDK. Use `pageId` or `pageId/fieldPositionId` only.
+</Info>
+
+
+## NavResponse 
+
+The `goto` method returns an object indicating success or failure.
+
+```javascript
+const result = navigator.goto("page_123/fieldPosition_456")
+
+if (result.status === "success") {
+  // Navigation succeeded - target exists and is visible
+} else {
+  // Navigation failed - target doesn't exist, is hidden, or unsupported
+}
+```
+
+| Response | Description |
+| --- | --- |
+| `"success"` | The target exists, is supported, and is visible |
+| `"failure"` | The target does not exist, is hidden, or has an unsupported field type |
+
+**Failure reasons include:**
+- Page does not exist
+- Page is hidden (due to conditional logic)
+- Field position does not exist
+- Field is hidden (due to conditional logic)
+- Field type is unsupported (e.g. `file`, `unknown`)
+- Navigating to a hidden field: the page still switches and scrolls to the top of the page, but `status` is `"failure"`
+
+## Page Change Events
+
+Page changes triggered by `goto()` or by the user clicking a page in the UI are emitted through the `onBlur` and `onFocus` callbacks (the **navigation listener**). When the active page changes, the SDK fires a page event so you can track which page is focused.
+
+Check the `type` property on the event to distinguish page events from field focus/blur events:
+
+```javascript
+<JoyDoc
+  doc={doc}
+  onFocus={(params) => {
+    if (params.type === 'page.focus') {
+      console.log('Arrived at page:', params.page._id, params.page.name)
+    }
+  }}
+  onBlur={(params) => {
+    if (params.type === 'page.blur') {
+      console.log('Left page:', params.page._id)
+    }
+  }}
+/>
+```
+
+| Event | Trigger |
+| --- | --- |
+| `onBlur` with `type: 'page.blur'` | Emitted when navigating away from a page |
+| `onFocus` with `type: 'page.focus'` | Emitted when navigating to a page |
+
+**Page event payload:**
+
+| Property | Description |
+| --- | --- |
+| `sdk` | `'js'` |
+| `v` | `1` |
+| `type` | `'page.focus'` or `'page.blur'` |
+| `_id` | Document ID |
+| `identifier` | Document identifier |
+| `fileId` | File ID |
+| `page` | The full page object that gained or lost focus |
+
+For all event options (including field-level focus/blur), see [Event Handling](/web/guides/event-handling).
