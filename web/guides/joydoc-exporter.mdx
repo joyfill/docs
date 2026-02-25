@@ -1,0 +1,216 @@
+---
+title: "JoyDocExporter"
+description: "Render JoyDoc forms as PDF-ready layouts for self-hosted PDF generation"
+icon: "file-export"
+---
+
+# Overview
+
+The `JoyDocExporter` component renders a JoyDoc form as a PDF-ready layout. It handles field measurement, formula resolution, and conditional logic — outputting a structure suitable for capturing as a PDF file using a headless browser.
+
+This component is the core building block for [self-hosted PDF generation](/web/guides/pdf-generator-self-hosted). It takes your JoyDoc JSON data and renders it in a print-optimized format.
+
+# 1. Install
+
+## Using a package manager
+
+<CodeGroup>
+  ```bash bash
+  npm install --save @joyfill/components
+  ```
+
+  ```bash bash
+  yarn add @joyfill/components
+  ```
+</CodeGroup>
+
+# 2. Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `doc` | `object` | ✅ | — | JoyDoc JSON data containing `files` and `fields` arrays. |
+| `theme` | `object` | ✅ | — | Theme configuration. The `fontFamily` property is required. |
+| `config` | `object` | ❌ | See below | PDF page configuration (height, width, padding). |
+
+### Config Object
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `config.page.height` | `number` | `1056` | Page height in pixels. |
+| `config.page.width` | `number` | `816` | Page width in pixels. |
+| `config.page.padding` | `number` | `0` | Page padding in pixels. |
+
+### Theme Object
+
+The `fontFamily` property is **required**. You must also ensure the font is loaded in your application before rendering the exporter.
+
+```javascript
+theme={{
+  fontFamily: 'Arial, sans-serif',
+  fontColorPrimary: '#333333',
+  fontColorSecondary: '#666666',
+  primaryColor: '#0066FF',
+  backgroundColor: '#FFFFFF',
+  borderColor: '#E0E0E0',
+  borderRadius: 4,
+  field: {
+    titleFontSize: 14,
+    titleFontColor: '#333333',
+    titleFontStyle: 'normal',
+    titleFontWeight: 'bold',
+    titleTextAlign: 'left',
+    fontSize: 13,
+    fontColor: '#333333',
+    margin: 4
+  }
+}}
+```
+
+<Warning>
+**fontFamily is required.** The `JoyDocExporter` will not render correctly without a `fontFamily` set in the theme. Make sure the font is loaded in your application.
+</Warning>
+
+# 3. Usage
+
+## React
+
+```jsx
+import { JoyDocExporter } from '@joyfill/components';
+
+const doc = {
+  _id: '691f3762738ed0e8e217abff',
+  type: 'template',
+  stage: 'draft',
+  metadata: {},
+  identifier: 'template_691f3762738ed0e8e217abff',
+  name: 'Starbucks template',
+  createdOn: 1763653482316,
+  files: [
+    {
+      _id: '691f3762c80bfb0005c57b48',
+      metadata: {},
+      name: 'Starbucks template',
+      version: 1,
+      styles: { margin: 4 },
+      pages: [
+        {
+          name: 'New Page',
+          fieldPositions: [
+            {
+              _id: '699f166036e3f465e57c6b68',
+              type: 'text',
+              displayType: 'original',
+              x: 0,
+              y: 11,
+              width: 4,
+              height: 8,
+              field: 'text1',
+            },
+          ],
+          hidden: false,
+          width: 816,
+          height: 1056,
+          cols: 8,
+          rowHeight: 8,
+          layout: 'grid',
+          presentation: 'normal',
+          margin: 0,
+          padding: 24,
+          borderWidth: 0,
+          _id: '691f376206195944e65eef76',
+          metadata: {},
+        },
+      ],
+      pageOrder: ['691f376206195944e65eef76'],
+      views: [],
+    },
+  ],
+  fields: [
+    {
+      file: '691f3762c80bfb0005c57b48',
+      _id: 'text1',
+      type: 'text',
+      title: 'Text',
+      identifier: 'field_text1',
+    },
+  ],
+  deleted: false,
+  categories: [],
+};
+
+function PDFPage() {
+  return (
+    <JoyDocExporter
+      doc={doc}
+      theme={{ fontFamily: 'Arial, sans-serif' }}
+      config={{
+        page: {
+          height: 1056,
+          width: 816,
+          padding: 0
+        }
+      }}
+    />
+  );
+}
+
+export default PDFPage;
+```
+
+# 4. PDF Capture Ready
+
+The `JoyDocExporter` uses a two-phase rendering process:
+
+1. **Measurement Phase** — The component measures field heights for dynamic layouts (tables, multi-select fields, etc.). During this phase, a "Field Measuring In Progress" message is displayed.
+2. **Render Phase** — Once measurements are complete, the final PDF layout is rendered and a `#pdf-capture-ready` element is added to the DOM.
+
+<Info>
+**Important:** When using a headless browser to capture the PDF, you must wait for the `#pdf-capture-ready` element to appear in the DOM before taking a screenshot or generating the PDF. Capturing before this element exists will result in incomplete or missing content.
+</Info>
+
+### Example: Waiting for PDF Ready (Puppeteer)
+
+```javascript
+await page.goto('http://localhost:3000/pdf-export', {
+  waitUntil: 'networkidle0'
+});
+
+await page.waitForSelector('#pdf-capture-ready');
+
+await page.pdf({
+  path: 'output.pdf',
+  format: 'Letter',
+  printBackground: true
+});
+```
+
+# 5. CSS Requirements
+
+Apply the following styles to the HTML file that contains the `JoyDocExporter`. This ensures proper color rendering and spacing when generating a PDF.
+
+```html
+<style>
+  html {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  body {
+    margin: 0px;
+  }
+</style>
+```
+
+<Warning>
+Ensure that no margin, padding, or other external spacing styles are targeting the body or any parent elements that contain `JoyDocExporter`. The component targets measurements and sizing to support standard PDF Letter dimensions. Additional spacing could impact sizing and cause fields to get cut off.
+</Warning>
+
+# 6. Features
+
+The `JoyDocExporter` automatically handles the following when rendering:
+
+- **Formula Resolution** — All formulas are calculated and resolved before rendering.
+- **Conditional Logic** — Fields are shown or hidden based on configured conditional logic rules.
+- **Dynamic Field Sizing** — Table, collection, and multi-select fields are measured and sized to fit their content.
+- **Page Breaking** — Content is split across pages based on the configured page dimensions.
+- **License Validation** — If a `license` prop is provided, the component validates it before rendering.
+

@@ -139,6 +139,7 @@
               "web/guides/formulas",
               "web/guides/customize-draggable-fields",
               "web/guides/pdf-file-uploads",
+              "web/guides/joydoc-exporter",
               "web/guides/external-navigation"
             ]
           },
