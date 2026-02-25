@@ -14,7 +14,7 @@ icon: "globe"
 
 ### 🚀 New Features & Enhancements
 
-- **Conditional Logic on Columns:** You can now apply conditional logic to table and collection columns, allowing columns to show or hide based on field values or other column values within the same row. (**NO-1919**)
+- **Conditional Logic on Columns:** You can now apply conditional logic to table columns, allowing columns to show or hide based on field values or conditions. (**NO-1919**)
 - **Force Hide By View:** Fields and table columns can now be hidden per view (desktop, mobile, PDF), giving you control over what appears in each view for cleaner, more tailored form layouts. (**NO-1913**)
 - **Filter Hidden Fields in Validation Output:** Fields that are hidden — whether by conditional logic, global settings, or view-specific hiding — are now excluded from validation results, ensuring validation only applies to visible fields. (**NO-1941**)
 
@@ -22,6 +22,10 @@ icon: "globe"
 
 - **Formula Handling for Page Duplication:** Resolved an issue where formulas were not properly carried over when duplicating a page. Formulas are now cloned with updated field references so they continue to work correctly on the duplicated page. (**NO-1888**)
 - **Formula Saving:** Fixed a bug where formula changes could be lost when saving due to stale document state. The formula editor now correctly tracks and persists all pending changes. (**NO-1922**)
+
+### ⚠️ Deprecation Notice
+
+- **Important:** We will be deprecating the use of the `hidden` property on `fieldPosition.tableColumns`. Going forward, the `hidden` property will be stored on `field` and `field.tableColumns`. The new `hiddenViews` property will also be stored on `field` and `field.tableColumns`.
 
 ---
 
