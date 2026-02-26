@@ -3,7 +3,7 @@ title: Navigation
 icon: "compass"
 ---
 
-This document describes how to programmatically navigate to pages, fields, and table/collection rows within a form using the `goto` API on `DocumentEditor`.
+This document describes how to programmatically navigate to pages, fields, table/collection rows, and individual cells within a form using the `goto` API on `DocumentEditor`.
 
 ## Overview
 
@@ -13,10 +13,11 @@ The `goto` method enables programmatic navigation to specific locations within a
 - Deep linking to specific form sections
 - Auto-scrolling to specific fields
 - Opening a specific table or collection row in its row form (modal)
+- Focusing a specific cell within a table or collection row
 
 ## Path-Based Navigation
 
-Navigate using a slash-separated path string. Up to three segments are supported.
+Navigate using a slash-separated path string. Up to four segments are supported.
 
 ```swift
 // Navigate to a page
@@ -27,6 +28,9 @@ let status = editor.goto("page_123/fieldPosition_456")
 
 // Navigate to a table or collection row (optionally open row form)
 let status = editor.goto("page_123/fieldPosition_456/row_789", gotoConfig: GotoConfig(open: true))
+
+// Navigate to a specific cell in a table or collection row
+let status = editor.goto("page_123/fieldPosition_456/row_789/column_012", gotoConfig: GotoConfig(open: true, focus: true))
 ```
 
 | Path Format | Description |
@@ -34,12 +38,15 @@ let status = editor.goto("page_123/fieldPosition_456/row_789", gotoConfig: GotoC
 | `"pageId"` | Navigate to the top of the specified page |
 | `"pageId/fieldPositionId"` | Navigate to the page and automatically scroll to the field |
 | `"pageId/fieldPositionId/rowId"` | Navigate to the page, scroll to the table/collection field, and select the row. Use `GotoConfig(open: true)` to also open the row form modal. |
+| `"pageId/fieldPositionId/rowId/columnId"` | Navigate to the page, scroll to the table/collection field, select the row, and target a specific column/cell. Use `GotoConfig(focus: true)` to auto-focus the cell. |
 
 <Warning>
 **Important:** Use `fieldPositionId` from `page.fieldPositions[]._id`, not `fieldId` from `document.fields[]._id`. Using the wrong ID will cause navigation to fail.
 </Warning>
 
-For row-level paths, the field must be a **table** or **collection** type. The `rowId` must match an existing row’s ID in that field’s value; otherwise `goto` returns `.failure`.
+For row-level paths, the field must be a **table** or **collection** type. The `rowId` must match an existing row's ID in that field's value; otherwise `goto` returns `.failure`.
+
+For column-level paths, the `columnId` must match an existing visible column in the field; otherwise `goto` returns `.failure` (but still navigates to the row).
 
 ## GotoConfig
 
@@ -50,21 +57,32 @@ public struct GotoConfig {
     /// When true, automatically opens the row form modal for table/collection rows.
     public let open: Bool
 
-    public init(open: Bool = false)
+    /// When true, triggers the onFocus callback for the target field or cell.
+    public let focus: Bool
+
+    public init(open: Bool = false, focus: Bool = false)
 }
 ```
 
 | Property | Default | Description |
 | --- | --- | --- |
-| `open` | `false` | If the path targets a table/collection row (`pageId/fieldPositionId/rowId`), set to `true` to open that row’s form in a modal after navigation. |
+| `open` | `false` | If the path targets a table/collection row, set to `true` to open that row's form in a modal after navigation. |
+| `focus` | `false` | When `true`, triggers the SDK's `onFocus` event for the target field or cell. For text, number, and barcode cells this also opens the keyboard. |
 
-Example: navigate to a row and open its form for editing.
+Examples:
 
 ```swift
+// Navigate to a row and open its form for editing
 let status = editor.goto("page_123/fieldPosition_456/row_789", gotoConfig: GotoConfig(open: true))
+
+// Navigate to a field and trigger onFocus
+let status = editor.goto("page_123/fieldPosition_456", gotoConfig: GotoConfig(focus: true))
+
+// Navigate to a specific cell, open the row form, and focus the cell
+let status = editor.goto("page_123/fieldPosition_456/row_789/column_012", gotoConfig: GotoConfig(open: true, focus: true))
 ```
 
-If you omit `gotoConfig`, the default `GotoConfig()` is used (same as `open: false`).
+If you omit `gotoConfig`, the default `GotoConfig()` is used (`open: false`, `focus: false`).
 
 ## NavigationStatus
 
@@ -85,7 +103,7 @@ case .failure:
 
 | Response | Description |
 | --- | --- |
-| `.success` | The target exists, is supported, and is visible (and for row paths, the row exists in the field). |
+| `.success` | The target exists, is supported, and is visible (and for row paths, the row exists; for column paths, the column exists and is visible). |
 | `.failure` | The target does not exist, is hidden, or has an unsupported field type. |
 
 **Failure reasons include:**
@@ -93,6 +111,7 @@ case .failure:
 - Page is hidden (due to conditional logic)
 - Field position does not exist
 - Field is hidden (due to conditional logic)
-- For row-level paths: field is not a table/collection, or the row ID is not found in the field’s value
+- For row-level paths: field is not a table/collection, or the row ID is not found in the field's value
+- For column-level paths: the column ID does not exist or is hidden
 
 When the page changes, the SDK emits page focus and page blur events. See [Event Handling](/ios/guides/event-handling#onfocus-event) for details.
