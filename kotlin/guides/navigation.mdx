@@ -3,7 +3,7 @@ title: Navigation
 icon: "compass"
 ---
 
-This document describes how to programmatically navigate to pages, and fields within a form using the `goto` API on `DocumentEditor`.
+This document describes how to programmatically navigate to pages, fields, table/collection rows, and individual cells within a form using the `goto` API on `DocumentEditor`.
 
 ## Overview
 
@@ -11,10 +11,13 @@ The `goto` method enables programmatic navigation to specific locations within a
 - Guiding users to required fields after validation
 - Implementing custom navigation flows
 - Deep linking to specific form sections
+- Auto-scrolling to specific fields
+- Opening a specific table or collection row in its row form (modal)
+- Focusing a specific cell within a table or collection row
 
 ## Path-Based Navigation
 
-Navigate using a slash-separated path string.
+Navigate using a slash-separated path string. Up to four segments are supported.
 
 ```kotlin
 // Navigate to a page
@@ -28,6 +31,10 @@ editor.goto("page_123/fieldPos_456/row_1")
 
 // Navigate to a row and open the row form modal
 editor.goto("page_123/fieldPos_456/row_1", GotoConfig(open = true))
+
+
+// Navigate to a specific cell in a table or collection row
+editor.goto("page_123/fieldPosition_456/row_789/column_012", GotoConfig(open: true, focus: true))
 ```
 
 | Path Format | Description |
@@ -35,12 +42,15 @@ editor.goto("page_123/fieldPos_456/row_1", GotoConfig(open = true))
 | `"pageId"` | Navigate to the top of the specified page |
 | `"pageId/fieldPositionId"` | Navigate to the page and scroll to the field |
 | `"pageId/fieldPositionId/rowId"` | Navigate to the page, scroll to the table/collection field, and select the row. Use `GotoConfig(open = true)` to also open the row form modal. |
+| `"pageId/fieldPositionId/rowId/columnId"` | Navigate to the page, scroll to the table/collection field, select the row, and target a specific column/cell. Use `GotoConfig(focus: true)` to auto-focus the cell. |
 
 <Warning>
 **Important:** Use `fieldPositionId` from `page.fieldPositions[]._id`, not `fieldId` from `document.fields[]._id`. Using the wrong ID will cause navigation to fail.
 </Warning>
 
-For row-level paths, the field must be a **table** or **collection** type. The `rowId` must match an existing row's ID in that field's value; otherwise `goto` returns `NavResponse.Failure`.
+For row-level paths, the field must be a **table** or **collection** type. The `rowId` must match an existing row's ID in that field's value; otherwise `goto` returns `.failure`.
+
+For column-level paths, the `columnId` must match an existing visible column in the field; otherwise `goto` returns `.failure` (but still navigates to the row).
 
 ## GotoConfig
 
@@ -56,6 +66,7 @@ Navigation behavior is configured via `GotoConfig`. Pass it as the second argume
  */
 class GotoConfig(
     val open: Boolean = false,
+    val focus: Boolean = false,
     val animate: Boolean = true
 ) {
     companion object {
@@ -68,6 +79,7 @@ class GotoConfig(
 | --- | --- | --- |
 | `open` | `false` | When `true`, automatically opens the row form modal for table/collection rows |
 | `animate` | `true` | Whether to animate the scroll |
+| `focus` | `false` | When `true`, triggers the SDK's `onFocus` event for the target field or cell. For text, number, and barcode cells this also opens the keyboard. |
 
 ## NavResponse
 
@@ -99,6 +111,8 @@ when (response) {
 - Field type is unsupported (`file`, `unknown`)
 - Row is hidden
 - Row does not exist
+- Column is hidden
+- Column does not exist
 
 ## Page Change Events
 
