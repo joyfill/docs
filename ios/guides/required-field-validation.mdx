@@ -35,7 +35,7 @@ if validationResult.status == .valid {
 - **Check status** for overall validation result
 - **Use fieldValidities** to get specific field errors
 - **Required fields** must have non-empty values
-- **Hidden fields** are automatically considered valid (conditional logic and `hiddenViews`)
+- **Hidden fields** are always filtered out of the validation output (conditional logic and `hiddenViews`)
 - **Page hidden**: all of its fields are valid
 - **Table/Collection**: validate their required columns per row. Each `FieldValidity` includes `rowValidities` with row-level and cell-level results (`RowValidity` and `CellValidity`)
 - **Non-required table/collection fields** still validate rows against required columns
