@@ -6,6 +6,21 @@ icon: "notes"
 
 > Source: https://github.com/joyfill/components-swift/releases  
 
+## 3.0.0-rc11
+
+
+## What's Changed
+**Added**
+* **Column conditional logic** — Table and collection columns can now be shown or hidden based on conditional logic rules, with support across page duplication.
+* **View-based field and column hiding** — Fields and columns with hiddenViews set for the current view type are now force-hidden, taking top priority over conditional logic.
+* **Navigation: column targeting and focus** — goto() now supports full path pageId/fieldPositionId/rowId/columnId for cell-level navigation. GotoConfig(focus: true) triggers the onFocus callback for programmatic field focus.
+
+**Changed**
+* **Validation with row and cell output** — The validate() method now returns row-level and cell-level validity for table and collection fields, with goto() support to navigate directly to invalid fields.
+
+**Full Changelog**: https://github.com/joyfill/components-swift/compare/3.0.0-rc10...3.0.0-rc11
+
+
 ## 3.0.0-rc10
 
 **Release Date:** February 12, 2026
