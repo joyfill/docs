@@ -4,13 +4,13 @@ icon: "check-circle"
 ---
 The validation system checks required fields, validates data formats, and provides detailed feedback about validation status.
 
-### **How Required Field Validation Works**
+### **How Required Field Validation Works**
 
-Joyfill automatically validates required fields based on:
+Joyfill automatically validates required fields based on:
 
-- **Field requirement**: Fields marked as required = true
-- **Field visibility**: Hidden fields are always considered valid (even if required)
-- **Field values**: Required fields must have non-empty values to be valid
+- **Field requirement**: Fields marked as required = true
+- **Field visibility**: Hidden fields are always considered valid (even if required)
+- **Field values**: Required fields must have non-empty values to be valid
 
 **Basic Usage**
 
@@ -31,10 +31,12 @@ if validationResult.status == .valid {
 
 **Key Points**
 
-- **Call validate()** before form submission
-- **Check status** for overall validation result
-- **Use fieldValidities** to get specific field errors
-- **Required fields** must have non-empty values
-- **Hidden fields** are automatically considered valid
+- **Call validate()** before form submission
+- **Check status** for overall validation result
+- **Use fieldValidities** to get specific field errors
+- **Required fields** must have non-empty values
+- **Hidden fields** are automatically considered valid (conditional logic and `hiddenViews`)
 - **Page hidden**: all of its fields are valid
-- **Table** validate their required columns
+- **Table/Collection**: validate their required columns per row. Each `FieldValidity` includes `rowValidities` with row-level and cell-level results (`RowValidity` and `CellValidity`)
+- **Non-required table/collection fields** still validate rows against required columns
+- **Navigate to invalid fields**: use `fieldValidity.pageId` and `fieldValidity.fieldPositionId` with `goto()` to navigate directly to invalid fields
