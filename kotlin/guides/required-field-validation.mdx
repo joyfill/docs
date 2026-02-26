@@ -9,7 +9,7 @@ This guide shows you how to validate required fields in Joyfill forms.
 Joyfill automatically validates required fields based on:
 
 - **Field requirement**: Fields marked as required = true
-- **Field visibility**: Hidden fields are always considered valid (even if required)
+- **Field visibility**: Hidden fields are always filtered out of the validation Output
 - **Field values**: Required fields must have non-empty values to be valid
 
 ### **Document-Level Validation**
@@ -121,7 +121,7 @@ if (isRequired) {
 ### **Key Points**
 
 - Required fields are automatically validated based on the `required` property
-- Hidden fields are always valid, even if marked as required
+- Hidden fields are always filtered out of the validation Output
 - Validation errors use the format: "Component [title] is required"
 - Call `editor.validate()` anytime to get current validation status
 - Document validation checks all visible required fields at once
