@@ -8,6 +8,22 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc13
+
+**Release Date:** March 11, 2026
+
+🚀 **New Features & Enhancements**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Single Field Validation:** You can now validate individual fields on demand using the `validateField` function, returning a valid or invalid status with reasons, without triggering full-document validation. Handles special cases for table fields (per-column row validation) and collection fields (nested table validation). (NO-1960)
+
+- **Decorators on Standard Fields:** Fields now support a `decorators` property, which are customizable action pills with an icon, label, color, and action identifier. Up to 3 decorators render inline; 4 or more collapse into a popover menu. Decorators are hidden in readonly and pdf modes and are only clickable in fill mode. (NO-1973)
+
+- **Decorators on Table Row Fields:** Table fields now support a `rowDecorators` property, allowing action pills to be attached per row. Deleted decorators are automatically filtered out to ensure data integrity. (NO-1973)
+
+---
+
 ## 4.0.0-RC12
 
 **Release Date:** February 25, 2026
