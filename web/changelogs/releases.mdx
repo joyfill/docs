@@ -20,6 +20,35 @@ icon: "globe"
   * You can now validate individual fields on demand using the `validateField` function, returning a valid or invalid status with reasons, without triggering full-document validation.
   * Handles special cases for table fields (per-column row validation) and collection fields (nested table validation). (NO-1960)
 
+  **Example: Validate a single field inside onChange**
+
+  ```tsx
+  import { JoyDoc, validator } from '@joyfill/components';
+
+  <JoyDoc
+    doc={doc}
+    mode="fill"
+    onChange={(changelogs, updatedDoc) => {
+      // Get the changed field ID from the first changelog entry
+      const changedFieldId = changelogs[0]?._id;
+
+      // Find the updated field in the doc
+      const field = updatedDoc.fields.find((f) => f._id === changedFieldId);
+
+      if (field) {
+        const result = validator.validateField(field, 'desktop', updatedDoc.fields);
+
+        if (result.status === 'invalid') {
+          console.log('Field is invalid:', result.reasons);
+          // e.g. ['Required']
+        } else {
+          console.log('Field is valid');
+        }
+      }
+    }}
+  />
+  ```
+
 - **Decorators:**
   * Fields now support a `decorators` property, and table fields support a `rowDecorators` property — both are customizable action pills with an icon, label, color, and action identifier.
   * Up to 3 decorators render inline; 4 or more collapse into a popover menu.
