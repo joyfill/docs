@@ -10,7 +10,22 @@ icon: "android"
 
 - Decorators: integrators can attach icons or text to fields or rows; tapping them fires a custom event to the host application, enabling custom UI actions
 - `inlineFields` parameter on the `Form` composable: when `true`, openable fields (table, collection, image, signature, chart) expand inline within the existing view instead of opening a modal or new screen, giving the host application full control of the UI layer
-- Single field validation via `field.validate()`
+- Single field validation via `field.validate()`, here is an example on how to use in the From: 
+  ```
+  onFieldChange = {
+      val textField = editor.fields.text(it.fieldId) ?: return@Form
+      val validity = textField.validate()
+      val status = validity.status.lowercase // can be "valid" or "invalid"
+      val field = validity.component
+      val pageId = validity.pageId
+      val fieldPositionId = validity.fieldPositionId
+      val rowValidites = validity.rowValidites // nullable if its not a table or a collection field
+      val messages = validity.messages // deprecated and should not be used
+      if (validity is Valid) {
+          val validStatus = validity.status.lowercase // "valid"
+      }
+  }
+  ```
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
