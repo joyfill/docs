@@ -4,13 +4,32 @@ description: "Complete changelog of Joyfill Kotlin Multiplatform SDK releases"
 icon: "android"
 ---
 
+## 2.0.0-RC14
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Decorators: integrators can attach icons or text to fields or rows; tapping them fires a custom event to the host application, enabling custom UI actions
+- `inlineFields` parameter on the `Form` composable: when `true`, openable fields (table, collection, image, signature, chart) expand inline within the existing view instead of opening a modal or new screen, giving the host application full control of the UI layer
+- Single field validation via `field.validate()`
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Changelog entries now include a `type` property (mirrors `target`, e.g. `"field.update"`) for consistency with the web SDK
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- `goto()` now correctly returns a failure result when a valid row ID is provided but the specified `columnId` does not exist
+- Multi-select field options with long text are now displayed in full instead of being truncated
+- `DateField` clearing now correctly fires `onFieldChange` from the form in addition to `onChange` from the `DocumentEditor`
+- Column order in field validation results for table and collection fields now matches the defined column order
+
 ## 2.0.0-RC13
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
 - Required field validation output now includes rows and cells for validation issues
 - Table/collection validation now follows proper hierarchy — validation depends on row validity, not only whether the field is empty or has no rows
-- External Navigation Pt.3 — cell navigation and focus highlighting: `goto` supports `columnId` for row-form cell targeting and `focus: true` for auto-focus with highlighted border styles ([documentation](https://docs.joyfill.io/kotlin/guides/navigation))
+- External Navigation Pt.3 — cell navigation and focus highlighting: `goto` supports `columnId` for row-form cell targeting and `focus: true` for auto-focus with highlighted border styles
 - Conditional logic on columns — show and hide table/collection columns based on other field values (same pattern as existing conditional logic)
 
 ## 2.0.0-RC12
