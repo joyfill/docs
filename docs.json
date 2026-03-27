@@ -48,6 +48,7 @@
               "ios/guides/schema-validation",
               "ios/guides/event-handling",
               "ios/guides/form-configuration",
+              "ios/guides/form-footer",
               "ios/guides/external-navigation"
             ]
           },
