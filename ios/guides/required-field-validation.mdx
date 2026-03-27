@@ -29,6 +29,23 @@ if validationResult.status == .valid {
 }
 ```
 
+**Path-scoped validation (`validate(path:)`)**
+
+Use a path string when you only need validation for the whole document, one page, or one field layout—same rules as `validate()`, scoped to that path.
+
+- **`""`** (or whitespace-only) — same as `validate()`; result is `.page(Validation)`.
+- **Page id only** — pass a single page id string; fields on that page only; `.page(Validation)`.
+- **`pageId/fieldPositionId`** — two ids separated by `/`; that field when the first segment matches the page that owns the position; `.field(FieldValidity)`. Otherwise falls back to `.page(Validation)` for the page id in the path.
+
+Surrounding whitespace around the path and next to `/` is ignored. Use `fieldValidity` on the returned `ComponentValidity` when you only care about the single-field case (non-`nil` for `.field`).
+
+```swift
+let scoped = documentEditor.validate(path: "\(pageId)/\(fieldPositionId)")
+if case .field(let fieldValidity) = scoped {
+    // use fieldValidity.status, .field, .rowValidities, etc.
+}
+```
+
 **Key Points**
 
 - **Call validate()** before form submission
@@ -40,3 +57,4 @@ if validationResult.status == .valid {
 - **Table/Collection**: validate their required columns per row. Each `FieldValidity` includes `rowValidities` with row-level and cell-level results (`RowValidity` and `CellValidity`)
 - **Non-required table/collection fields** still validate rows against required columns
 - **Navigate to invalid fields**: use `fieldValidity.pageId` and `fieldValidity.fieldPositionId` with `goto()` to navigate directly to invalid fields
+- **Path-scoped checks**: use `validate(path:)` when you validate after a single edit, one page submit, or to match the same `pageId`/`fieldPositionId` shape as `goto()`
