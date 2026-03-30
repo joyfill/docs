@@ -1,0 +1,86 @@
+---
+title: Form footer
+icon: "mobile"
+---
+
+## What it is
+
+`formFooter` is a SwiftUI modifier on the Joyfill `Form` that adds **your** bottom bar—buttons, labels, validation hints, or any other views—**above the home indicator and safe area**. The SDK keeps that bar on screen as users move through the main form and many nested flows (for example chart detail, signature canvas, or table and collection row forms), so you do not have to rebuild the same toolbar on every screen yourself.
+
+It is **not** configured on `DocumentEditor` or in JSON; it is plain SwiftUI you compose next to `Form`.
+
+## How to use
+
+1. Chain **`.formFooter { … }`** on `Form` or on **any parent** that wraps `Form` (the modifier only needs to sit **above** `Form` in the view hierarchy).  
+2. Build the footer inside the closure like any other SwiftUI view. You can use `@State`, `ObservableObject`, and animations there; when that state changes, the footer updates.
+
+```swift
+import SwiftUI
+import Joyfill
+import JoyfillModel
+
+struct MyFormScreen: View {
+    let documentEditor: DocumentEditor
+
+    var body: some View {
+        Form(documentEditor: documentEditor)
+            .formFooter {
+                HStack {
+                    Button("Save") {
+                        // e.g. persist or call your API
+                    }
+                    Button("Submit") { }
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color(.secondarySystemBackground))
+            }
+    }
+}
+```
+
+- If you **do not** add `formFooter`, the SDK does not add a footer; layout matches earlier versions.
+- Keep the footer **compact** when possible so it leaves enough room for form content; long footers still respect the safe area but reduce visible scroll area.
+
+## Show or hide the footer by page
+
+You can turn the footer **on or off for specific pages** using the same **page focus and blur** callbacks described in [Event handling](/ios/guides/event-handling). When the user moves to another page, the SDK calls `onFocus` with `event.pageEvent` (`type` is `"page.focus"`) and calls `onBlur` on the previous page with `"page.blur"`. Each `PageEvent` includes `page` (use `page.id` for that page’s `_id` in the doc).
+
+1. Keep a `Bool` (or similar) in SwiftUI state—often `@Published` on an `ObservableObject` you pass to `DocumentEditor` as `events:`.
+2. In `onFocus`, when `event.pageEvent` is set, update that flag from `page.id` (for example hide the footer when the id is in a `Set` of pages that should not show actions).
+3. Optionally use `onBlur` with `event.pageEvent` for the same `type`/page shape when you need logic tied to **leaving** a page.
+4. In `.formFooter { }`, only build the footer when your flag is `true` (use `if showFooter { … }`).
+
+The `Form` does not need extra APIs; your existing `FormChangeEvent` implementation drives visibility.
+
+```swift
+// Properties on the same type (e.g. @Published var showFooter; let pagesWithoutFooter: Set<String>).
+
+// In your FormChangeEvent type (same object you pass as DocumentEditor’s `events:`).
+func onFocus(event: Joyfill.Event) {
+    if let pageEvent = event.pageEvent, pageEvent.type == "page.focus", let id = pageEvent.page.id {
+        showFooter = !pagesWithoutFooter.contains(id)
+    }
+    // Still handle field focus via event.fieldEvent when needed.
+}
+
+func onBlur(event: Joyfill.Event) {
+    if let pageEvent = event.pageEvent, pageEvent.type == "page.blur" {
+        // Optional: page being left is pageEvent.page
+    }
+}
+
+// On your Form:
+.formFooter {
+    if showFooter {
+        HStack { Button("Save") { }; Button("Submit") { } }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(Color(.secondarySystemBackground))
+    }
+}
+```
+
+## Example project
+
+The [Example app](https://github.com/joyfill/SimpleUIkitProject) includes a sample footer (show/hide) and matching form JSON.

@@ -6,6 +6,22 @@ icon: "notes"
 
 > Source: https://github.com/joyfill/components-swift/releases  
 
+## 3.0.0-rc14
+
+**Release Date:** March 30, 2026
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Scoped validation** — The `validate` API now supports validating a specific path via `validate(path:)` (for example a page or a single field), not only the full form.
+- **Form footer** — Added a `formFooter` modifier on the SDK so host apps can inject a footer across form screens.
+
+  ```swift
+  Form(documentEditor: documentEditor)
+      .formFooter {
+          MyFooterView()
+      }
+  ```
+
 ## 3.0.0-rc13
 
 **Release Date:** March 25, 2026
