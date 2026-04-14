@@ -6,6 +6,59 @@ icon: "notes"
 
 > Source: https://github.com/joyfill/components-swift/releases  
 
+## 3.0.0-rc16
+
+
+**Release Date:** April 14, 2026
+
+**Added**
+```swift
+import Joyfill
+import JoyfillModel
+
+var decorator = Decorator()
+decorator.icon = "comment"
+decorator.label = "Review"
+decorator.color = "#3B82F6"
+decorator.action = "open_review"
+
+// path formats:
+// field  -> "pageId/fieldPositionId"
+// row    -> "pageId/fieldPositionId/rowId"
+// column -> "pageId/fieldPositionId/rowId/columnId"
+let path = "\(pageId)/\(fieldPositionId)/\(rowId)/\(columnId)"
+
+// Add
+documentEditor.addDecorators(path: path, decorators: [decorator])
+
+// Read
+let decorators = documentEditor.getDecorators(path: path)
+
+// Update (matched by action)
+decorator.label = "Open Review"
+documentEditor.updateDecorator(path: path, action: "open_review", decorator: decorator)
+
+// Remove
+documentEditor.removeDecorator(path: path, action: "open_review")
+```
+```swift
+// path formats:
+// row  -> "pageId/fieldPositionId/rowId"
+// cell -> "pageId/fieldPositionId/rowId/columnId"
+
+documentEditor.validate(path: path)
+```
+**Fixed**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
+
+* **Decorators**: Dynamic decorators API with live UI updates.
+* **Validation**: Path-scoped validation via validate(path:), including support for row- and cell-level checks.
+* **Page list view**: Fixed UI hangs with 300+ pages.
+* **Navigation**: Fixed row edit sheet dismiss/reset behavior during programmatic navigation.
+* **Logging**: Wrapped Log() with #if DEBUG to eliminate string construction overhead in release builds.
+
+
 ## 3.0.0-rc15
 
 **Release Date:** April 1, 2026
