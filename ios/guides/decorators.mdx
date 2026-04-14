@@ -1,0 +1,123 @@
+---
+title: Decorators
+icon: "sparkles"
+---
+
+Decorators are small actions attached to a **field**, a **table/collection row**, or a **column**. They appear as an icon and/or label. When the user taps one, the SDK delivers the tap through **`onFocus`** so your app can run custom logic (navigation, uploads, deep links, etc.).
+
+## Decorator model
+
+Each decorator is a `Decorator` value (`JoyfillModel`) with optional presentation fields and a required **`action`** string used as the event identifier.
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `action` | `String` | **Required** for programmatic add/update. Non-empty; must be unique among decorators at the same path. |
+| `icon` | `String?` | Icon name (see [Supported icons](#supported-icons)). |
+| `label` | `String?` | Text shown next to or instead of the icon. |
+| `color` | `String?` | If set, must be a 6-digit hex color: `#RRGGBB` (e.g. `#3B82F6`). |
+
+The control is shown only when there is a non-empty **`icon`** or **`label`** (`isDisplayable`).
+
+```swift
+import JoyfillModel
+
+var d = Decorator()
+d.action = "openHelp"
+d.icon = "circle-info"
+d.label = "Help"
+d.color = "#2563EB"
+```
+
+## Paths
+
+`DocumentEditor` resolves decorators using a slash-separated path:
+
+| Segments | Scope |
+| --- | --- |
+| `pageId/fieldPositionId` | Field header decorators |
+| `pageId/fieldPositionId/rowId` | Row decorators (tables and collections) |
+| `pageId/fieldPositionId/rowId/columnId` | Column decorators |
+
+
+## API
+
+Paths use **`pageId`**, **`fieldPositionId`**, and for tables/collections **`rowId`** and **`columnId`** from your document. Replace the placeholders below with real ids from `Page`, `FieldPosition`, and the field’s row/column model.
+
+### Field decorators (two segments)
+
+```swift
+let fieldPath = "\(pageId)/\(fieldPositionId)"
+
+let onField = editor.getDecorators(path: fieldPath)
+
+editor.addDecorators(path: fieldPath, decorators: [d])
+editor.removeDecorator(path: fieldPath, action: "openHelp")
+editor.updateDecorator(path: fieldPath, action: "openHelp", decorator: updated)
+```
+
+### Row decorators (three segments)
+
+Row decorators apply to a **specific row** in a table or collection. The path is `pageId/fieldPositionId/rowId`.
+
+```swift
+// Example: row "row_7f3a" on a table/collection field
+let rowPath = "\(pageId)/\(fieldPositionId)/row_7f3a"
+
+let onRow = editor.getDecorators(path: rowPath)
+
+var rowAction = Decorator()
+rowAction.action = "duplicateRow"
+rowAction.icon = "plus"
+rowAction.label = "Duplicate"
+
+editor.addDecorators(path: rowPath, decorators: [rowAction])
+editor.removeDecorator(path: rowPath, action: "duplicateRow")
+```
+
+### Column decorators (four segments)
+
+Column decorators apply to a **column** in the context of a row (table or collection). The path is `pageId/fieldPositionId/rowId/columnId`.
+
+```swift
+// Example: column "col_attachments" on row "row_7f3a"
+let columnPath = "\(pageId)/\(fieldPositionId)/row_7f3a/col_attachments"
+
+let onColumn = editor.getDecorators(path: columnPath)
+
+var colAction = Decorator()
+colAction.action = "uploadFile"
+colAction.icon = "paperclip"
+colAction.color = "#3B82F6"
+
+editor.addDecorators(path: columnPath, decorators: [colAction])
+editor.updateDecorator(path: columnPath, action: "uploadFile", decorator: colAction)
+```
+
+Failures (invalid path, validation, duplicate `action`, missing decorator to remove/update) are reported through **`onError`** as `JoyfillError.decoratorError(DecoratorError)`.
+
+**Collection fields:** Adding or changing decorators on collection fields requires a license that enables collection features. Otherwise the SDK emits a decorator error and does not apply the change.
+
+## Handling taps
+
+Decorator taps are **not** separate callbacks. They are delivered on **`onFocus`** with a **field** event whose `type` and `target` are set to the decorator’s **`action`**. Use the same handler as normal field focus, and branch on `field.type` / `field.target` when needed.
+
+For row or column scope, **`rowIds`**, **`columnId`**, and **`parentPath`** may be set on `FieldIdentifier` so you know where the user tapped.
+
+```swift
+func onFocus(event: Joyfill.Event) {
+    guard let field = event.fieldEvent else { return }
+
+    if let action = field.type, !action.isEmpty {
+        // Decorator tap (action matches your decorator's `action`)
+        print("Decorator:", action, "field:", field.fieldID, "rows:", field.rowIds ?? [])
+    } else {
+        // Ordinary field focus
+    }
+}
+```
+
+See [Event handling](/ios/guides/event-handling) for the full `onFocus` / `onBlur` flow.
+
+## Supported icons
+
+The SDK maps common names to bundled artwork or SF Symbols, including: `camera`, `import`, `paperclip`, `image`, `file`, `comment`, `comments`, `upload`, `download`, `rotate`, `cloud`, `filter`, `share`, `paper-plane`, `folder`, `folder-open`, `magnet`, `eye`, `circle-info`, `add`, `plus`, `print`, `flag`. Unknown names fall back to a default symbol.

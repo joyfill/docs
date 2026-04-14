@@ -49,7 +49,8 @@
               "ios/guides/event-handling",
               "ios/guides/form-configuration",
               "ios/guides/form-footer",
-              "ios/guides/external-navigation"
+              "ios/guides/external-navigation",
+              "ios/guides/decorators"
             ]
           },
           {
