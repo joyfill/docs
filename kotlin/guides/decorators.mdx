@@ -1,0 +1,125 @@
+---
+title: Decorators
+icon: "sparkles"
+---
+
+Decorators are small actions attached to a **field**, a **table/collection row**, or a **column**. They appear as an icon and/or label. When the user taps one, the SDK delivers the tap through **`onFocus`** so your app can run custom logic (navigation, uploads, deep links, etc.).
+
+## Decorator model
+
+Each decorator is a clickable element in the form with optional presentation fields and a required **`action`** string used as the event identifier.
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `action` | `String?` | Non-empty and unique among decorators at the same path; required when adding/updating programmatically. |
+| `icon` | `String?` | Icon name (see [Supported icons](#supported-icons)). |
+| `label` | `String?` | Text shown next to or instead of the icon. |
+| `color` | `String?` | If set, must be a 6-digit hex color: `#RRGGBB` (e.g. `#3B82F6`). |
+
+The control is shown only when there is a non-empty **`icon`** or **`label`** (`isDisplayable`).
+
+```kotlin
+val decorator = Decorator().apply {
+    action = "openHelp"
+    icon = "circle-info"
+    label = "Help"
+    color = "#2563EB"
+}
+```
+
+## Paths
+
+`DocumentEditor` resolves decorators using a slash-separated path:
+
+| Segments | Scope |
+| --- | --- |
+| `pageId/fieldPositionId` | Field header decorators |
+| `pageId/fieldPositionId/rowId` | Row decorators (tables and collections) |
+| `pageId/fieldPositionId/rowId/columnId` | Column decorators |
+
+
+## API
+
+Paths use **`pageId`**, **`fieldPositionId`**, and for tables/collections **`rowId`** and **`columnId`** from your document. Replace the placeholders below with real ids from `Page`, `FieldPosition`, and the field's row/column model.
+
+### Field decorators (two segments)
+
+```kotlin
+val fieldPath = "$pageId/$fieldPositionId"
+
+val onField = documentEditor.decorator.list(fieldPath)
+
+documentEditor.decorator.add(fieldPath, decorator)
+documentEditor.decorator.remove(fieldPath, action = "openHelp")
+documentEditor.decorator.update(fieldPath, action = "openHelp", decorator = updated)
+```
+
+### Row decorators (three segments)
+
+Row decorators apply to a **specific row** in a table or collection. The path is `pageId/fieldPositionId/rowId`.
+
+```kotlin
+// Example: row "row_7f3a" on a table/collection field
+val rowPath = "$pageId/$fieldPositionId/row_7f3a"
+
+val onRow = documentEditor.decorator.list(rowPath)
+
+val rowAction = Decorator().apply {
+    action = "duplicateRow"
+    icon = "plus"
+    label = "Duplicate"
+}
+
+documentEditor.decorator.add(rowPath, rowAction)
+documentEditor.decorator.remove(rowPath, action = "duplicateRow")
+```
+
+### Column decorators (four segments)
+
+Column decorators apply to a **column** in the context of a row (table or collection). The path is `pageId/fieldPositionId/rowId/columnId`.
+
+```kotlin
+// Example: column "col_attachments" on row "row_7f3a"
+val columnPath = "$pageId/$fieldPositionId/row_7f3a/col_attachments"
+
+val onColumn = documentEditor.decorator.list(columnPath)
+
+val colAction = Decorator().apply {
+    action = "uploadFile"
+    icon = "paperclip"
+    color = "#3B82F6"
+}
+
+documentEditor.decorator.add(columnPath, colAction)
+documentEditor.decorator.update(columnPath, action = "uploadFile", decorator = colAction)
+```
+
+Failures (invalid path, validation, duplicate `action`, missing decorator to remove/update) are reported through **`onError`** as `JoyfillError.DecoratorError(DecoratorError)`.
+
+**Collection fields:** Adding or changing decorators on collection fields requires a license that enables collection features. Otherwise the SDK emits a decorator error and does not apply the change.
+
+## Handling taps
+
+Decorator taps are **not** separate callbacks. They are delivered on **`onFocus`** with a **field** event whose `type` and `target` are set to the decorator's **`action`**. Use the same handler as normal field focus, and branch on `field.type` / `field.target` when needed.
+
+For row or column scope, **`rowIds`**, **`columnId`**, and **`parentPath`** may be set on `FieldIdentifier` so you know where the user tapped.
+
+```kotlin
+onFocus = { event ->
+    val field = event.fieldEvent ?: return@onFocus
+
+    val action = field.type
+    if (!action.isNullOrEmpty()) {
+        // Decorator tap (action matches your decorator's `action`)
+        println("Decorator: $action, field: ${field.fieldID}, rows: ${field.rowIds ?: []}")
+    } else {
+        // Ordinary field focus
+    }
+}
+```
+
+See [Event handling](../architecture/v2/event-system) for the full `onFocus` / `onBlur` flow.
+
+## Supported icons
+
+The SDK maps common names to bundled artwork, including: `camera`, `import`, `paperclip`, `image`, `file`, `comment`, `comments`, `upload`, `download`, `rotate`, `cloud`, `filter`, `share`, `paper-plane`, `folder`, `folder-open`, `magnet`, `eye`, `circle-info`, `add`, `plus`, `print`, `flag`. Unknown names fall back to a default symbol.
