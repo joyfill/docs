@@ -31,18 +31,35 @@ if validationResult.status == .valid {
 
 **Path-scoped validation (`validate(path:)`)**
 
-Use a path string when you only need validation for the whole document, one page, or one field layout—same rules as `validate()`, scoped to that path.
+Use a path string when you only need validation for the whole document, one page, one field, or—on **table** and **collection** fields—a **single row** or **single cell**. Rules match `validate()`, scoped to the path depth. The result is a `ComponentValidity`: `.page`, `.field`, `.row`, `.cell`, or `.notFound`.
 
-- **`""`** (or whitespace-only) — same as `validate()`; result is `.page(Validation)`.
-- **Page id only** — pass a single page id string; fields on that page only; `.page(Validation)`.
-- **`pageId/fieldPositionId`** — two ids separated by `/`; that field when the first segment matches the page that owns the position; `.field(FieldValidity)`. Otherwise falls back to `.page(Validation)` for the page id in the path.
+- **`""`** (or whitespace-only) — same as `validate()`; `.page(Validation)`.
+- **`pageId`** — fields on that page only; `.page(Validation)`.
+- **`pageId/fieldPositionId`** — that field when the first segment is the page that owns the position; `.field(FieldValidity)`. If the page does not match, falls back to page-scoped validation for `pageId`.
+- **`pageId/fieldPositionId/rowId`** — **row-level** validation for table/collection fields; `.row(RowValidity)`. Use the row’s id from the field value. If the row is missing or not applicable, `.notFound`.
+- **`pageId/fieldPositionId/rowId/columnId`** — **cell-level** validation for a column in that row; `.cell(CellValidity)`. If the column or row is missing, `.notFound`.
 
-Surrounding whitespace around the path and next to `/` is ignored. Use `fieldValidity` on the returned `ComponentValidity` when you only care about the single-field case (non-`nil` for `.field`).
+Surrounding whitespace around the path and next to `/` is ignored. For `.field`, you can use the `fieldValidity` helper on `ComponentValidity` when convenient.
 
 ```swift
-let scoped = documentEditor.validate(path: "\(pageId)/\(fieldPositionId)")
-if case .field(let fieldValidity) = scoped {
-    // use fieldValidity.status, .field, .rowValidities, etc.
+// Field (any type)
+let fieldResult = documentEditor.validate(path: "\(pageId)/\(fieldPositionId)")
+if case .field(let fieldValidity) = fieldResult {
+    // fieldValidity.status, fieldValidity.rowValidities (tables/collections), etc.
+}
+
+// Row (table or collection)
+let rowPath = "\(pageId)/\(fieldPositionId)/\(rowId)"
+let rowResult = documentEditor.validate(path: rowPath)
+if case .row(let rowValidity) = rowResult {
+    // Row-level status and rowValidity.cellValidities
+}
+
+// Cell (table or collection column in a row)
+let cellPath = "\(pageId)/\(fieldPositionId)/\(rowId)/\(columnId)"
+let cellResult = documentEditor.validate(path: cellPath)
+if case .cell(let cellValidity) = cellResult {
+    // Cell-level validation for that column
 }
 ```
 
@@ -57,4 +74,4 @@ if case .field(let fieldValidity) = scoped {
 - **Table/Collection**: validate their required columns per row. Each `FieldValidity` includes `rowValidities` with row-level and cell-level results (`RowValidity` and `CellValidity`)
 - **Non-required table/collection fields** still validate rows against required columns
 - **Navigate to invalid fields**: use `fieldValidity.pageId` and `fieldValidity.fieldPositionId` with `goto()` to navigate directly to invalid fields
-- **Path-scoped checks**: use `validate(path:)` when you validate after a single edit, one page submit, or to match the same `pageId`/`fieldPositionId` shape as `goto()`
+- **Path-scoped checks**: use `validate(path:)` after a single edit, for one page submit, or with the same path shapes as `goto()` — including **`pageId/fieldPositionId/rowId`** and **`pageId/fieldPositionId/rowId/columnId`** for table/collection row and cell validation
