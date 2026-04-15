@@ -47,11 +47,11 @@ Paths use **`pageId`**, **`fieldPositionId`**, and for tables/collections **`row
 ```kotlin
 val fieldPath = "$pageId/$fieldPositionId"
 
-val onField = documentEditor.decorator.list(fieldPath)
+val onField = documentEditor.decorators.list(fieldPath)
 
-documentEditor.decorator.add(fieldPath, decorator)
-documentEditor.decorator.remove(fieldPath, action = "openHelp")
-documentEditor.decorator.update(fieldPath, action = "openHelp", decorator = updated)
+documentEditor.decorators.add(fieldPath, decorator)
+documentEditor.decorators.remove(fieldPath, action = "openHelp")
+documentEditor.decorators.update(fieldPath, action = "openHelp", decorator = updated)
 ```
 
 ### Row decorators (three segments)
@@ -62,7 +62,7 @@ Row decorators apply to a **specific row** in a table or collection. The path is
 // Example: row "row_7f3a" on a table/collection field
 val rowPath = "$pageId/$fieldPositionId/row_7f3a"
 
-val onRow = documentEditor.decorator.list(rowPath)
+val onRow = documentEditor.decorators.list(rowPath)
 
 val rowAction = Decorator().apply {
     action = "duplicateRow"
@@ -70,8 +70,8 @@ val rowAction = Decorator().apply {
     label = "Duplicate"
 }
 
-documentEditor.decorator.add(rowPath, rowAction)
-documentEditor.decorator.remove(rowPath, action = "duplicateRow")
+documentEditor.decorators.add(rowPath, rowAction)
+documentEditor.decorators.remove(rowPath, action = "duplicateRow")
 ```
 
 ### Column decorators (four segments)
@@ -82,7 +82,7 @@ Column decorators apply to a **column** in the context of a row (table or collec
 // Example: column "col_attachments" on row "row_7f3a"
 val columnPath = "$pageId/$fieldPositionId/row_7f3a/col_attachments"
 
-val onColumn = documentEditor.decorator.list(columnPath)
+val onColumn = documentEditor.decorators.list(columnPath)
 
 val colAction = Decorator().apply {
     action = "uploadFile"
@@ -90,8 +90,8 @@ val colAction = Decorator().apply {
     color = "#3B82F6"
 }
 
-documentEditor.decorator.add(columnPath, colAction)
-documentEditor.decorator.update(columnPath, action = "uploadFile", decorator = colAction)
+documentEditor.decorators.add(columnPath, colAction)
+documentEditor.decorators.update(columnPath, action = "uploadFile", decorator = colAction)
 ```
 
 Failures (invalid path, validation, duplicate `action`, missing decorator to remove/update) are reported through **`onError`** as `JoyfillError.DecoratorError(DecoratorError)`.
