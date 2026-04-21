@@ -8,6 +8,27 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc15
+
+**Release Date:** April 21, 2026
+
+🚀 **New Features & Enhancements**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Compact View for Table & Collection Fields:**
+  * Table and Collection fields now support a compact view when `displayType` is set to `rte`. This renders rows in a streamlined, rich-text layout using column templates with merge codes, replacing the traditional grid format. (NO-2044)
+  * Merge codes can be configured using the `{{columnId}}` syntax within RTE Editor in edit mode to dynamically resolve row data.
+
+🛠️ **Bug Fixes**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- **Mobile Disconnected View Conditions:**
+  * Fixed a bug where conditional logic applied in the mobile disconnected view was incorrectly carried over to the desktop view. Conditions now apply only to their intended view. (NO-1985)
+
+---
+
 ## 4.0.0-rc14
 
 **Release Date:** March 26, 2026
