@@ -8,6 +8,22 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc16
+
+**Release Date:** April 27, 2026
+
+🛠️ **Bug Fixes**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- **PDF Export with Duplicate Field Position IDs:**
+  * Fixed a bug where PDF export would fail or render fields multiple times when two field positions shared the same `_id`. Duplicate field positions are now detected and skipped during export processing. (NO-2026)
+
+- **Chart Field Empty Points:**
+  * Fixed a bug where chart fields were treating empty or incomplete data points as zeros, distorting the chart. Points with missing, null, or non-numeric `x`/`y` values are now ignored and excluded from rendering. (NO-1942)
+
+---
+
 ## 4.0.0-rc15
 
 **Release Date:** April 21, 2026
