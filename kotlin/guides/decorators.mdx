@@ -3,106 +3,129 @@ title: Decorators
 icon: "sparkles"
 ---
 
-Decorators are small actions attached to a **field**, a **table/collection row**, or a **column**. They appear as an icon and/or label. When the user taps one, the SDK delivers the tap through **`onFocus`** so your app can run custom logic (navigation, uploads, deep links, etc.).
+Decorators are tappable indicators (icon + label) attached to a **field**, **column**, **row**, or **cell**. Taps are delivered through **`onFocus`** so your app can run custom logic — navigation, uploads, etc.
 
 ## Decorator model
 
-Each decorator is a clickable element in the form with optional presentation fields and a required **`action`** string used as the event identifier.
-
-| Property | Type | Description |
-| --- | --- | --- |
-| `action` | `String?` | Non-empty and unique among decorators at the same path; required when adding/updating programmatically. |
-| `icon` | `String?` | Icon name (see [Supported icons](#supported-icons)). |
-| `label` | `String?` | Text shown next to or instead of the icon. |
-| `color` | `String?` | If set, must be a 6-digit hex color: `#RRGGBB` (e.g. `#3B82F6`). |
-
-The control is shown only when there is a non-empty **`icon`** or **`label`** (`isDisplayable`).
-
 ```kotlin
 val decorator = Decorator().apply {
-    action = "openHelp"
-    icon = "circle-info"
-    label = "Help"
-    color = "#2563EB"
+    action = "openHelp"     // optional in Kotlin, unique within scope when set
+    icon   = "circle-info"  // optional, see Supported icons
+    label  = "Help"         // optional
+    color  = "#3B82F6"      // optional, must be #RRGGBB
 }
 ```
 
-## Paths
+| Property | Type | Description |
+| --- | --- | --- |
+| `action` | `String?` | Non-empty and unique among decorators at the same path. |
+| `icon` | `String?` | Icon name (see [Supported icons](#supported-icons)). |
+| `label` | `String?` | Text shown next to or instead of the icon. |
+| `color` | `String?` | 6-digit hex color: `#RRGGBB` (e.g. `#3B82F6`). |
 
-`DocumentEditor` resolves decorators using a slash-separated path:
+The control is shown only when there is a non-empty **`icon`** or **`label`** (`isDisplayable`). Action-only entries are stored but not displayed.
 
-| Segments | Scope |
-| --- | --- |
-| `pageId/fieldPositionId` | Field header decorators |
-| `pageId/fieldPositionId/rowId` | Row decorators (tables and collections) |
-| `pageId/fieldPositionId/rowId/columnId` | Column decorators |
+## Constructing a path
 
+`DocumentEditor` resolves decorators using a slash-separated path. Every path starts with `pageId/fieldPositionId`. What you append after that determines what gets decorated.
+
+> **Reserved keywords.** The path grammar uses three reserved tokens — **`schemas`**, **`rows`**, and **`columns`**. Anything else in a path slot is treated as an id (page id, field-position id, row id, column id, or schema key). Don't use these keywords as ids.
+
+### Field decorators
+
+Just the two ids. Applies to the field's header.
+
+```kotlin
+val fieldPath = "$pageId/$fieldPositionId"
+```
+
+### Table — `/rows`, `/columns/colId`, or specific `rowId` / `rowId/colId`
+
+A table has four decorator scopes, two **common** (defaults applied everywhere) and two **specific** (overrides for one row or cell):
+
+| What you want | Append | Example |
+| --- | --- | --- |
+| Common decorators on **every row** | `/rows` | `pageId/fpId/rows` |
+| Decorators on **one specific row** | `/rowId` | `pageId/fpId/row_42` |
+| Common decorators on **every cell in a column** | `/columns/colId` | `pageId/fpId/columns/col_status` |
+| Decorators on **one specific cell** | `/rowId/colId` | `pageId/fpId/row_42/col_status` |
+
+Specific paths inherit from the matching common path on the first write — anything you set on `/rows` shows on `row_42` until you write to `row_42` directly.
+
+### Collection — same as table, plus `/schemas/schemaKey/…` for nested rows
+
+A collection's **root** rows behave like a table — the four scopes above use the exact same path shapes.
+
+Take a "People" collection where each person row holds a nested "Addresses" schema:
+
+```
+schema "people"     (root, children: [addresses])
+schema "addresses"  (nested under people)
+
+Rows:
+  p_alice                                  ← row in "people"
+    addresses → [ addr_home, addr_work ]   ← rows in "addresses", under p_alice
+  p_bob
+    addresses → [ addr_apt ]
+```
+
+**Common rows / columns** of any schema — root or nested — are schema-level defaults. Address them directly with `schemas/schemaKey/…`, no parent walk needed:
+
+| What you want | Path shape | Example |
+| --- | --- | --- |
+| Common rows in any schema | `pageId/fpId/schemas/sk/rows` | `pageId/fpId/schemas/addresses/rows` |
+| Common columns in any schema | `pageId/fpId/schemas/sk/columns/colId` | `pageId/fpId/schemas/addresses/columns/col_zip` |
+
+**A specific nested row or cell** lives under a particular parent. Walk through that parent's row id, then `schemas/sk/`, then the nested row id:
+
+| What you want | Path shape | Example |
+| --- | --- | --- |
+| Specific nested row | `…/rowId/schemas/sk/nestedRowId` | `pageId/fpId/p_alice/schemas/addresses/addr_home` |
+| Specific nested cell | `…/rowId/schemas/sk/nestedRowId/colId` | `pageId/fpId/p_alice/schemas/addresses/addr_home/col_zip` |
+
+If `addresses` itself had children, you'd chain another `schemas/.../rowId/…` after `addr_home` — the same pattern repeats for every level.
+
+> **Schema keys** come from the field's `schema` map. The schema marked `root: true` holds top-level rows; its `children` array names the nested schemas reachable from a row in this schema.
 
 ## API
 
-Paths use **`pageId`**, **`fieldPositionId`**, and for tables/collections **`rowId`** and **`columnId`** from your document. Replace the placeholders below with real ids from `Page`, `FieldPosition`, and the field's row/column model.
-
-### Field decorators (two segments)
+Four methods, all on `documentEditor.decorators`. Errors are reported via **`onError`** as `JoyfillError.DecoratorError(DecoratorError)`.
 
 ```kotlin
 val fieldPath = "$pageId/$fieldPositionId"
 
-val onField = documentEditor.decorators.list(fieldPath)
-
+documentEditor.decorators.get(fieldPath)                          // -> List<Decorator>
 documentEditor.decorators.add(fieldPath, decorator)
-documentEditor.decorators.remove(fieldPath, action = "openHelp")
 documentEditor.decorators.update(fieldPath, action = "openHelp", decorator = updated)
+documentEditor.decorators.remove(fieldPath, action = "openHelp")
 ```
 
-### Row decorators (three segments)
-
-Row decorators apply to a **specific row** in a table or collection. The path is `pageId/fieldPositionId/rowId`.
+Same shape for every path scope. A few examples:
 
 ```kotlin
-// Example: row "row_7f3a" on a table/collection field
-val rowPath = "$pageId/$fieldPositionId/row_7f3a"
+// Common row decorators on a table — applied to every row
+documentEditor.decorators.add("$pageId/$fpId/rows", duplicate)
 
-val onRow = documentEditor.decorators.list(rowPath)
+// Override on a specific row
+documentEditor.decorators.add("$pageId/$fpId/$rowId", archive)
 
-val rowAction = Decorator().apply {
-    action = "duplicateRow"
-    icon = "plus"
-    label = "Duplicate"
-}
+// Cell-specific decorator
+documentEditor.decorators.add("$pageId/$fpId/$rowId/$colId", upload)
 
-documentEditor.decorators.add(rowPath, rowAction)
-documentEditor.decorators.remove(rowPath, action = "duplicateRow")
+// Nested collection row
+val nestedPath = "$pageId/$fpId/$parentRowId/schemas/$nestedSK/$nestedRowId"
+documentEditor.decorators.add(nestedPath, comment)
 ```
 
-### Column decorators (four segments)
+## Behavior to know
 
-Column decorators apply to a **column** in the context of a row (table or collection). The path is `pageId/fieldPositionId/rowId/columnId`.
+- **Copy-on-write seed.** First write to a row-self / cell scope seeds from the matching common scope, so existing common decorators stay visible on that row alongside your override. Subsequent writes diverge freely.
 
-```kotlin
-// Example: column "col_attachments" on row "row_7f3a"
-val columnPath = "$pageId/$fieldPositionId/row_7f3a/col_attachments"
-
-val onColumn = documentEditor.decorators.list(columnPath)
-
-val colAction = Decorator().apply {
-    action = "uploadFile"
-    icon = "paperclip"
-    color = "#3B82F6"
-}
-
-documentEditor.decorators.add(columnPath, colAction)
-documentEditor.decorators.update(columnPath, action = "uploadFile", decorator = colAction)
-```
-
-Failures (invalid path, validation, duplicate `action`, missing decorator to remove/update) are reported through **`onError`** as `JoyfillError.DecoratorError(DecoratorError)`.
-
-**Collection fields:** Adding or changing decorators on collection fields requires a license that enables collection features. Otherwise the SDK emits a decorator error and does not apply the change.
+- **Collection license gating.** Writes against a collection field require a license that enables collection features. Without it, the call emits `decoratorError` and is rejected.
 
 ## Handling taps
 
-Decorator taps are **not** separate callbacks. They are delivered on **`onFocus`** with a **field** event whose `type` and `target` are set to the decorator's **`action`**. Use the same handler as normal field focus, and branch on `field.type` / `field.target` when needed.
-
-For row or column scope, **`rowIds`**, **`columnId`**, and **`parentPath`** may be set on `FieldIdentifier` so you know where the user tapped.
+Decorator taps come through **`onFocus`** with the decorator's `action` exposed on the field event's `type` / `target`. `rowIds` / `columnId` / `parentPath` on `FieldIdentifier` tell you where the user tapped.
 
 ```kotlin
 onFocus = { event ->
@@ -110,15 +133,39 @@ onFocus = { event ->
 
     val action = field.type
     if (!action.isNullOrEmpty()) {
-        // Decorator tap (action matches your decorator's `action`)
-        println("Decorator: $action, field: ${field.fieldID}, rows: ${field.rowIds ?: []}")
+        // Decorator tap
+        println("Decorator: $action, field: ${field.fieldID}, rows: ${field.rowIds ?: []}, column: ${field.columnId ?: "-"}")
     } else {
         // Ordinary field focus
     }
 }
 ```
 
-See [Event handling](../architecture/v2/event-system) for the full `onFocus` / `onBlur` flow.
+See [Event handling](../architecture/v2/event-system) for the full focus/blur flow.
+
+## Errors
+
+All four APIs report through `onError` as `JoyfillError.DecoratorError(DecoratorError)`:
+
+- Path didn't resolve (bad ids, deleted row, malformed grammar)
+- Validation (`action` empty, `color` not `#RRGGBB`)
+- Duplicate `action` in batch or against an existing entry
+- `remove` / `update` with an unknown `action`
+- Collection write without a valid license
+
+Reads (`get`) on an unresolvable path also emit `onError` and return `[]`.
+
+## Display limits
+
+`DecoratorConfig`, passed to `DocumentEditor` at init, controls how many decorators render inline before the rest collapse into a kebab menu.
+
+```kotlin
+val config = DecoratorConfig(
+    visibleLimitInFields = 2,   // field + column scopes; default 2
+    visibleLimitInRows = 1      // row scopes; default 1
+)
+val editor = DocumentEditor(document = doc, decoratorConfig = config)
+```
 
 ## Supported icons
 
