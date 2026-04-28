@@ -4,6 +4,12 @@ description: "Complete changelog of Joyfill Kotlin Multiplatform SDK releases"
 icon: "android"
 ---
 
+## 2.0.0-RC17
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+— Added support for row and cell-specific decorators in table and collection fields, accessible via scoped path targeting.
+
 ## 2.0.0-RC16
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
@@ -24,17 +30,17 @@ val decorator = Decorator().apply {
 }
 
 // Add
-documentEditor.decorators.add(path, decorator)
+documentEditor.decorator.add(path, decorator)
 
 // Read
-val decorators = documentEditor.decorators.list(path)
+val decorators = documentEditor.decorator.list(path)
 
 // Update (matched by action)
 decorator.label = "Open Review"
-documentEditor.decorators.update(path, action = "open_review", decorator = decorator)
+documentEditor.decorator.update(path, action = "open_review", decorator = decorator)
 
 // Remove
-documentEditor.decorators.remove(path, action = "open_review")
+documentEditor.decorator.remove(path, action = "open_review")
 ```
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
@@ -53,7 +59,7 @@ documentEditor.decorators.remove(path, action = "open_review")
     - multi-select cell
     - signature cell
 - Table row form is now visible when a column has a long title
-- Fixed crash when duplicate columnId or fieldId values were used
+
 
 ## 2.0.0-RC15
 
