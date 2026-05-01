@@ -8,6 +8,25 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc17
+
+**Release Date:** May 1, 2026
+
+🛠️ **Bug Fixes**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- **Copy Without Values Retains Block and Read-Only Field Values:**
+  * Added support to ensure copying without values retains values for block fields and read-only fields. (NO-2093)
+
+- **Validator Duplicate Field Position Warnings:**
+  * Validator will now emit console warnings when two field positions have the same `_id`. (NO-2110)
+
+- **Chart Field Blank Values:**
+  * Fixed chart field coordinate handling so deleting an `x` or `y` value now stores `x: null` and `y: null` instead of coercing to `0`. (NO-2111)
+
+---
+
 ## 4.0.0-rc16
 
 **Release Date:** April 27, 2026
