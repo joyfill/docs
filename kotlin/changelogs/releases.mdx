@@ -4,11 +4,27 @@ description: "Complete changelog of Joyfill Kotlin Multiplatform SDK releases"
 icon: "android"
 ---
 
+## 2.0.0-RC18
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Decorator Icons — added support for two new decorator icons: `pencil` and `pen-to-square`
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Row Decorator Column — improved the UI of inline decorators with horizontal scroll, fixed curvature bugs, and optimized performance
+- Chart Blank Coordinates — blank x/y values on chart points are now saved as `null` and displayed as empty in the UI, instead of being coerced to `0`; schema bumped to 1.0.1 to allow nullable coordinates
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Decorators Visibility & Interaction — decorators are now visible and interactive on readonly forms
+- Duplicate Page Without Values — duplicating a page without values now keeps read-only and display-text field values intact
+
 ## 2.0.0-RC17
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- Added support for row and cell-specific decorators in table and collection fields, accessible via scoped path targeting.
+— Added support for row and cell-specific decorators in table and collection fields, accessible via scoped path targeting.
 
 ## 2.0.0-RC16
 
@@ -30,17 +46,17 @@ val decorator = Decorator().apply {
 }
 
 // Add
-documentEditor.decorators.add(path, decorator)
+documentEditor.decorator.add(path, decorator)
 
 // Read
-val decorators = documentEditor.decorators.list(path)
+val decorators = documentEditor.decorator.list(path)
 
 // Update (matched by action)
 decorator.label = "Open Review"
-documentEditor.decorators.update(path, action = "open_review", decorator = decorator)
+documentEditor.decorator.update(path, action = "open_review", decorator = decorator)
 
 // Remove
-documentEditor.decorators.remove(path, action = "open_review")
+documentEditor.decorator.remove(path, action = "open_review")
 ```
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
@@ -59,7 +75,7 @@ documentEditor.decorators.remove(path, action = "open_review")
     - multi-select cell
     - signature cell
 - Table row form is now visible when a column has a long title
-- Fixed crash when duplicate columnId or fieldId values were used
+
 
 ## 2.0.0-RC15
 
