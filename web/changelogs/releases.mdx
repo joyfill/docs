@@ -8,6 +8,31 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc18
+
+**Release Date:** May 11, 2026
+
+🛠️ **Bug Fixes & Improvements**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- **New Decorator icons:** This release adds the new **pencil** and **pen-square** icons for decorators *(NO-2123)*
+
+- **Smart Point Normalization:**
+  * Points with missing or partially defined coordinates are now automatically normalized or cleaned.
+  * **Null Value Cleanup:** To reduce payload size, points with no coordinates are stripped of unnecessary `null` properties.
+    * Before: `{ label: "Point", x: null, y: null }`
+    * After: `{ label: "Point" }`
+  * **Partial Coordinate Support:** Points with only one axis defined will now explicitly maintain the missing axis as `null`.
+    * Before: `{ label: "Point", x: 20 }`
+    * After: `{ label: "Point", x: 20, y: null }`
+  * **Typing Updates:** Refined `JoyDoc` typings to mark `x` and `y` as optional properties, aligning the codebase with these new data standards. (NO-2116)
+
+- **Multi-Select PDF Layouts:**
+  * Resolved a bug that caused excessive padding in multi-select fields during PDF generation. Exports now feature a tighter, more professional layout. (NO-2096)
+
+---
+
 ## 4.0.0-rc17
 
 **Release Date:** May 1, 2026
