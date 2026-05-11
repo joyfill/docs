@@ -26,7 +26,7 @@ icon: "globe"
   * **Partial Coordinate Support:** Points with only one axis defined will now explicitly maintain the missing axis as `null`.
     * Before: `{ label: "Point", x: 20 }`
     * After: `{ label: "Point", x: 20, y: null }`
-  * **Typing Updates:** Refined `JoyDoc` typings to mark `x` and `y` as optional properties, aligning the codebase with these new data standards. (NO-2116)
+  * **Validator Updates:** Refined `JoyDoc` Validator to mark `x` and `y` as optional chart properties, aligning the codebase with these new data standards. (NO-2116)
 
 - **Multi-Select PDF Layouts:**
   * Resolved a bug that caused excessive padding in multi-select fields during PDF generation. Exports now feature a tighter, more professional layout. (NO-2096)
