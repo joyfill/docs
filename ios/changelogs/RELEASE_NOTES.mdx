@@ -6,6 +6,34 @@ icon: "notes"
 
 > Source: https://github.com/joyfill/components-swift/releases  
 
+## 3.0.0-rc19
+
+
+**Release Date:** May 20, 2026
+
+
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
+
+- Row Forms — open in readonly mode with disabled cells while decorator actions stay tappable.
+- Row Delete Payload — rowDelete change logs now include the deleted row data alongside existing identifiers.
+  **How to use it**
+  ```swift
+  // Inside your onChange handler
+  if change.target == "field.value.rowDelete",
+     let deletedRow = change.change?["row"] as? [String: Any] {
+      let rowId = deletedRow["_id"] as? String
+      // deletedRow contains the full row payload (cells, children, etc.)
+  }
+
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Row Form Text Column — no longer emits multiple changelogs on a single tap.
+- Row Decorator Column — now appears whenever decorator data exists, even when the `decorate` flag is missing.
+- Mobile Page Duplicate — duplicated pages reset to `deletable` `true` and `copyable` `[.withValues, .withoutValues]`.
+
+
 ## 3.0.0-rc18
 
 
