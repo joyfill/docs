@@ -77,7 +77,7 @@ val decorator = Decorator().apply {
 documentEditor.decorators.add(path, decorator)
 
 // Read
-val decorators = documentEditors.decorators.list(path)
+val decorators = documentEditor.decorators.list(path)
 
 // Update (matched by action)
 decorator.label = "Open Review"
