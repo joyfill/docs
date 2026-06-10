@@ -169,9 +169,32 @@ See [Event handling](/web/guides/event-handling) for the full `onFocus` paramete
 
 ## Behavior to know
 
-- **Copy-on-write seed.** First write to a row-specific or cell scope seeds from the matching common scope, so existing common decorators stay visible on that row alongside your override. Subsequent writes diverge freely.
+- **Display limits.** Decorators are hidden in `readonly` and `pdf` modes and are only clickable in `fill` mode.
 
-- **Display limits.** Up to 3 decorators render inline; 4 or more collapse into a popover menu. Decorators are hidden in `readonly` and `pdf` modes and are only clickable in `fill` mode.
+## Errors
+
+All four APIs report errors through the `onError` event handler:
+
+- Path didn't resolve (bad ids, deleted row, malformed grammar)
+- Validation (`action` empty, `color` not `#RRGGBB`)
+- Duplicate `action` in batch or against an existing entry
+- `removeDecorator` / `updateDecorator` with an unknown `action`
+- Collection write without a valid license
+
+Reads (`getDecorators`) on an unresolvable path also emit `onError` and return `[]`.
+
+## Display limits
+
+`DecoratorConfig`, passed to `<JoyDoc>` via the `decoratorManager`, controls how many decorators render inline before the rest collapse into a kebab menu.
+
+```tsx
+const decoratorManager = new DecoratorManager({
+  visibleLimitInFields: 2,  // field + column scopes; default 2
+  visibleLimitInRows: 1     // row scopes; default 1
+});
+
+<JoyDoc decoratorManager={decoratorManager} doc={doc} mode="fill" />
+```
 
 ## Supported icons
 
