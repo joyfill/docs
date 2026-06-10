@@ -8,6 +8,26 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc21
+
+**Release Date:** June 10, 2026
+
+## 🚀 Highlights
+This release introduces dynamic decorator management APIs, enhanced support for row-specific decorators, and improvements to image rendering across page breaks in PDF exports.
+
+## 🛠️ Enhancements
+- **NO-2179**: Added support for dynamic decorator manipulation through the new `DecoratorManager` API, allowing decorators to be added, updated, retrieved, and removed programmatically at runtime.
+- **NO-2178**: Added support for row-specific decorators and improved the behavior of common and specific row decorator customization.
+- **NO-2165**: Fixed an issue where images could be split across pages during PDF generation. Images that would otherwise be cut by a page break are now rendered in full on the next page.
+
+## JSON Schema Updates
+- Added support for dynamic decorator management via `DecoratorManager`.
+- Standardized decorator lookups to use `action` as the canonical identifier.
+- Decorator `_id` is no longer required and is no longer generated for decorator objects.
+- Added support for row-specific decorators through `rows.decorators.all`.
+
+---
+
 ## 4.0.0-rc20
 
 **Release Date:** May 23, 2025

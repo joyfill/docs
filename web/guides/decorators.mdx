@@ -1,0 +1,178 @@
+---
+title: Decorators
+icon: "sparkles"
+---
+
+Decorators are clickable indicators (icon + label) attached to a **field**, **column**, **row**, or **cell**. Clicks are delivered through **`onFocus`** so your app can run custom logic — navigation, uploads, help modals, etc.
+
+## Decorator model
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `action` | `string` | **Required**. Non-empty. Unique within its scope (path). |
+| `icon` | `string?` | See [Supported icons](#supported-icons). |
+| `label` | `string?` | Text label. |
+| `color` | `string?` | 6-digit hex (`#RRGGBB`). |
+
+A decorator renders only when it has a non-empty `icon` **or** `label`. Action-only entries are stored but not displayed.
+
+## Setup
+
+Import `DecoratorManager` from `@joyfill/components` and pass an instance to `<JoyDoc>` via the `decoratorManager` prop:
+
+```tsx
+import { JoyDoc, DecoratorManager } from '@joyfill/components';
+
+const decoratorManager = new DecoratorManager();
+
+<JoyDoc
+  decoratorManager={decoratorManager}
+  doc={doc}
+  mode="fill"
+/>
+```
+
+All four API methods are called directly on the `decoratorManager` instance.
+
+## Constructing a path
+
+Every path starts with `pageId/fieldPositionId`. What you append after that determines what gets decorated.
+
+> **Reserved keywords.** The path grammar uses three reserved tokens — **`schemas`**, **`rows`**, and **`columns`**. Anything else in a path slot is treated as an id (page id, field-position id, row id, column id, or schema key). Don't use these keywords as ids.
+
+### Field decorators
+
+Just the two ids. Applies to the field's header.
+
+```ts
+const fieldPath = `${pageId}/${fieldPositionId}`;
+```
+
+### Table — `/rows`, `/columns/colId`, or specific `rowId` / `rowId/colId`
+
+A table has four decorator scopes, two **common** (defaults applied everywhere) and two **specific** (overrides for one row or cell):
+
+| What you want | Path suffix | Example |
+| --- | --- | --- |
+| Common decorators on **every row** | `/rows` | `pageId/fpId/rows` |
+| Decorators on **one specific row** | `/{rowId}` | `pageId/fpId/row_42` |
+| Common decorators on **every cell in a column** | `/columns/{colId}` | `pageId/fpId/columns/col_status` |
+| Decorators on **one specific cell** | `/{rowId}/{colId}` | `pageId/fpId/row_42/col_status` |
+
+Specific paths inherit from the matching common path on the first write — anything you set on `/rows` shows on `row_42` until you write to `row_42` directly.
+
+### Collection — same as table, plus `/schemas/schemaKey/…` for nested rows
+
+A collection's **root** rows behave like a table — the four scopes above use the exact same path shapes.
+
+Take a "People" collection where each person row holds a nested "Addresses" schema:
+
+```
+schema "people"     (root, children: [addresses])
+schema "addresses"  (nested under people)
+
+Rows:
+  p_alice                                  ← row in "people"
+    addresses → [ addr_home, addr_work ]   ← rows in "addresses", under p_alice
+  p_bob
+    addresses → [ addr_apt ]
+```
+
+**Common rows / columns** of any schema — root or nested — are schema-level defaults:
+
+| What you want | Path shape | Example |
+| --- | --- | --- |
+| Common rows in any schema | `pageId/fpId/schemas/sk/rows` | `pageId/fpId/schemas/addresses/rows` |
+| Common columns in any schema | `pageId/fpId/schemas/sk/columns/colId` | `pageId/fpId/schemas/addresses/columns/col_zip` |
+
+**A specific nested row or cell** lives under a particular parent. Walk through that parent's row id, then `schemas/sk/`, then the nested row id:
+
+| What you want | Path shape | Example |
+| --- | --- | --- |
+| Specific nested row | `…/rowId/schemas/sk/nestedRowId` | `pageId/fpId/p_alice/schemas/addresses/addr_home` |
+| Specific nested cell | `…/rowId/schemas/sk/nestedRowId/colId` | `pageId/fpId/p_alice/schemas/addresses/addr_home/col_zip` |
+
+> **Schema keys** come from the field's `schema` map. The schema marked `root: true` holds top-level rows; its `children` array names the nested schemas reachable from a row in this schema.
+
+## API
+
+Four methods on `DecoratorManager`:
+
+```ts
+const path = `${pageId}/${fieldPositionId}`;
+
+decoratorManager.getDecorators(path);
+// → Decorator[]
+
+decoratorManager.addDecorators(path, [
+  { action: 'help', icon: 'circle-info', color: '#3B82F6' }
+]);
+
+decoratorManager.updateDecorator(path, 'help', {
+  action: 'help',
+  icon: 'star',
+  color: '#3B82F6'
+});
+
+decoratorManager.removeDecorator(path, 'help');
+```
+
+The same four methods work for every path scope. A few examples:
+
+```ts
+// Common row decorators on a table — applied to every row
+decoratorManager.addDecorators(`${pageId}/${fpId}/rows`, [
+  { action: 'duplicate', icon: 'copy', label: 'Duplicate' }
+]);
+
+// Override on a specific row
+decoratorManager.addDecorators(`${pageId}/${fpId}/${rowId}`, [
+  { action: 'archive', icon: 'folder', color: '#6B7280' }
+]);
+
+// Cell-specific decorator
+decoratorManager.addDecorators(`${pageId}/${fpId}/${rowId}/${colId}`, [
+  { action: 'upload', icon: 'paperclip', label: 'Attach' }
+]);
+
+// Nested collection row
+const nestedPath = `${pageId}/${fpId}/${parentRowId}/schemas/${nestedSchemaKey}/${nestedRowId}`;
+decoratorManager.addDecorators(nestedPath, [
+  { action: 'comment', icon: 'comment', color: '#10B981' }
+]);
+```
+
+## Handling clicks
+
+Decorator clicks come through **`onFocus`**. When `params.type` is non-empty (and not `'fieldPositionFocus'`), the focus event is a decorator tap — the value of `params.type` is the decorator's `action`. Use `params.fieldRowId` and `params.fieldColumnId` to know exactly where the user clicked.
+
+```tsx
+<JoyDoc
+  decoratorManager={decoratorManager}
+  doc={doc}
+  mode="fill"
+  onFocus={(params, e) => {
+    if (params.type && params.type !== 'fieldPositionFocus') {
+      // Decorator tap
+      console.log('Decorator action:', params.type);
+      console.log('Field position:', params.fieldPositionId);
+      console.log('Row:', params.fieldRowId);
+      console.log('Column:', params.fieldColumnId);
+    } else {
+      // Ordinary field focus
+    }
+  }}
+/>
+```
+
+See [Event handling](/web/guides/event-handling) for the full `onFocus` parameter reference.
+
+## Behavior to know
+
+- **Copy-on-write seed.** First write to a row-specific or cell scope seeds from the matching common scope, so existing common decorators stay visible on that row alongside your override. Subsequent writes diverge freely.
+
+- **Display limits.** Up to 3 decorators render inline; 4 or more collapse into a popover menu. Decorators are hidden in `readonly` and `pdf` modes and are only clickable in `fill` mode.
+
+## Supported icons
+
+The SDK supports the following named icons: `camera`, `import`, `paperclip`, `image`, `file`, `comment`, `comments`, `upload`, `download`, `rotate`, `cloud`, `filter`, `share`, `paper-plane`, `folder`, `folder-open`, `magnet`, `eye`, `circle-info`, `add`, `plus`, `print`, `flag`, `pencil`, `pen-to-square`. Unknown names fall back to a default icon.
