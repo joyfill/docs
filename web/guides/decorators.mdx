@@ -169,7 +169,9 @@ See [Event handling](/web/guides/event-handling) for the full `onFocus` paramete
 
 ## Behavior to know
 
-- **Display limits.** Decorators are hidden in `readonly` and `pdf` modes and are only clickable in `fill` mode.
+- **Collection license gating.** Writes against a collection field require a license that enables collection features. Without it, the call emits `decoratorError` and is rejected.
+
+- **Decorator visibility in PDFs.** Decorators are hidden in `readonly` and `pdf` modes and are only clickable in `fill` mode.
 
 ## Errors
 
