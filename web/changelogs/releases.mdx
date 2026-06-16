@@ -8,6 +8,20 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc22
+
+**Release Date:** June 16, 2026
+
+🛠️ **Bug Fixes**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- **PDF Page Breaking Mismatch:**
+  * Resolved an issue where page breaks in exported PDFs could occur earlier than expected, causing large blank areas to appear at the bottom of pages and pushing content of the collection field onto subsequent pages unnecessarily. (NO-2203)
+  * This was caused by inconsistencies between the layout measurement phase and the final PDF rendering phase, resulting in incorrect page height calculations. Page break calculations now accurately reflect the final rendered content, improving content distribution across pages and reducing unused page space.
+
+---
+
 ## 4.0.0-rc21
 
 **Release Date:** June 10, 2026
