@@ -8,6 +8,36 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc23
+
+**Release Date:** June 25, 2026
+
+🚀 **New Features**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Custom Titles for Nested Schemas:**
+  * Added support for custom titles on nested schemas within Collection fields, allowing builders to define descriptive titles instead of relying on default naming conventions. (NO-2222)
+  * This introduces a dedicated title configuration for nested schemas, providing clearer context, improved labeling, and more intuitive form layouts while separating title styling from column styling.
+
+🛠️ **Bug Fixes**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- **Rich Text Editor Top Borders:**
+  * Resolved an issue where top borders were not rendered correctly within the Rich Text Editor (RTE), causing inconsistencies in the visual layout of formatted content. (NO-2125)
+  * Top borders now render consistently, ensuring structured content and section dividers maintain their intended appearance.
+
+- **Missing Table Headers on Mobile:**
+  * Resolved an issue where table headers would disappear when tables were viewed on mobile devices, making tabular data difficult to interpret. (NO-2209)
+  * Table headers are now preserved across smaller viewport sizes, ensuring tables remain readable and responsive on mobile.
+
+- **Date Picker Month/Year Selector Inside Modals:**
+  * Resolved an issue where the Date Picker's month and year selectors would briefly appear and immediately disappear when a JoyDoc was rendered inside a modal. (NO-2069)
+  * This was caused by the interaction between the modal's focus management and the Date Picker's dropdown rendering. The month and year selectors are now rendered reliably within the modal, allowing users to navigate and select dates without interruption.
+
+---
+
 ## 4.0.0-rc22
 
 **Release Date:** June 16, 2026
