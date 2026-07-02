@@ -4,6 +4,94 @@ icon: "gear"
 ---
 This document describes the configuration options available when initializing a `DocumentEditor` for customizing form behavior, including page management, field interactions.
 
+## Initialization with DocumentEditorConfig
+
+The recommended way to initialize a `DocumentEditor` is with a single `DocumentEditorConfig` object. This groups every editor option — mode, event handler, license, schema validation, page behavior, and display — into one configuration surface.
+
+```swift
+import Joyfill
+import JoyfillModel
+
+// 1. Page behavior
+let pageConfig = PageConfig(
+    navigation: true,
+    enableDuplicates: false,
+    enableDeletes: false,
+    currentPageID: nil
+)
+
+// 2. Display & decorators
+let decoratorConfig = DecoratorConfig(
+    visibleLimitInFields: 2,
+    visibleLimitInRows: 1
+)
+
+let displayConfig = DisplayConfig(
+    singleClickRowEdit: false,
+    decorators: decoratorConfig
+)
+
+// 3. Assemble the editor config
+let config = DocumentEditorConfig(
+    mode: .fill,
+    events: handler,          // your FormChangeEvent handler (optional)
+    license: "your-license",  // optional
+    validateSchema: true,
+    page: pageConfig,
+    display: displayConfig
+)
+
+// 4. Create the editor
+let editor = DocumentEditor(
+    document: myDocument,
+    config: config
+)
+```
+
+Every parameter has a default, so you only set what you need:
+
+```swift
+// Minimal — all defaults
+let editor = DocumentEditor(document: myDocument)
+
+// Just an event handler
+let editor = DocumentEditor(
+    document: myDocument,
+    config: DocumentEditorConfig(events: handler)
+)
+```
+
+### DocumentEditorConfig
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `mode` | `Mode` | `.fill` | Editing mode. `.fill` allows editing; `.readonly` disables edits (and page duplication/deletion). |
+| `events` | `FormChangeEvent?` | `nil` | Handler that receives change, focus, upload, capture, and error events. See [Event Handling](/ios/guides/event-handling). |
+| `license` | `String?` | `nil` | License token. A valid license enables licensed features such as Collection fields. |
+| `validateSchema` | `Bool` | `true` | When `true`, validates the document schema on init. See [Schema Validation](#schema-validation). |
+| `page` | `PageConfig` | `PageConfig()` | Page-navigation and page-operation behavior. |
+| `display` | `DisplayConfig` | `DisplayConfig()` | Field-interaction and decorator display behavior. |
+
+### PageConfig
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `navigation` | `Bool` | `true` | Show the page navigation UI. |
+| `enableDuplicates` | `Bool` | `false` | Allow users to duplicate pages (`.fill` mode only). |
+| `enableDeletes` | `Bool` | `false` | Allow users to delete pages (`.fill` mode only). |
+| `currentPageID` | `String?` | `nil` | Page to open initially. `nil` falls back to the first valid page. |
+
+### DisplayConfig
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `singleClickRowEdit` | `Bool` | `false` | Open table/collection rows for editing with a single tap. |
+| `decorators` | `DecoratorConfig` | `DecoratorConfig()` | Controls how many decorators show inline before overflowing into a kebab menu. |
+
+<Note>
+The per-parameter initializer shown in the sections below (for example `DocumentEditor(document:mode:events:...)`) is **deprecated**. It still works and forwards its arguments into a `DocumentEditorConfig`, but new code should use the config-based initializer above.
+</Note>
+
 ## Page Management
 
 ### Page Navigation

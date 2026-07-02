@@ -146,5 +146,8 @@ Pass your event handler to the DocumentEditor:
 
 ```swift
 let handler = ChangeHandler()
-let editor = DocumentEditor(document: myDocument, events: handler)
+let editor = DocumentEditor(
+    document: myDocument,
+    config: DocumentEditorConfig(events: handler)
+)
 ```
