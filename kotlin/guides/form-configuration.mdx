@@ -2,20 +2,173 @@
 title: Form Configuration
 icon: "gear"
 ---
+This document describes the configuration options available when initializing a `DocumentEditor` and rendering a `Form` for customizing form behavior, including page management, field interactions, and display options.
 
-This document describes the configuration options available when initializing a `DocumentEditor` for customizing form behavior, including page management and field interactions.
+## Initialization with FormConfig
+
+The recommended way to configure a `DocumentEditor` (and the `Form` that renders it) is with a single `FormConfig` object. This groups every option — mode, event handlers, license, schema validation, page behavior, display, and formula functions — into one configuration surface.
+
+```kotlin
+import com.joyfill.editors.document.rememberDocumentEditor
+import com.joyfill.editors.document.Form
+import com.joyfill.editors.document.config.FormConfig
+import com.joyfill.editors.document.config.FormEvents
+import com.joyfill.editors.document.config.DisplayConfig
+import com.joyfill.editors.document.config.PageConfig
+import com.joyfill.editors.document.config.DecoratorConfig
+import com.joyfill.editors.document.Mode
+
+// 1. Event handlers
+val events = FormEvents(
+    onChange = { event -> /* handle change */ },
+    onFocus  = { event -> /* handle focus  */ },
+    onBlur   = { event -> /* handle blur   */ },
+    onUpload = { event -> listOf("https://…") },
+    onCapture = { event -> "scanned-value" },
+)
+
+// 2. Page behavior
+val pageConfig = PageConfig(
+    enableDuplicates = false,
+    enableDeletes = false,
+    currentPageId = null,
+)
+
+// 3. Display & decorators
+val decoratorConfig = DecoratorConfig(
+    visibleLimitInFields = 2,
+    visibleLimitInRows = 1,
+)
+
+val displayConfig = DisplayConfig(
+    showUnsupportedFields = false,
+    showUnsupportedColumns = true,
+    showRowNumbers = true,
+    inlineFields = false,
+    singleClickRowEdit = false,
+    decorators = decoratorConfig,
+)
+
+// 4. Assemble the form config
+val config = FormConfig(
+    mode = Mode.fill,
+    license = "your-license",   // optional
+    events = events,
+    display = displayConfig,
+    pages = pageConfig,
+    functions = null,           // optional Wisdom functions
+    validateSchema = true,
+)
+
+// 5. Create the editor and render the form
+@Composable
+fun MyForm(document: Document) {
+    val editor = rememberDocumentEditor(
+        document = document,
+        config = config,
+    )
+
+    Form(
+        editor = editor,
+        // config defaults to editor.config — pass explicitly to override
+    )
+}
+```
+
+Every parameter has a default, so you only set what you need:
+
+```kotlin
+// Minimal — all defaults
+val editor = rememberDocumentEditor(
+    document = myDocument,
+    config = FormConfig(),
+)
+Form(editor = editor)
+
+// Just an event handler
+val editor = rememberDocumentEditor(
+    document = myDocument,
+    config = FormConfig(events = FormEvents(onChange = ::handleChange)),
+)
+```
+
+You can also build an editor from raw JSON without decoding to an intermediate `String`:
+
+```kotlin
+// From a JSON string
+val editor = rememberDocumentEditor(json = jsonString, config = config)
+
+// From UTF-8 bytes (preferred for large documents from files / network)
+val editor = rememberDocumentEditor(bytes = jsonBytes, config = config)
+```
+
+### FormConfig
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `mode` | `Mode` | `Mode.fill` | Rendering mode. `Mode.fill` allows editing; `Mode.readonly` disables edits (and page duplication/deletion). |
+| `license` | `String?` | `null` | License token. A valid license enables licensed features such as Collection fields. |
+| `events` | `FormEvents` | `FormEvents()` | Field and page event handlers. See [Event Handling](/kotlin/guides/event-handling). |
+| `display` | `DisplayConfig` | `DisplayConfig()` | Field-interaction and decorator display behavior. |
+| `pages` | `PageConfig` | `PageConfig()` | Page-navigation capabilities. |
+| `functions` | `(ResolutionResourceBuilder.() -> Unit)?` | `null` | Optional Wisdom functions available to formulas during evaluation. |
+| `validateSchema` | `Boolean` | `true` | When `true`, validates the document schema on editor construction. See [Schema Validation](#schema-validation). |
+
+### FormEvents
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onChange` | `((ComponentEvent<*>) -> Unit)?` | `null` | Invoked on field value changes and page create/delete events. |
+| `onFocus` | `((ComponentEvent<*>) -> Unit)?` | `null` | Invoked when a field or page gains focus, and on decorator taps. |
+| `onBlur` | `((ComponentEvent<*>) -> Unit)?` | `null` | Invoked when a field or page loses focus. |
+| `onUpload` | `(suspend (ComponentEvent<AbstractFileEditor>) -> List<String>)?` | `null` | Suspend handler for file uploads; return the resulting URLs. |
+| `onCapture` | `(suspend (ComponentEvent<AbstractCompStringEditor>) -> String?)?` | `null` | Suspend handler for barcode / scan capture; return the captured value. |
+
+### PageConfig
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `enableDuplicates` | `Boolean` | `false` | Allow users to duplicate pages (`Mode.fill` only). |
+| `enableDeletes` | `Boolean` | `false` | Allow users to delete pages (`Mode.fill` only). |
+| `currentPageId` | `String?` | `null` | Page to open initially. `null` falls back to the first valid page. |
+
+### DisplayConfig
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showUnsupportedFields` | `Boolean` | `false` | When `true`, renders a placeholder for fields whose type isn't supported by the current SDK. |
+| `showUnsupportedColumns` | `Boolean` | `true` | When `true`, renders unsupported column types (as read-only placeholders) inside table/collection rows. |
+| `showRowNumbers` | `Boolean` | `true` | When `true`, displays row-number indicators on table and collection rows. |
+| `inlineFields` | `Boolean` | `false` | When `true`, renders supported fields inline instead of using the default stacked layout. |
+| `singleClickRowEdit` | `Boolean` | `false` | Open table/collection rows for editing with a single tap. |
+| `decorators` | `DecoratorConfig` | `DecoratorConfig.Default` | Controls how many decorators show inline before overflowing into a kebab menu. See [Decorators](/kotlin/guides/decorators). |
+
+<Note>
+The per-parameter overloads on `rememberDocumentEditor(document, mode, events, ...)` and `Form(editor, mode, ...)` are **deprecated**. They still work and forward their arguments into a `FormConfig`, but new code should use the config-based APIs above.
+</Note>
 
 ## Page Management
 
 ### Page Navigation
 
-Control the visibility of the page navigation UI.
+The page navigation UI is provided via a composable slot on `Form`, not a boolean flag. The default slot renders a page selector; pass `null` to hide it entirely, or supply your own composable to fully customize navigation.
 
 ```kotlin
+// Default page navigation (recommended)
+Form(editor = editor)
+
+// Hide the page navigation UI
 Form(
     editor = editor,
-    // Use the default page navigation (recommended)
-    // navigation parameter can be omitted to use the default
+    navigation = null,
+)
+
+// Custom navigation
+Form(
+    editor = editor,
+    navigation = { navigator, state ->
+        MyCustomPageBar(state = state, onSelect = { navigator.navigate(it) })
+    },
 )
 ```
 
@@ -25,63 +178,74 @@ Form(
 
 **Behavior:**
 
-- The default navigation displays a page selector dropdown that allows users to switch between pages
-- The page selector respects conditional logic - hidden pages are not shown in the list
-- Pass `null` to completely hide the page navigation UI:
-
-```kotlin
-Form(
-    editor = editor,
-    navigation = null  // Hide page navigation UI
-)
-```
-
-### Page Deletion
-
-Control whether users can delete pages from multi-page forms.
-
-```kotlin
-Form(
-    editor = editor,
-    isPageDeleteEnabled = true,
-    mode = Mode.fill,
-)
-```
-
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `isPageDeleteEnabled` | `Boolean` | `false` | When `true`, users can delete pages via the page navigation UI. A confirmation dialog appears before deletion to prevent accidental data loss. |
-
-**Behavior:**
-
-- When enabled, a delete icon appears next to each page in the page selector
-- Delete is only available when there is more than one page (you cannot delete the last remaining page)
-- A confirmation dialog prompts the user before deletion
-- Page deletion is permanent and cannot be undone
-- Page deletion only works in `Mode.fill`
+- The default navigation displays a page selector that allows users to switch between pages
+- The page selector respects conditional logic — hidden pages are not shown in the list
+- The default selector reads `config.pages.enableDuplicates` and `config.pages.enableDeletes` (combined with `config.mode`) to decide which page actions are exposed
 
 ### Page Duplication
 
 Control whether users can duplicate existing pages.
 
 ```kotlin
-Form(
-    editor = editor,
-    isPageDuplicateEnabled = true,
-    mode = Mode.fill,
+val config = FormConfig(
+    mode = Mode.fill,                              // duplication only works in Mode.fill
+    pages = PageConfig(enableDuplicates = true),
+)
+
+val editor = rememberDocumentEditor(document = myDocument, config = config)
+Form(editor = editor)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `pages.enableDuplicates` | `Boolean` | `false` | When `true`, users can duplicate pages via the page navigation UI. The duplicated page includes all field values from the original. |
+
+**Behavior:**
+
+- Duplicated pages retain all field values from the source page, including conditional logic and formulas
+- The new page is inserted immediately after the source page in the page order
+- Duplication emits a `ComponentEvent.PageEvent.PageCreate` through `events.onChange`
+- Only takes effect in `Mode.fill`
+
+### Page Deletion
+
+Control whether users can delete pages from multi-page forms.
+
+```kotlin
+val config = FormConfig(
+    mode = Mode.fill,                            // deletion only works in Mode.fill
+    pages = PageConfig(enableDeletes = true),
+)
+
+val editor = rememberDocumentEditor(document = myDocument, config = config)
+Form(editor = editor)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `pages.enableDeletes` | `Boolean` | `false` | When `true`, users can delete pages via the page navigation UI. A confirmation dialog appears before deletion to prevent accidental data loss. |
+
+**Behavior:**
+
+- Delete is only available when there is more than one page (you cannot delete the last remaining page)
+- A confirmation dialog is shown to the user before deletion
+- Page deletion is permanent and cannot be undone
+- Deletion emits a `ComponentEvent.PageEvent.PageDelete` through `events.onChange`
+- Only takes effect in `Mode.fill`
+
+### Initial Page
+
+Open the form on a specific page rather than the first valid one.
+
+```kotlin
+val config = FormConfig(
+    pages = PageConfig(currentPageId = "page_456"),
 )
 ```
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| `isPageDuplicateEnabled` | `Boolean` | `false` | When `true`, users can duplicate pages via the page navigation UI. The duplicated page includes all field values from the original. |
-
-**Behavior:**
-
-- When enabled, a duplicate icon appears next to each page in the page selector
-- Duplicated pages retain all field values from the source page, including conditional logic and formulas
-- The new page is inserted immediately after the source page
-- Page duplication only works in `Mode.fill`
+| `pages.currentPageId` | `String?` | `null` | Page to open initially. `null` falls back to the first valid page. |
 
 ## Field Interactions
 
@@ -90,22 +254,67 @@ Form(
 Simplify the process for opening table and collection rows for editing.
 
 ```kotlin
-Form(
-    editor = editor,
-    singleClickRowEdit = true,
+val config = FormConfig(
+    display = DisplayConfig(singleClickRowEdit = true),
 )
 ```
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| `singleClickRowEdit` | `Boolean` | `false` | When `true`, users can open a row for editing with a single tap. When `false`, users must go through multiple steps to edit a row. |
+| `display.singleClickRowEdit` | `Boolean` | `false` | When `true`, users can open a row for editing with a single tap. When `false`, users must go through multiple steps to edit a row. |
 
 **Behavior:**
 
 - **Default (`false`)**: Users must follow multiple steps to open a row form
-- **Enabled (`true`)**: Users can open the row form for editing with a single tap
-- This setting applies to both Table fields and Collection fields
-- The edit behavior respects the form's mode - in `Mode.readonly`, rows cannot be edited regardless of this setting
+- **Enabled (`true`)**: Users can open the row form for editing with a single tap, providing a faster and easier editing experience
+- Applies to both Table fields and Collection fields
+- The edit behavior respects the form's mode — in `Mode.readonly`, rows cannot be edited regardless of this setting
+
+### Inline Fields
+
+Render supported fields inline instead of using the default stacked layout.
+
+```kotlin
+val config = FormConfig(
+    display = DisplayConfig(inlineFields = true),
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `display.inlineFields` | `Boolean` | `false` | When `true`, supported field types render inline; when `false`, they use the default vertical layout. |
+
+### Unsupported Fields and Columns
+
+Control whether the form renders placeholders for field or column types that aren't supported by the current SDK version.
+
+```kotlin
+val config = FormConfig(
+    display = DisplayConfig(
+        showUnsupportedFields = false,   // hide unsupported top-level fields
+        showUnsupportedColumns = true,   // show unsupported columns as read-only placeholders
+    ),
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `display.showUnsupportedFields` | `Boolean` | `false` | When `true`, renders a placeholder for unsupported top-level field types. |
+| `display.showUnsupportedColumns` | `Boolean` | `true` | When `true`, renders unsupported column types (as read-only placeholders) inside table/collection rows. |
+
+### Row Numbers
+
+Toggle row-number indicators on table and collection rows.
+
+```kotlin
+val config = FormConfig(
+    display = DisplayConfig(showRowNumbers = false),
+)
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `display.showRowNumbers` | `Boolean` | `true` | When `true`, displays row-number indicators on table and collection rows. |
 
 ## Schema Validation
 
@@ -114,23 +323,25 @@ Control whether the document schema is validated during initialization.
 ```kotlin
 val editor = rememberDocumentEditor(
     document = myDocument,
-    validateSchema = true,
+    config = FormConfig(validateSchema = true),
 )
 ```
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| `validateSchema` | `Boolean` | `true` | When `true`, validates the document schema version and structure during initialization. Validation errors are exposed via `editor.error`. |
+| `validateSchema` | `Boolean` | `true` | When `true`, validates the document schema version and structure during construction. Validation errors are exposed via `editor.error` and reported to the configured error handler. |
 
 **Behavior:**
 
 - If validation fails, `editor.error` will contain a non-null error value
-- The form will display an error screen instead of the document content
+- The `Form` composable renders the `error` slot instead of the document content
 - Set to `false` to skip validation (useful for testing or when you're certain the document is valid)
+
+See [Schema Validation](/kotlin/guides/schema-validation) for the full validation flow.
 
 ## Programmatic Page Operations
 
-You can perform page operations programmatically using the `PageCollection` API available via `editor.pages`.
+You can also perform page operations programmatically using the `PageCollection` API exposed via `editor.pages`.
 
 ### Navigate to a Page
 
