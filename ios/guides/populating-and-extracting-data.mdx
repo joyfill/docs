@@ -54,6 +54,26 @@ if let field = documentEditor.field(fieldID: "textField1") {
 }
 ```
 
+**field(identifier:) - Get Field By Identifier**
+
+```swift
+// Get a specific field by identifier
+if let field = documentEditor.field(identifier: "textField1_identifier") {
+    print("Field title: \(field.title ?? "No title")")
+    print("Field type: \(field.fieldType)")
+}
+```
+
+**field(title:) - Get Field By Title**
+
+```swift
+// Get a specific field by title (case-insensitive)
+if let field = documentEditor.field(title: "Text Field 1") {
+    print("Field title: \(field.title ?? "No title")")
+    print("Field type: \(field.fieldType)")
+}
+```
+
 **getFieldIdentifier - Field Context Access**
 
 The getFieldIdentifier(for:) method provides complete context information about a field, which is essential for the Change API and field operations.
