@@ -6,6 +6,29 @@ icon: "notes"
 
 > Source: https://github.com/joyfill/components-swift/releases  
 
+## 3.0.0-rc24
+
+
+**Release Date:** July 16, 2026
+
+
+
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Field lookup by identifier and title** — `DocumentEditor` now supports `field(identifier:)` and `field(title:)` in addition to `field(fieldID:)`, so you no longer have to filter `allFields` by hand. Title lookups are case-insensitive to stay consistent across platforms.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- **MultiSelect columns are now single-select by default** — set `multi: true` on a table or collection column to allow picking more than one option.
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- **Image field decorators**  — decorators applied to a standalone image field now render in the UI instead of only being saved to JSON.
+- **Row-form scrolling on large tables & collections** — fixed janky, sticky scrolling in the single-row / bulk-edit form on fields with large datasets.
+- **Landscape date + time picker** — opening the combined date + time picker in landscape no longer freezes the app.
+
+
 ## 3.0.0-rc23
 
 
