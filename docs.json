@@ -162,16 +162,7 @@
           },
           {
             "group": "Resources",
-            "pages": [
-              "web/changelogs/releases",
-              "web/about/security",
-              {
-                "group": "Security Advisory",
-                "pages": [
-                  "untitled-page"
-                ]
-              }
-            ]
+            "pages": ["web/changelogs/releases", "web/about/security"]
           }
         ]
       },
