@@ -162,7 +162,11 @@
           },
           {
             "group": "Resources",
-            "pages": ["web/changelogs/releases", "web/about/security"]
+            "pages": [
+              "web/changelogs/releases",
+              "web/about/security",
+              "web/about/security-advisory"
+            ]
           }
         ]
       },
