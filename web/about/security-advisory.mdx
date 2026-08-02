@@ -1,17 +1,30 @@
 ---
-title: "Security Advisory: Compromised @joyfill npm beta releases"
+title: "Security Advisory: Compromised @joyfill npm beta releases and public github repos"
 sidebarTitle: "Security Advisory"
-description: "JOYFILL-SA-2026-001 — compromised @joyfill npm beta releases: affected versions, how to check whether you are impacted, and remediation steps."
+description: "JOYFILL-SA-2026-001 — compromised @joyfill npm beta releases and public github repos: affected versions, how to check whether you are impacted, and remediation steps."
 icon: "triangle-exclamation"
 ---
 
-**Advisory ID:** JOYFILL-SA-2026-001 · **Published:** July 29, 2026 · **Last updated:** July 29, 2026 · **Status:** Investigation ongoing · **Severity:** Critical for affected installs
+**Advisory ID:** JOYFILL-SA-2026-001 · **Published:** July 29, 2026 · **Last updated:** August 2, 2026 (Revision 2) **Status:** Investigation ongoing · **Severity:** Critical for affected installs
+
+---
+
+> **Update, August 2, 2026 — npm verification complete; scope expanded to cover source repositories.** We have finished verifying our published npm packages and found no additional affected versions. We have separately identified the malicious code in three public Joyfill GitHub repositories. If you cloned any Joyfill repository directly from GitHub, see [Cloned GitHub repositories](#cloned-github-repositories).
 
 ---
 
 ## Start here: are you affected?
 
-Six **beta** releases of `@joyfill` packages were published on July 28, 2026 containing malicious code. All of them carry the `2773` prerelease build marker. **All six affected versions have been removed from npm. Stable releases are not currently believed to be affected.**
+There are two separate ways to have been exposed. Run both checks — they are independent, and a clean result on one says nothing about the other.
+
+### Check 1 — did you install an affected npm version?
+
+Six **beta** releases were published on July 28, 2026 containing malicious code. All carry the `2773` prerelease build marker, and no release without that marker has been found to contain the implant. **All six have been removed from npm. Stable releases are not currently believed to be affected.**
+
+| Package | Affected versions | Confirmed clean |
+| --- | --- | --- |
+| `@joyfill/layouts` | `0.1.2-2773.beta.0`, `0.1.2-2773.beta.1`, `0.1.2-2773.beta.2` | `0.1.1` |
+| `@joyfill/components` | `4.0.0-rc24-2773-beta.4`, `4.0.0-rc24-2773-beta.5`, `4.0.0-rc24-2773-beta.6` | `4.0.0-rc24` |
 
 Run this from the root of any project that uses `@joyfill` packages — the directory containing your `package.json`. In a monorepo, run it once at the repository root; the search recurses into workspace lockfiles beneath it.
 
@@ -23,7 +36,7 @@ grep -rEn --include=package-lock.json --include=yarn.lock --include=pnpm-lock.ya
 On Windows, from the same directory (PowerShell):
 
 ```powershell
-Get-ChildItem -Path .\* -Recurse -Include package-lock.json,yarn.lock,pnpm-lock.yaml |
+Get-ChildItem -Recurse -Include package-lock.json,yarn.lock,pnpm-lock.yaml |
   Select-String "joyfill.*2773"
 ```
 
@@ -33,24 +46,21 @@ To see what actually resolved rather than what the lockfile records, run this fr
 npm ls @joyfill/layouts @joyfill/components
 ```
 
-**If those come back empty, run one more pass.** The searches above require `joyfill` and `2773` to appear on the same line, which depends on the `resolved` URL your lockfile records. Offline installs and internal registry mirrors can rewrite or omit that URL, so an affected entry can be present without matching. This search is noisier but cannot miss:
-
-```bash
-grep -rn --include=package-lock.json --include=npm-shrinkwrap.json --include=yarn.lock \
-  --include=pnpm-lock.yaml --include=package.json '2773' . 2>/dev/null
-```
-
-If you use Bun, `bun.lockb` is a binary file and neither search can read it — run `bun pm ls | grep joyfill` instead.
-
 Repeat for every repository or checkout that depends on `@joyfill`. A check on your own machine does not cover lockfiles that exist only in CI caches, container images, or a colleague's environment.
 
----
+**If this finds anything**, the affected versions execute code at import time, so an install alone is enough — go to [If you installed or imported an affected version](#if-you-installed-or-imported-an-affected-version).
 
-## If you found no matches
+### Check 2 — did you clone a Joyfill repository from GitHub?
 
-You are not affected by this advisory. Two precautions still apply to you, and neither is optional — both close the path by which a later install could still pull an affected build.
+Separately from npm, three public Joyfill repositories on GitHub contained the same malicious code. This is a distinct exposure path: it affects anyone who cloned those repositories directly, whether or not they ever installed a `@joyfill` package.
 
-**Do not install `@joyfill/layouts` or `@joyfill/components` from the `beta` dist-tag** until we confirm remediation is complete, since that tag can resolve to a prerelease build on your next install.
+**If you cloned, pulled, or fetched any Joyfill repository from GitHub between May 25, 2026 and August 1, 2026** — including an older clone you updated during that window — go to [Cloned GitHub repositories](#cloned-github-repositories).
+
+### Both checks clean?
+
+You are not affected by this advisory and can stop after the two items below.
+
+**Do not install** `@joyfill/layouts `**or** `@joyfill/components `**from the npm** `beta `**dist-tag** until we confirm remediation is complete, since that tag can resolve to a prerelease build on your next install.
 
 **Pin to an exact version that is not a `2773` build.** Whatever version you are on today is fine, as long as it does not carry the `2773` marker. Pin that exact version rather than a range:
 
@@ -60,30 +70,13 @@ npm install --save-exact @joyfill/components@<your current version>
 
 Your `package.json` should read `"@joyfill/components": "4.0.0-rc24"` — an exact version with no `^` or `~` in front of it.
 
-**This advisory is not a reason to upgrade.** If you are running an older release, stay on it. Older releases predate this entirely and are outside the window we are verifying. Upgrading across a major version to respond to this incident would take on breakage risk you do not need. If you want a version that has been independently confirmed clean by the analyses linked below, those are `@joyfill/layouts@0.1.1` and `@joyfill/components@4.0.0-rc24`.
+**This advisory is not a reason to upgrade.** If you are running an older release, stay on it. Older releases predate this entirely. Upgrading across a major version to respond to this incident would take on breakage risk you do not need. If you want a version that has been independently confirmed clean by the analyses linked below, those are `@joyfill/layouts@0.1.1` and `@joyfill/components@4.0.0-rc24`.
 
 **Where the range prefix actually matters.** If your components dependency is written as `^4.0.0-rc24` or `~4.0.0-rc24`, change it to the exact version. Because `4.0.0-rc24` is itself a prerelease, those ranges **do** match the compromised `2773` builds — under semver they sort above `4.0.0-rc24`, so they are valid upgrades within the range, and your next install could pull one.
 
 Any other range — `^3.x`, `^2.x`, anything anchored on a stable version, or any range on `@joyfill/layouts` — cannot reach a `2773` build. Pinning exactly is still good practice, but there is no urgency for you here.
 
-If you want to be extra careful, re-run the check above after your next `npm install`, in case a transitive update pulls a different version.
-
----
-
-## If you found a match
-
-The affected versions execute code at import time, so an install alone is enough to have triggered the implant. Continue to [If you installed or imported an affected version](#if-you-installed-or-imported-an-affected-version).
-
-| Package | Affected versions | Confirmed clean |
-| --- | --- | --- |
-| `@joyfill/layouts` | `0.1.2-2773.beta.0`, `0.1.2-2773.beta.1`, `0.1.2-2773.beta.2` | `0.1.1` |
-| `@joyfill/components` | `4.0.0-rc24-2773-beta.4`, `4.0.0-rc24-2773-beta.5`, `4.0.0-rc24-2773-beta.6` | `4.0.0-rc24` |
-
-Every affected version carries `2773` in its version string, and no release without that marker has been found to contain the implant. The versions in the right-hand column are the ones independently examined and confirmed clean — they are reference points, not an upgrade recommendation. Any non-`2773` version you are already running is a valid version to pin to.
-
-`4.0.0-rc24` is itself a prerelease, and it is listed here because it is what was examined — not because prereleases are safer than stable releases. The `2773` marker, not the release channel, is what identifies an affected build.
-
-We are separately verifying every version published from our main branch this year and will update this page with the results. See [Scope verification](#scope-verification).
+If you want to be extra careful, re-run Check 1 after your next `npm install`, in case a transitive update pulls a different version.
 
 ---
 
@@ -96,12 +89,39 @@ Because the payload can execute arbitrary commands, treat the machine as comprom
 1. **Take the affected machine offline.** Preserve logs, shell history, and dependency artifacts before cleaning anything. If forensics may be needed later, image the disk first.
 2. **Rotate credentials reachable from that machine or process** — npm tokens, cloud keys, CI secrets, SSH keys, GitHub personal access tokens, database credentials, local `.env` contents.
 3. **Rotate browser-stored credentials and sessions** on that machine: saved passwords, cookies, and any password-manager or wallet extension data.
-4. **Reimage the machine.** We recommend a full reimage rather than targeted cleanup. The recovered payload injects self-reloading code into local developer tooling — editors, desktop applications, and the global npm CLI — so it can survive both removal of the package and rotation of credentials, and steal the new credentials in turn. There is also no reliable way to confirm from the outside that a given machine is clean: the payload is fetched at runtime, so machines may have received different code, and the credential-stealing branch can run and exit without leaving anything behind to find.
-   If reimaging is genuinely not possible, the linked third-party analyses below list the specific injection targets and file markers needed for manual cleanup. Treat that as the weaker option, and contact us if you want help working through it.
-5. **Purge the package everywhere it persists.** Delete `node_modules` and reinstall from a corrected lockfile so the compromised bundle is gone from disk, then clear it from local and CI caches, internal registry mirrors, container build layers, and deployment artifacts. Removal from npm does not reach these — a cached copy in a mirror or build layer will still install. Block the affected versions in your registry proxy or dependency policy tooling so automated resolution can't restore them.
+4. **Reimage the machine.** We recommend a full reimage rather than targeted cleanup. The recovered payload injects self-reloading code into local developer tooling — editors, desktop applications, and the global npm CLI — so it can survive both removal of the package and rotation of credentials, and steal the new credentials in turn. There is also no reliable way to confirm from the outside that a given machine is clean: the payload is fetched at runtime, so machines may have received different code, and the credential-stealing branch can run and exit without leaving anything behind to find. If reimaging is genuinely not possible, the linked third-party analyses below list the specific injection targets and file markers needed for manual cleanup. Treat that as the weaker option, and contact us if you want help working through it.
+5. **Purge the package everywhere it persists.** Delete `node_modules` and reinstall from a corrected lockfile so the compromised bundle is gone from disk, then clear it from local and CI caches, internal registry mirrors, container build layers, and deployment artifacts. Block the affected versions in your registry proxy or dependency policy tooling so automated resolution can't restore them.
 6. **Work out how far it reached.** Reimaging fixes one machine. It does not tell you whether other machines imported the same package, whether the implant ever connected, or how long it was live — and wiping the disk destroys the local evidence that would. Network and CI logs survive the rebuild, so they are your best remaining source. Look for detached `node` processes and outbound blockchain RPC traffic from build agents or developer workstations; blockchain RPC calls from a CI runner are a strong signal on their own. Indicators of compromise are in the third-party analyses linked below.
 
 If you need help assessing exposure, contact us directly — see [Contact](#contact).
+
+---
+
+## Cloned GitHub repositories
+
+Separately from npm, we identified malicious code in project files in three public Joyfill repositories on GitHub. This section is about environments that cloned these repositories directly from GitHub.
+
+**These repositories were made inaccessible on August 1, 2026.** They can no longer be cloned or pulled from. This section applies to any clone that was created, pulled, or fetched between May 25, 2026 and August 1, 2026 — including a clone made years earlier that was updated during that window.
+
+| Repository | File | Runs when |
+| --- | --- | --- |
+| `https://github.com/joyfill/react-grid-layout` | `webpack.config.js` | a webpack build runs |
+| `https://github.com/joyfill/examples` | `VueJs/babel.config.js` | Babel runs |
+| `https://github.com/joyfill/layout-engine` | `src/utils/reactGridLayoutUtils.js` | the module is imported |
+
+**If you cloned any of these, inspect the file listed above in your clone.** The code is hidden behind a long run of whitespace padding on an existing line, so it will not be visible during a normal read. Two reliable tells: an unexpected jump in file size, and any line longer than about 2,000 characters.
+
+```bash
+# From the root of your clone
+awk 'length > 2000 {print FILENAME": line "FNR" is "length" chars"}' \
+  $(git ls-files '*.js' '*.mjs' '*.cjs') 2>/dev/null
+```
+
+**Finding the code in a clone does not mean your machine was affected.** The code is inert on disk and runs only when the file it sits in is executed or imported. If you cloned a repository and never built, tested, or ran anything from it, delete the clone and there is nothing further to do.
+
+The threshold is lower than it sounds, though. For the two configuration files, running any build from the project is enough. For `layout-engine`, importing the module is enough — a dev server, a test run, or a bundling step will do it, without anyone deliberately running that file.
+
+If you built, tested, or ran anything from one of these clones, follow the steps in [If you installed or imported an affected version](#if-you-installed-or-imported-an-affected-version).
 
 ---
 
@@ -117,7 +137,7 @@ If you maintain packages and an affected machine was used to build or publish th
 2. Rotate your npm publishing tokens from a clean machine before publishing anything else.
 3. Publish subsequent releases from CI with provenance rather than from a workstation.
 
-We recognize how much work that is. We would rather flag it than leave anyone to discover it downstream.
+We recognise how much work that is. We would rather flag it than leave anyone to discover it downstream.
 
 ---
 
@@ -147,7 +167,7 @@ Socket links the implant to the DEV#POPPER / Contagious Interview malware family
 
 Our investigation has made substantial progress. We have established how the malicious code reached our published packages, and we have already acted on what we found — the remediation work described below reflects specific findings rather than precautionary guesswork.
 
-When the investigation and the scope verification described below are complete, we will publish a full technical post-mortem covering root cause, timeline, and remediation, and we will link it from this page.
+When our investigation is complete, we will publish a full technical post-mortem covering root cause, timeline, and remediation, and we will link it from this page.
 
 If you have a specific question in the meantime — as a customer, a downstream maintainer, or a researcher — please contact us directly rather than inferring from what is not yet published. See [Contact](#contact).
 
@@ -155,15 +175,9 @@ If you have a specific question in the meantime — as a customer, a downstream 
 
 ## Scope verification
 
-We want to be precise about what we have and have not confirmed.
+**Verification complete for npm.** We have manually inspected every version we published to npm over the past 12 months (over 800\+ versions), along with the dependency packages we publish and manage. We did not find the known malicious code in any of them. The affected versions are the beta releases listed above, and no others at this time.
 
-**Confirmed affected:** the beta versions listed above.
-
-**Confirmed clean:** `@joyfill/layouts@0.1.1` and `@joyfill/components@4.0.0-rc24`.
-
-**Under verification:** every version published from our main branch this year, through July 28, 2026.
-
-We will publish that result on this page whether or not it expands the scope of this advisory.
+This closes the verification we committed to when this advisory was first published. Our npm packages outside those beta releases are clean from the known malicious code.
 
 ---
 
@@ -187,4 +201,5 @@ We respond within one business day. If you believe you were affected and want he
 
 ## Changelog
 
-- **2026-07-29** — Initial publication.
+- **2026-08-02 (Revision 2)** — Completed verification of all npm versions published in the past 12 months; no additional affected versions found. Added a section covering three public GitHub repositories found to contain the same code, none of which were published to npm. Those repositories were made inaccessible on August 1, 2026.
+- **2026-07-29 (Revision 1)** — Initial publication.
