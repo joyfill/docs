@@ -8,7 +8,7 @@
     "dark": "#0052CC"
   },
   "favicon": {
-    "light": "/logo/light.svg",
+    "light": "/logo/dark.svg",
     "dark": "/logo/dark.svg"
   },
   "navigation": {
