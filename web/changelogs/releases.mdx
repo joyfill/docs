@@ -8,6 +8,28 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc25
+
+**Release Date:** August 28, 2026
+
+This release introduces **Conditional Required Logic** and **Cell Visibility Logic**, plus an explicit `multi` property for multiple choice fields.
+
+🚀 **New Features**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Conditional Required Logic:** Required validation can now be driven by conditions instead of a fixed flag. Rules can be configured on fields, table or collection columns, individual cells (evaluated per row), and nested collection child tables. Use `enforce` to make something required when conditions are met, or `unenforce` to lift a requirement. Cell-level rules can react to sibling columns in the same row.
+
+- **Cell Visibility Logic:** Individual cells within a table or collection column can now be shown or hidden per row, based on sibling columns or fields elsewhere in the document. Column headers stay in place, hidden cells keep their stored values, and hidden cells are exempt from required validation.
+
+🛠️ **Enhancements**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
+
+- **Multiple Choice `multi` Property:** Multiple choice fields now use an explicit `multi` property to control whether more than one option can be selected. Set `multi: true` to allow multiple selections. Without it, the field behaves as single choice.
+
+---
+
 ## 4.0.0-rc24
 
 **Release Date:** July 9, 2026
