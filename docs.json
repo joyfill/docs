@@ -19,16 +19,14 @@
         "groups": [
           {
             "group": "Joyfill",
-            "pages": ["joyfill/index"]
-          },
-          {
-            "group": "JoyDoc",
             "pages": [
+              "joyfill/index",
               "joyfill/joydoc-usage",
               "joyfill/schema-json",
               "joyfill/metadata",
               "joyfill/field-identifiers",
-              "joyfill/self-hosted"
+              "joyfill/self-hosted",
+              "security"
             ]
           }
         ]
