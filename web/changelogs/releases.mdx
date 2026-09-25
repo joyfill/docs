@@ -8,6 +8,28 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc27
+
+**Release Date:** September 25, 2026
+
+This release introduces **Auto-Shrink** and **Auto-Height** for text fields, so long values can fit their configured bounds or grow to show the full content.
+
+🚀 **New Features**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Auto-Shrink for Text Fields:** Text and textarea fields can now automatically reduce their font size to help long values fit within the configured field bounds. Configure `autoShrink`, `maxLines`, and `maxLength`. Text fields also now correctly wrap their values when `textOverflow` is set to `wrap`.
+
+- **Auto-Height for Text Fields:** Text and textarea fields can now automatically grow in height when their value exceeds the available space. This is supported in the builder and PDF-form pages. On fillable PDF pages, exported fields retain the same auto-shrunk font and grow to show the full value. Auto-height fields grow only when needed and retain their configured width and position.
+
+🛠️ **Enhancements**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
+
+- **JoyDoc JSON Schema:** Updated the JoyDoc JSON schema to support `autoShrink`, `autoHeight`, and their associated field-position settings.
+
+---
+
 ## 4.0.0-rc26
 
 **Release Date:** September 14, 2026
