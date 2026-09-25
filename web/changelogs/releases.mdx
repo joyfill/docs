@@ -8,6 +8,34 @@ icon: "globe"
 
 ---
 
+## 4.0.0-rc27
+
+**Release Date:** September 25, 2026
+
+This release introduces **Column-Level Formulas** for table text columns, plus formula syntax improvements and a mobile-view indicator fix.
+
+🚀 **New Features**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Column-Level Formulas:** A table text column's default value can now be an Excel-style formula, e.g. `=Qty*Price`. Every blank cell under that column shows the calculated result, and shows the formula itself when you click into it. Nothing is written back to the row: leaving a cell alone saves nothing, typing over it saves your text, and clearing it brings the formula back.
+  * Works in the grid and the input group, collections (including nested child tables), the row-edit modal, and individually mapped or dragged table cells.
+  * Required validation on a text column checks the calculated value, so a column filled in by a formula no longer gets flagged as incomplete. New rows no longer copy the formula in as literal text, so it keeps calculating for every row you add.
+
+🛠️ **Bug Fixes**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- **Required and Hidden Indicators in Mobile View:** The required red asterisk, the hidden yellow eye icon, and hidden nested collection tables were disappearing in the mobile view whenever field syncing was off. The mobile canvas is locked to read-only so a drag there can't rewrite the desktop layout, and these indicators were incorrectly tied to that same read-only state. They now follow the actual authoring mode, so mobile shows the same required and hidden state as desktop while staying non-interactive.
+
+🛠️ **Enhancements**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
+
+- **Cell-Level Formulas:** Cell-level formulas are now case-insensitive and no longer require A1-style operands. `=sum(a,d)` and `=a+d` now work the same as `=SUM(A1,D1)`.
+
+---
+
 ## 4.0.0-rc26
 
 **Release Date:** September 14, 2026
