@@ -18,81 +18,45 @@ Joyfill's React Native SDK supports raw react native and expo projects. The SDK 
 
 # 2. Usage
 
-* Add the Template identifier from the previous setup step to the `App.js` file.
-* Add the User Access Token from the preview setup step to the `api.js` file.
+* Add a valid JoyDoc JSON to the template const.
 
 <CodeGroup>
   ```bash bash
   import React, { useState, useEffect } from 'react';
-  import { Dimensions } from 'react-native';
-  import { retrieveTemplate } from '../api.js';
-
-  import { JoyDoc } from '@joyfill/components-react-native';
-
+  import { Dimensions, View } from 'react-native';
+  import { JoyDoc, getDefaultDocument } from '@joyfill/components-react-native';
+  
   const screenWidth = Dimensions.get('window').width;
-
-  function App() {
-
-    const [ template, setTemplate ] = useState(null);
-
-    /**
-     * Add your template identifier
-     */
-    const identifier = '<REPLACE_WITH_TEMPLATE_IDENIFIER>';
-
-    /**
-     * Retrieve template via the Joyfill API 
-     */
-    useEffect(() => {
-
-      const handleRetrieveTemplate = async () => {
-        const response = await retrieveTemplate(identifier);
-        setTemplate(response);
-      };
-
-      handleRetrieveTemplate();
-
-    }, []);
-
+  
+  const template = <PASTE_JSON_TEMPLATE>
+  
+  function Document() {
+  
+    const [doc, setDoc] = useState(template);
+  
     return (
-      <JoyDoc
-        mode="fill"
-        doc={template}
-        width={screenWidth}
-        onChange={(changelogs, doc) => {
-
-          /**
-           * Changelogs represent the individual change that was made
-           * Data represents the entire data structure with all new changes applied.
-           */
-          console.log('>>>>>>>>: ', changelogs, doc);
-
-        }}
-      />
+      <View style={{flex: 1}}>
+        <JoyDoc
+          mode="fill"
+          doc={doc}
+          width={screenWidth}
+          onChange={(changelogs, doc) => {
+            console.log('onChange doc: ', doc);
+            setDoc(doc);
+          }}
+          onUploadAsync={async (params) => {
+            // Add your picker/upload handler and return { url, fileName, filePath } objects.
+            console.log('onUploadAsync: ', params);
+            return []; // No file selected; leave the document unchanged.
+          }}
+        />
+      </View>
     );
-
   }
-  ```
-
-  ```bash bash
-  const userAccessToken = "<REPLACE_USER_ACCESS_TOKEN>";
-  const apiBaseUrl = "https://api-joy.joyfill.io";
-
-  export const retrieveTemplate = async (identifier) => {
-
-    //See API Doc Here: https://docs.joyfill.io/reference/retrieve-a-template
-    const response = await fetch(`${apiBaseUrl}/v1/templates/${identifier}`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        Authorization: `Bearer ${userAccessToken}`,
-        'Content-Type': 'application/json'
-      },
-    });
-
-    const data = await response.json();
-    return data;
-  }
+  
+  export default Document;
+  
+  
   ```
 </CodeGroup>
 
@@ -104,8 +68,6 @@ Joyfill's React Native SDK supports raw react native and expo projects. The SDK 
 
 If you’re looking for a full example project that shows many more of the Joyfill SDK capabilities and workflows then head over to our full example project and try it for yourself.
 
-* [Joyfill React Native Example](https://github.com/joyfill/examples/tree/main/react-native)
 * [SDK NPM Package](https://www.npmjs.com/package/@joyfill/components-react-native)
 
 ***
-
