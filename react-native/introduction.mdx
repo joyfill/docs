@@ -18,14 +18,43 @@ Joyfill's React Native SDK supports raw react native and expo projects. The SDK 
 
 # 2. Usage
 
-* Add the Template identifier from the previous setup step to the `App.js` file.
-* Add the User Access Token from the preview setup step to the `api.js` file.
+* Add a valid JoyDoc JSON to the template const.
 
 <CodeGroup>
   ```bash bash
   import React, { useState, useEffect } from 'react';
-  import { Dimensions } from 'react-native';
-  import { retrieveTemplate } from '../api.js';
+  import { Dimensions, View } from 'react-native';
+  import { JoyDoc, getDefaultDocument } from '@joyfill/components-react-native';
+  
+  const screenWidth = Dimensions.get('window').width;
+  
+  const template = <PASTE_JSON_TEMPLATE>
+  
+  function Document() {
+  
+    const [doc, setDoc] = useState(template);
+  
+    return (
+      <View style={{flex: 1}}>
+        <JoyDoc
+          mode="fill"
+          doc={doc}
+          width={screenWidth}
+          onChange={(changelogs, doc) => {
+            console.log('onChange doc: ', doc);
+            setDoc(doc);
+          }}
+          onUploadAsync={async (params) => {
+            // Add your picker/upload handler and return { url, fileName, filePath } objects.
+            console.log('onUploadAsync: ', params);
+            return []; // No file selected; leave the document unchanged.
+          }}
+        />
+      </View>
+    );
+  }
+  
+  export default Document;
   
   
   ```
@@ -39,7 +68,6 @@ Joyfill's React Native SDK supports raw react native and expo projects. The SDK 
 
 If you’re looking for a full example project that shows many more of the Joyfill SDK capabilities and workflows then head over to our full example project and try it for yourself.
 
-* [Joyfill React Native Example](https://github.com/joyfill/examples/tree/main/react-native)
 * [SDK NPM Package](https://www.npmjs.com/package/@joyfill/components-react-native)
 
 ***
