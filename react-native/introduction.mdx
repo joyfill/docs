@@ -73,27 +73,6 @@ Joyfill's React Native SDK supports raw react native and expo projects. The SDK 
 
   }
   ```
-
-  ```bash bash
-  const userAccessToken = "<REPLACE_USER_ACCESS_TOKEN>";
-  const apiBaseUrl = "https://api-joy.joyfill.io";
-
-  export const retrieveTemplate = async (identifier) => {
-
-    //See API Doc Here: https://docs.joyfill.io/reference/retrieve-a-template
-    const response = await fetch(`${apiBaseUrl}/v1/templates/${identifier}`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        Authorization: `Bearer ${userAccessToken}`,
-        'Content-Type': 'application/json'
-      },
-    });
-
-    const data = await response.json();
-    return data;
-  }
-  ```
 </CodeGroup>
 
 <Warning>
@@ -108,4 +87,3 @@ If you’re looking for a full example project that shows many more of the Joyfi
 * [SDK NPM Package](https://www.npmjs.com/package/@joyfill/components-react-native)
 
 ***
-
