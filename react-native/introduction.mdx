@@ -26,52 +26,8 @@ Joyfill's React Native SDK supports raw react native and expo projects. The SDK 
   import React, { useState, useEffect } from 'react';
   import { Dimensions } from 'react-native';
   import { retrieveTemplate } from '../api.js';
-
-  import { JoyDoc } from '@joyfill/components-react-native';
-
-  const screenWidth = Dimensions.get('window').width;
-
-  function App() {
-
-    const [ template, setTemplate ] = useState(null);
-
-    /**
-     * Add your template identifier
-     */
-    const identifier = '<REPLACE_WITH_TEMPLATE_IDENIFIER>';
-
-    /**
-     * Retrieve template via the Joyfill API 
-     */
-    useEffect(() => {
-
-      const handleRetrieveTemplate = async () => {
-        const response = await retrieveTemplate(identifier);
-        setTemplate(response);
-      };
-
-      handleRetrieveTemplate();
-
-    }, []);
-
-    return (
-      <JoyDoc
-        mode="fill"
-        doc={template}
-        width={screenWidth}
-        onChange={(changelogs, doc) => {
-
-          /**
-           * Changelogs represent the individual change that was made
-           * Data represents the entire data structure with all new changes applied.
-           */
-          console.log('>>>>>>>>: ', changelogs, doc);
-
-        }}
-      />
-    );
-
-  }
+  
+  
   ```
 </CodeGroup>
 
