@@ -4,6 +4,24 @@ description: "Complete changelog of Joyfill Kotlin Multiplatform SDK releases"
 icon: "android"
 ---
 
+## 2.0.0-RC29
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Collection Tables — keep the active table header and row actions visible while scrolling
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Samples — migrated to the config-based `Form` API
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Bulk Editing — emit change events after submission, including when default action buttons are hidden
+- Inline Bulk Editing — reset submission state for each new bulk edit so Submit and Cancel remain available
+- Row Navigation — clear bulk selection when opening a single row
+- Addition Formulas — sum numeric text values as numbers
+- Publishing — keep the local non-packed KLIB workaround out of shared Gradle properties so Maven publication can resolve the expected artifacts
+
 ## 2.0.0-RC28
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
