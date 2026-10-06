@@ -6,18 +6,15 @@ icon: "android"
 
 ## 2.0.0-RC30
 
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
-
-- Bulk Change Events — typed `BulkEdit` and `BulkDelete` events expose affected rows and column values through `FormEvents.onChange`, including deleted-row snapshots
-
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
-- Bulk Editing and Deletion — each committed bulk action now emits one v2 changelog instead of separate row and field callbacks. Consumers must handle `field.value.bulkRowUpdate` and `field.value.bulkRowDelete`; mixed formula rows can include optional `change.rowUpdates` for row-specific writes
+- Bulk Editing — submitting a bulk edit now sends one change event containing all affected rows and updated cell values
+- Bulk Deletion — deleting multiple rows now sends one change event containing all deleted rows
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Bulk Change Replay — replay shared and row-specific cell updates while preserving formula cells and untouched rows, including numeric and explicit-null values
-- Change Event Context — retain the affected page for deletion events, including alternate views and newly created pages
+- Bulk Changes — applying bulk changes now preserves formula cells and leaves other rows unchanged
+- Deletion Events — events now identify the correct page when rows are deleted
 
 ## 2.0.0-RC29
 
