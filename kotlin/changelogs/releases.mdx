@@ -13,8 +13,6 @@ icon: "android"
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
 - Bulk Editing and Deletion — each committed bulk action now emits one v2 changelog instead of separate row and field callbacks. Consumers must handle `field.value.bulkRowUpdate` and `field.value.bulkRowDelete`; mixed formula rows can include optional `change.rowUpdates` for row-specific writes
-- Change Callbacks — the config-based Form API now reports applied document changes through the existing `ComponentEvent<*>` callback, without duplicate UI notifications. Formatting-only edits do not emit a committed change
-- Event Handling — exhaustive `when` expressions over component events or change targets must handle the new bulk variants
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
