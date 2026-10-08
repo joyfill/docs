@@ -4,7 +4,35 @@ description: "Complete changelog of Joyfill Web SDK releases"
 icon: "globe"
 ---
 
-> Source: https://github.com/joyfill/components/releases
+## 4.0.0-rc28
+
+**Release Date:** October 8, 2026
+
+This release introduces **Row Form Editability** for tables and collections, and fixes text field sizing and hidden-title field alignment in the builder and PDF exports.
+
+🚀 **New Features**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Row Form Editability:** Table fields and collection schemas (root and nested) now support an `editability` setting that controls whether rows are edited in the table, in the row form, or both. This matches the behavior already available in the iOS and Android SDKs. (NO-2351)
+  * `['inline', 'form']` or no value: rows can be edited in the table and through "Edit Row".
+  * `['form']`: table cells are locked, and "Edit Row" still works.
+  * `['inline']`: the "Edit Row" option is removed.
+  * Only the exact lowercase values `inline` and `form` are recognized. Any other value falls back to both.
+  * Table cells mapped onto a page are also locked when inline editing is off.
+  * In the builder, table and collection schema settings have new **Edit in table** and **Edit in row form** checkboxes.
+  * The setting is enforced in fill mode only. The builder, readonly mode, PDF export and the compact (RTE) view are unchanged.
+
+🛠️ **Bug Fixes**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+- **Text Field Sizing in the Builder and PDF:** Short text fields with auto-shrink or auto-height no longer show scrollbars in the builder or print at double height in the PDF. (NO-2373)
+  * Short wrapping text fields, common on PDF templates, keep the height the designer drew. A 20px field now prints at 20px instead of 40px.
+  * A box too short for one line centers and clips that line, and the field no longer jumps when you click into it to type.
+  * In PDF exports, text and multiline fields on grid pages grow to show their full value but never shrink. On fillable-PDF pages they keep their size unless auto-height is on.
+  * Auto-height grows when you leave a field and shrinks back after an edit. Clicking through a field without typing no longer changes its size.
+- **Hidden-Title Field Alignment:** Since 4.0.0-rc13, fields with a hidden title drew an empty 4px strip above their value, which pushed typed values onto the printed cell borders of PDF forms. The strip now only appears when a field has a visible title or decorator buttons, restoring the 4.0.0-rc12 layout across all field types. Short single-line display-text labels also center their text now, so they stay level with the values beside them in the builder and the PDF. (NO-2390, NO-2385)
 
 ---
 
@@ -149,15 +177,16 @@ This release introduces support for **Landscape Mode** and includes several fixe
 
 **Release Date:** June 10, 2026
 
-## 🚀 Highlights
 This release introduces dynamic decorator management APIs, enhanced support for row-specific decorators, and improvements to image rendering across page breaks in PDF exports.
 
-## 🛠️ Enhancements
+🛠️ **Enhancements**
+
 - **NO-2179**: Added support for dynamic decorator manipulation through the new `DecoratorManager` API, allowing decorators to be added, updated, retrieved, and removed programmatically at runtime.
 - **NO-2178**: Added support for row-specific decorators and improved the behavior of common and specific row decorator customization.
 - **NO-2165**: Fixed an issue where images could be split across pages during PDF generation. Images that would otherwise be cut by a page break are now rendered in full on the next page.
 
-## JSON Schema Updates
+**JSON Schema Updates**
+
 - Added support for dynamic decorator management via `DecoratorManager`.
 - Standardized decorator lookups to use `action` as the canonical identifier.
 - Decorator `_id` is no longer required and is no longer generated for decorator objects.
@@ -169,16 +198,17 @@ This release introduces dynamic decorator management APIs, enhanced support for 
 
 **Release Date:** May 23, 2025
 
-## 🚀 Highlights
 This release includes improvements to decorator customization, card layout image rendering, export view spacing, and column header overflow handling.
 
-## 🛠️ Enhancements
+🛠️ **Enhancements**
+
 - **NO-2089**: Added support to customize decorator count.
 - **NO-2162**: Added ability to wrap or ellipsize column headers.
 - **NO-1987**: Fixed an issue where image sizing was not displaying properly in card layout.
 - **NO-2161**: Fixed excessive padding for horizontal multi-select fields in export view.
 
-## JSON Schema Updates
+**JSON Schema Updates**
+
 - Decorator `_id` is now optional.
 - Added `columnTitleTextOverflow` to the `FieldPosition` schema.
 
@@ -347,18 +377,18 @@ This release includes improvements to decorator customization, card layout image
 
 **Release Date:** February 25, 2026
 
-### 🚀 New Features & Enhancements
+🚀 **New Features & Enhancements**
 
 - **Conditional Logic on Columns:** You can now apply conditional logic to table columns, allowing columns to show or hide based on field values or conditions. (**NO-1919**)
 - **Force Hide By View:** Fields and table columns can now be hidden per view (desktop, mobile, PDF), giving you control over what appears in each view for cleaner, more tailored form layouts. (**NO-1913**)
 - **Filter Hidden Fields in Validation Output:** Fields that are hidden — whether by conditional logic, global settings, or view-specific hiding — are now excluded from validation results, ensuring validation only applies to visible fields. (**NO-1941**)
 
-### 🛠️ Bug Fixes
+🛠️ **Bug Fixes**
 
 - **Formula Handling for Page Duplication:** Resolved an issue where formulas were not properly carried over when duplicating a page. Formulas are now cloned with updated field references so they continue to work correctly on the duplicated page. (**NO-1888**)
 - **Formula Saving:** Fixed a bug where formula changes could be lost when saving due to stale document state. The formula editor now correctly tracks and persists all pending changes. (**NO-1922**)
 
-### ⚠️ Deprecation Notice
+⚠️ **Deprecation Notice**
 
 - **Important:** We will be deprecating the use of the `hidden` property on `fieldPosition.tableColumns`. Going forward, the `hidden` property will be stored on `field` and `field.tableColumns`. The new `hiddenViews` property will also be stored on `field` and `field.tableColumns`.
 
@@ -368,13 +398,13 @@ This release includes improvements to decorator customization, card layout image
 
 **Release Date:** February 17, 2026
 
-### 🚀 New Features & Enhancements
+🚀 **New Features & Enhancements**
 
 - **Navigator:** This release introduces the Navigator, establishing the foundation for enhanced cross-platform navigation and seamless integration. (**NO-1834**)
 - **Nested Table Styling:** You can now apply custom styles to nested tables within collection fields, allowing for better visual hierarchy and data readability. (**NO-1906**)
 - **Cleaner Read-Only Views:** To reduce UI clutter, the barcode icon is now hidden when table and collection fields are set to read-only mode. (**NO-1904**)
 
-### 🛠️ Bug Fixes
+🛠️ **Bug Fixes**
 
 - **Validation Stability:** Resolved an issue where default helper functions were triggering incorrect validation errors. Logic checks should now behave as expected. (**NO-1828**)
 - **Collection Field Patch:** Resolved a bug that caused Collection fields to crash when opened or scrolled. (**NO-1921**)
@@ -518,7 +548,7 @@ These release notes detail several important fixes and stability improvements ac
 
 ---
 
-### Replacing Default US Date Formats
+**Replacing Default US Date Formats**
 
 The example below demonstrates how to use the new helper function to replace US date and time formats with EU-style formats.
 
@@ -558,12 +588,12 @@ console.log(JSON.stringify(updatedDoc, null, 2));
 - Issue where underlying table cell formulas were appearing in generated PDFs. These cells will now display as empty. (NO-1452)
 - Issue where chart field line point labels were duplicated, causing a blurring effect. (NO-1575)
 
-## 🗓️ New Date/Time Element & Custom Formats — Details
+🗓️ **New Date/Time Element & Custom Formats — Details**
 
 The native browser date/time input element was unreliable and inconsistent across browsers, especially with different local time zones. This often caused truncated or incorrectly formatted values in table cells and fields.
 To solve this, we’ve replaced the native input with a **custom date/time picker** and added the ability to define custom display formats using tokens like `MM`, `DD`, `YYYY`, etc.
 
-### 📌 Visual Impact of Removing Native Browser Date/Time Inputs
+📌 **Visual Impact of Removing Native Browser Date/Time Inputs**
 
 Previously, browsers attempted to “predict” the date/time format based on the user’s local settings (e.g., `DD/MM/YYYY` vs `MM/DD/YYYY`, or 12-hour vs 24-hour time). This prediction was **the root cause of formatting issues** and is no longer applied.
 
@@ -574,7 +604,7 @@ Going forward, date/time formats will be strictly enforced based on either:
 
 If your workflow relied on the browser’s formatting, you’ll need to configure the desired format using the new **custom date format functionality**. (See below.)
 
-### 🛠️ Custom Format Usage
+🛠️ **Custom Format Usage**
 
 Custom formats are currently available **only on desktop (JS SDK)** and are **disabled by default**.
 To enable them, use the `customDateTimeFormat` field setting:
@@ -596,7 +626,7 @@ To enable them, use the `customDateTimeFormat` field setting:
 
 Once enabled, a **Custom Format** input will appear in the field settings panel of date fields and date columns.
 
-### 📱 Native Mobile SDKs
+📱 **Native Mobile SDKs**
 
 > **Important:** If you’re using the native iOS, Kotlin, or React Native SDKs, it’s recommended to keep custom date formats **disabled** for now.
 > Custom formats are **not yet fully supported** across Joyfill’s native SDKs and may cause unintended behavior.
