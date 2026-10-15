@@ -8,18 +8,18 @@ icon: "android"
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
 
-- Row Duplication — duplicate a selected table or collection row from **More → Duplicate Row**, choosing how many copies (− / + stepper or typed number), whether copies go below the selected row or at the bottom of the table, and, for collection rows, whether to include child tables. Also available as `rows.duplicate(id, quantity, includeChildren, atEnd)`. One copy emits `rowCreate`; several emit one `bulkRowCreate`
-- Row Limits — `maxRows` on table fields and collection table schemas caps the number of rows. Add Row, Insert Below and Duplicate are hidden or capped at the limit, and `TableComponent.canAddRows()` reports remaining capacity
-- Bulk Form Decorators — new `DecoratorConfig.showInBulkForm` (default `true`) hides field and column decorators in the bulk-edit row form when set to `false`
+- Row Duplication — duplicate a table or collection row from the row menu. Choose how many copies to make, place them below the selected row or at the bottom of the table, and optionally include child tables. Also available in code with `rows.duplicate(...)`. Duplicating several rows sends a single change event
+- Row Limits — set `maxRows` on a table or collection table to cap how many rows it can hold. Adding and duplicating rows stop at the limit. Use `canAddRows()` to check whether more rows fit
+- Bulk Edit Decorators — new `DecoratorConfig.showInBulkForm` option to hide decorators when editing several rows at once. Defaults to `true`
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
 
-- Row Limits — `Rows.append()` and `Rows.prepend()` now throw `IllegalStateException` when the table has reached `maxRows`; check `canAddRows()` before calling them (**behaviour change**)
+- Row Limits — `rows.append()` and `rows.prepend()` now throw an `IllegalStateException` when the table is full. Check `canAddRows()` before calling them
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
 
-- Collection Tables — each table section now shows its own header inline and the active one pins to the top, removing the duplicated table title introduced in RC29
-- Collection Tables — closing a row form scrolls the row into view below the pinned header instead of underneath it
+- Collection Tables — each table shows its own header, and the current one stays pinned at the top while scrolling. The table title no longer appears twice
+- Collection Tables — after closing a row form, the row is no longer hidden behind the pinned header
 
 ## 2.0.0-RC30
 
