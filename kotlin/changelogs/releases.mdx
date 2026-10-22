@@ -4,6 +4,22 @@ description: "Complete changelog of Joyfill Kotlin Multiplatform SDK releases"
 icon: "android"
 ---
 
+## 2.0.0-RC32
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Row Duplication — the "Duplicate Row" action is now off by default. Turn it on with `DisplayConfig(enableRowDuplicates = true)`. `rows.duplicate(...)` still works from code (**behaviour change**)
+- Performance — large forms open much faster. A form with about 21,000 fields and 258 pages went from about 3 minutes to about 34 seconds on a low-end Android phone
+- Performance — duplicating a page with large tables is much faster, and memory used by deleted pages and fields is now released
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Navigation — `goto` to a hidden column now returns a failure instead of success
+- Filters — filtering a nested table now finds rows under parent rows that were never expanded
+- Collection Decorators — common row and column decorators on nested tables now stay in sync across all parent rows, and adding one under another parent no longer removes the first
+- Page Duplication — in a duplicated table or collection, column order, nested-table logic and cell show/hide and required logic now work in the copy
+- Page Duplication — duplicating a page now copies only that page's formulas, instead of every formula in the document
+
 ## 2.0.0-RC31
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
