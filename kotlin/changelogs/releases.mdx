@@ -4,6 +4,22 @@ description: "Complete changelog of Joyfill Kotlin Multiplatform SDK releases"
 icon: "android"
 ---
 
+## 2.0.0-RC32
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Row Duplication — the "Duplicate Row" action is now off by default. Turn it on with `DisplayConfig(enableRowDuplicates = true)`. `rows.duplicate(...)` still works from code (**behaviour change**)
+- Performance — large forms open faster
+- Performance — duplicating and deleting pages is faster and uses less memory
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Navigation — `goto` to a hidden column now returns a failure instead of success
+- Filters — filtering a nested table now finds rows under parent rows that were never expanded
+- Collection Decorators — decorators on nested tables now stay the same across all parent rows
+- Page Duplication — duplicated tables and collections now keep their column order and logic
+- Page Duplication — duplicating a page no longer copies formulas from other pages
+
 ## 2.0.0-RC31
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
