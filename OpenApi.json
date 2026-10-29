@@ -886,8 +886,20 @@
                   "timezone": {
                     "type": "string",
                     "default": "UTC"
+                  },
+                  "sdkVersion": {
+                    "type": "string",
+                    "description": "Optional Joyfill Components SDK version used to render the PDF. Omit this property to use the Export API's configured default. Must be a complete version such as `4.0.0`, `4.0.0-rc25`, or `4.1.0-beta.2+build.7`, with a maximum of 64 characters. Tags such as `latest`, version ranges, URLs, empty strings, and null are rejected with HTTP 400.",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+                    "example": "4.0.0-rc25"
                   }
                 }
+              },
+              "example": {
+                "timezone": "America/New_York",
+                "sdkVersion": "4.0.0-rc25"
               }
             }
           }
@@ -985,8 +997,24 @@
                   "timezone": {
                     "type": "string",
                     "default": "UTC"
+                  },
+                  "sdkVersion": {
+                    "type": "string",
+                    "description": "Optional Joyfill Components SDK version used to render the PDF. Omit this property to use the Export API's configured default. Must be a complete version such as `4.0.0`, `4.0.0-rc25`, or `4.1.0-beta.2+build.7`, with a maximum of 64 characters. Tags such as `latest`, version ranges, URLs, empty strings, and null are rejected with HTTP 400.",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+                    "example": "4.0.0-rc25"
                   }
                 }
+              },
+              "example": {
+                "document": {
+                  "name": "PDF export example",
+                  "files": []
+                },
+                "timezone": "America/New_York",
+                "sdkVersion": "4.0.0-rc25"
               }
             }
           }
