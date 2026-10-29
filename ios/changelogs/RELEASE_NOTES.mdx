@@ -8,6 +8,33 @@ icon: "notes"
 
 ---
 
+## 3.0.0-rc32
+
+
+**Release Date:** October 29, 2026
+
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Bulk Change Helper** (`makeBulkChange`) — merges multiple row updates/deletes into one bulk change event.
+  ```swift
+  func onChange(changes: [Change], document: JoyDoc) {
+      if let bulk = DocumentEditor.makeBulkChange(from: changes) {
+          // single or merged event
+      } else {
+          changes.forEach { }
+      }
+  }
+  ```
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- **Table Bulk Delete** — bulk delete operations no longer freeze the UI on large tables and collections.
+- **Table Modal Scroll** — improved scroll performance in table field.
+- **Table Bulk Edit** — optimized performance when bulk editing multiple table rows.
+- **Nested Tables** — expanding and collapsing nested tables now performs better.
+
+
 ## 3.0.0-rc31
 
 
