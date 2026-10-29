@@ -4,6 +4,69 @@ description: "Complete changelog of Joyfill Web SDK releases"
 icon: "globe"
 ---
 
+## 4.0.0-rc29
+
+**Release Date:** October 29, 2026
+
+This release adds row limits for tables and collections, lifecycle controls for vanilla JavaScript integrations, and faster editing of large documents. It also fixes portrait scrolling, rich-text spacing, and required indicators in PDF exports.
+
+🚀 **New Features**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+### Maximum rows for tables and collections
+
+Use the new **Max Rows** setting in the builder, or set `maxRows` on a table field or collection schema, to limit how many rows users can add.
+
+- Each root or nested collection table enforces its own schema's limit independently.
+- At the limit, add, insert, and duplicate controls are hidden, and their handlers reject additional rows.
+- Deleting a row frees capacity. Lowering a limit preserves existing rows, including rows above the new limit.
+- Missing or `null` limits allow unlimited rows. A limit of `0` prevents new rows.
+
+Supported across table, input-group, and compact (RTE) display modes.
+
+### Update and unmount vanilla JavaScript components
+
+`Joyfill.JoyDoc()` and `Joyfill.JoyDocExporter()` now return a handle with `update(props)` and `unmount()` methods. Integrations can reuse a mounted component and run its cleanup when leaving a screen.
+
+```js
+const viewer = Joyfill.JoyDoc(element, props);
+
+// Pass the complete next props object; update does not merge props.
+viewer.update({ ...props, mode: 'fill' });
+
+// Unmount before removing the host element.
+viewer.unmount();
+```
+
+Existing callers can continue to ignore the return value. Repeated unmount is safe; updating after unmount throws.
+
+⚡ **Performance Improvements**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
+
+- Large tables and collections render and respond faster when editing cells, scrolling, or adding, duplicating, moving, and deleting rows. Improvements cover table, input-group, and compact (RTE) views, including nested collections. Validation included documents with 11,000 table rows and 33,000 total collection rows.
+- The builder's table editor renders visible rows as you scroll, reducing the work needed to open large templates.
+- Repeated `validator.validate(doc)` calls read the current values after in-place edits to cells, schemas, formulas, and visibility controls, preserving validation correctness alongside the performance improvements.
+
+🛠️ **Bug Fixes**
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #ef4444', borderRadius: '6px', color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>FIXED</span>
+
+### Portrait pages in narrow containers
+
+Portrait pages retain their configured width, making right-edge fields reachable by horizontal scrolling in narrow builder and fill views. Landscape pages continue to fit the available width. Embedding containers must allow horizontal scrolling.
+
+### Rich-text spacing in fixed-height fields
+
+Legacy rich-text content uses its original default line spacing, without the added paragraph gaps that caused headers to overflow fixed-height fields. Explicit line-height settings remain supported.
+
+### Required indicators in PDF exports
+
+`JoyDocExporter` hides required-field indicators, including on table cells mapped onto a page. Required-field validation and indicators in the builder and fill view remain active.
+
+---
+
 ## 4.0.0-rc28
 
 **Release Date:** October 8, 2026
