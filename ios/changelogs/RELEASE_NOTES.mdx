@@ -8,6 +8,27 @@ icon: "notes"
 
 ---
 
+## 3.0.0-rc33
+
+
+**Release Date:** November 12, 2026
+
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- **Full-Width Grid** — added `DisplayConfig.fullWidthGrid` to let the Table/Collection grid run edge-to-edge, ignoring horizontal safe-area insets. Defaults to `false`; toggleable at runtime via `DocumentEditor.setFullWidthGrid(_:)`.
+  ```swift
+  editor.setFullWidthGrid(true)
+  ```
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- **Nested Tables** — fixed an out-of-bounds crash on the external `rowUpdate` path when a nested row was updated without a `schemaId`.
+- **Collection Row-Form** — fixed per-keystroke typing lag in the bulk-edit row-form on large collections.
+- **Page Deletion & Duplication** — significantly faster on documents with large tables/collections.
+- **Page Duplication** — now preserves the source page's `copyable` setting instead of overwriting it.
+
+
 ## 3.0.0-rc32
 
 
