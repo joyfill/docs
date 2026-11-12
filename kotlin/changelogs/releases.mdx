@@ -4,6 +4,29 @@ description: "Complete changelog of Joyfill Kotlin Multiplatform SDK releases"
 icon: "android"
 ---
 
+## 2.0.0-RC34
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
+
+- Collection Tables — when the column names are pinned at the top, a "+" button there adds a row without scrolling back up
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
+
+- Collection Tables — only the slim column-name row stays pinned while scrolling, so more rows fit on screen. The title and "+ Row" heading now scroll away
+- Collection Tables — a cell you tap to edit stays in view, clear of the pinned column names and the keyboard
+- Landscape — fields, tables, row forms, dialogs, date and time pickers, filters, images, charts and signatures now fit short and landscape screens, and stay reachable while the keyboard is open
+- Screen Rotation (Android) — open dialogs and panels now stay open when the screen rotates. They also re-open when you come back to a screen that still holds the same editor (**behaviour change**). See the new "Screen rotation (Android)" section in the README
+- Dependencies — updated to Kotlin 2.4.21, Compose Multiplatform 1.11.1, Coil 3.5.0, Ktor 3.6.1 and newer kotlinx libraries. The `iosX64` target (Intel iOS simulator) is no longer published for the compose module (**behaviour change**)
+
+<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>FIXED</span>
+
+- Row Order — moving a row up or down and "Insert Below" now follow the row order shown on screen
+- Insert Below — after moving a nested row up, the new row now appears right below the chosen row
+- Nested Tables — changes in a nested table now point to the right parent row when the parent table is filtered or sorted
+- Page Duplication — picking an option in a copied table or collection cell no longer changes the original page
+- Page Duplication — a copied page keeps the original page's `copyable` setting
+- Page Duplication — copied tables and collections keep their column settings, such as a custom date format and hidden columns
+
 ## 2.0.0-RC33
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px', marginTop: '16px'}}>CHANGED</span>
