@@ -6,34 +6,9 @@ icon: "globe"
 
 ## 4.0.0-rc30
 
-**Release Date:** Pending
+**Release Date:** November 18, 2026
 
-This release adds a server-side print API, improves performance in date-heavy documents, preserves page-copy restrictions, and fixes PDF and text-layout issues.
-
-🚀 **New Features**
-
-<span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #10b981', borderRadius: '6px', color: '#10b981', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>ADDED</span>
-
-### Server-side print HTML
-
-Use `getJoyDocPrintHtml()` from `@joyfill/components` to render a JoyDoc as HTML and CSS for a CSS paged-media renderer, including a server-side PDF engine.
-
-```js
-import { getJoyDocPrintHtml } from '@joyfill/components';
-
-const { page, body, header, footer } = await getJoyDocPrintHtml(doc, {
-  license,
-  config,
-  measureText,
-});
-```
-
-- Returns the page dimensions and padding in CSS pixels, plus separate `{ html, css }` objects for the document body and any header and footer.
-- Fields grow with their content, each document page starts a new printed page, and tables and collections can split between rows with repeated table headers.
-- On a server, supply `measureText(runs)` to return the width of each `{ text, font }` run in pixels using the renderer's fonts. Auto-shrink text and charts need these measurements.
-- Collection fields require a license that enables them. Charts can render without a browser DOM.
-
-The API produces HTML and CSS; your application supplies the PDF renderer. Wrap the fragments in a standards-mode HTML document (`<!DOCTYPE html>`) and match the renderer's margins to `config.page`.
+This release improves performance in date-heavy documents, preserves page-copy restrictions, and fixes PDF and text-layout issues.
 
 ⚡ **Performance Improvements**
 
@@ -67,10 +42,6 @@ Long vertical and wrapping horizontal multi-select checklists are measured befor
 ### Short text fields with visible titles
 
 Restores text values in short titled fields in grid and float PDF exports and in edit, fill, and readonly modes. This fixes a regression introduced in `4.0.0-rc28`. Extremely short on-screen fields can still clip.
-
-⚠️ **Known Issues**
-
-- **Readonly multi-select scrolling:** During beta testing, a multi-select field with overflow scrolling was reported to scroll in fill and edit modes but not in readonly mode, leaving overflowed items inaccessible. This issue is not fixed in this release; its cause and affected layouts have not yet been confirmed.
 
 ---
 
