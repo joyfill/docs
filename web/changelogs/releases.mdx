@@ -14,8 +14,8 @@ This release improves performance in date-heavy documents, preserves page-copy r
 
 <span style={{display: 'inline-block', padding: '4px 12px', border: '1.5px solid #f97316', borderRadius: '6px', color: '#f97316', fontWeight: '600', fontSize: '13px', marginBottom: '12px'}}>CHANGED</span>
 
-- Date pickers reuse month-name formatters and wait until opened to convert the selected date, reducing work in large tables and exports. Reopening a picker reads the current saved value.
-- Timezone conversions reuse cached formatters, reducing repeated work in date-heavy documents.
+- Improved performance for documents with many date fields, including large tables and PDF exports.
+- Date pickers show the current saved value when reopened.
 
 🛠️ **Enhancements**
 
@@ -25,7 +25,7 @@ This release improves performance in date-heavy documents, preserves page-copy r
 
 Duplicated pages retain the source page's `copyable` settings, including copies of copies and matching mobile pages. Duplicates are deletable so accidental copies can be removed.
 
-**Behavior change:** A missing or invalid `copyable` setting now defaults to `["with-values"]`. To offer both copy options, explicitly set `["with-values", "without-values"]`. `["none"]` continues to hide the fill-mode copy menu.
+**Behavior change:** Pages with a missing, empty, or invalid `copyable` setting now default to `["with-values"]`. To offer both copy options, explicitly set `copyable: ["with-values", "without-values"]`. `["none"]` continues to hide the fill-mode copy menu.
 
 🛠️ **Bug Fixes**
 
@@ -33,7 +33,7 @@ Duplicated pages retain the source page's `copyable` settings, including copies 
 
 ### Dropdown text in short PDF fields
 
-Standalone dropdowns on float-layout PDF pages no longer clip the bottoms of selected values in short fields. Explicit ellipsis remains respected; grid dropdowns and mapped table cells keep their existing containment.
+Standalone dropdowns on fillable PDF pages no longer clip the bottoms of selected values in short fields. Explicit ellipsis settings remain respected.
 
 ### Multi-select checklist pagination
 
@@ -41,7 +41,7 @@ Long vertical and wrapping horizontal multi-select checklists are measured befor
 
 ### Short text fields with visible titles
 
-Restores text values in short titled fields in grid and float PDF exports and in edit, fill, and readonly modes. This fixes a regression introduced in `4.0.0-rc28`. Extremely short on-screen fields can still clip.
+Fixes a rendering regression introduced in `4.0.0-rc28` that caused text to disappear in short fields with visible titles.
 
 ---
 
